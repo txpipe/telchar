@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  @apply bg-white dark:bg-[#0C0505];
+
+  @apply text-gray-700 dark:text-gray-200
+}
+
+.card::after {
+  @apply absolute top-0 left-0 right-0 bottom-0 -z-10;
+  @apply rounded-[10px] border border-solid border-transparent;
+  content: '';
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+}
+
