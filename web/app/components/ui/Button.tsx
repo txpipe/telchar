@@ -2,16 +2,24 @@ import type { MouseEventHandler, PropsWithChildren } from 'react';
 import { tv, type VariantProps } from 'tailwind-variants';
 
 const button = tv({
-  base: 'px-6 py-3.5 rounded-full text-base font-semibold',
+  base: 'text-base font-semibold',
   variants: {
+    spacing: {
+      base: 'px-6 py-3.5 rounded-full',
+      icon: 'p-1.5 rounded-lg',
+    },
     color: {
       primary: 'bg-primary-400 text-white',
       'primary-gradient': 'bg-gradient-to-r from-primary-400 to-primary-500 text-white',
+    },
+    disabled: {
+      true: 'bg-white/70 opacity-50 cursor-not-allowed',
     },
   },
 
   defaultVariants: {
     color: 'primary-gradient',
+    spacing: 'base',
   },
 });
 
