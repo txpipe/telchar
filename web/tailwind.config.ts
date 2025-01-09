@@ -16,6 +16,9 @@ export default {
           '"Segoe UI Symbol"',
           '"Noto Color Emoji"',
         ],
+        roboto: [
+          '"Roboto Mono"', 'serif',
+        ],
       },
       colors: {
         primary: {

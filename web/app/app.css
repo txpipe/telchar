@@ -6,7 +6,7 @@ html,
 body {
   @apply bg-white dark:bg-[#0C0505];
 
-  @apply text-gray-700 dark:text-gray-200
+  @apply text-gray-700 dark:text-white
 }
 
 .card::after {

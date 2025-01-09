@@ -1,8 +1,8 @@
-import type { PropsWithChildren } from 'react';
+import type { MouseEventHandler, PropsWithChildren } from 'react';
 import { tv, type VariantProps } from 'tailwind-variants';
 
 const button = tv({
-  base: 'px-6 py-3.5 rounded-full',
+  base: 'px-6 py-3.5 rounded-full text-base font-semibold',
   variants: {
     color: {
       primary: 'bg-primary-400 text-white',
@@ -20,12 +20,12 @@ type ButtonVariants = VariantProps<typeof button>;
 interface Props extends ButtonVariants {
   type?: 'button' | 'submit' | 'reset';
   className?: string;
-
+  onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
-export function Button({ type, children, ...buttonProps }: PropsWithChildren<Props>) {
+export function Button({ type, children, onClick, ...buttonProps }: PropsWithChildren<Props>) {
   return (
-    <button type={type} className={button(buttonProps)}>
+    <button type={type} onClick={onClick} className={button(buttonProps)}>
       {children}
     </button>
   );
