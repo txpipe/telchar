@@ -1,0 +1,34 @@
+
+type Dapp {
+	id: ID!
+	name: String!
+	description: String!
+	repository: String!
+	publishedDate: Int!
+	teamId: String!
+	team: Team
+}
+
+
+
+
+type Query {
+	dapps: [Dapp!]!
+	dapp(id: ID!): Dapp
+	teams: [Team!]!
+	team(id: ID!): Team
+}
+
+
+type Team {
+	id: ID!
+	name: String!
+	repository: String!
+	dapps: [Dapp!]!
+}
+
+directive @include(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+directive @skip(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+schema {
+	query: Query
+}

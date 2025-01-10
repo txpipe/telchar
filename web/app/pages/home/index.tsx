@@ -1,19 +1,27 @@
-// Components
 import { useState } from 'react';
+
+// Components
 import { Header } from '~/components/Header';
 import { Hero } from '~/components/Hero';
+import { Footer } from '~/components/Footer';
 
 // Local components
 import { Catalogue } from './catalogue';
 
-export function Home() {
+export function Home({ initialDApps }: { initialDApps: Dapp[]; }) {
   const [_search, setSearch] = useState('');
 
   return (
-    <main className="container m-auto py-14">
+    <>
       <Header />
-      <Hero className="mt-14" onSearch={setSearch} />
-      <Catalogue className="mt-20" />
-    </main>
+      <main>
+        <Hero className="mt-14" onSearch={setSearch} />
+        <Catalogue
+          className="mt-20"
+          initialDApps={initialDApps}
+        />
+      </main>
+      <Footer className="mt-20" />
+    </>
   );
 }

@@ -1,3 +1,5 @@
+use std::{fs::File, io::Write};
+
 use async_graphql::{EmptyMutation, EmptySubscription, MergedObject, Schema};
 
 mod dapp;
@@ -11,7 +13,13 @@ pub struct Query(dapp::DAppQuery, team::TeamQuery);
 pub type TelcharSchema = Schema<Query, EmptyMutation, EmptySubscription>;
 
 pub fn build_schema() -> TelcharSchema {
-    Schema::build(Query::default(), EmptyMutation, EmptySubscription)
+    let schema = Schema::build(Query::default(), EmptyMutation, EmptySubscription)
         .limit_depth(4)
-        .finish()
+        .finish();
+
+    let sdl = schema.sdl();
+    let mut file = File::create("schema.graphql").expect("Failed to create schema file");
+    file.write_all(sdl.as_bytes()).expect("Failed to write schema");
+
+    return schema
 }

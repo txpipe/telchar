@@ -6,25 +6,23 @@ import { ChevronRightIcon } from '~/components/icons/chevron-right';
 
 interface CatalogueProps {
   className?: string;
+  initialDApps: Dapp[];
 }
 
-function PackageCard() {
+function PackageCard({ dapp }: { dapp: Dapp; }) {
   return (
     <Card>
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold">Package name</h3>
-        <p className="text-xl">1,700</p>
-      </div>
+      <h3 className="text-lg font-semibold">{dapp.name}</h3>
       <div>
-        <span>v4.1.11</span>
+        <span className="text-primary-400">@{dapp.team?.name ?? ''}</span>
         <span> • </span>
-        <span className="text-primary-400">@asteria</span>
+        <span>1 year ago</span>
       </div>
     </Card>
   );
 }
 
-export function Catalogue({ className }: CatalogueProps) {
+export function Catalogue({ className, initialDApps }: CatalogueProps) {
   return (
     <section className={className}>
       <div className="flex justify-between items-center">
@@ -34,17 +32,17 @@ export function Catalogue({ className }: CatalogueProps) {
         </div>
       </div>
       <div className="grid grid-cols-3 gap-6 mt-8">
-        {Array(6).fill(null).map((_, i) => (
-          <PackageCard key={`card-${i}`} />
+        {initialDApps.map(dapp => (
+          <PackageCard key={`dapp-${dapp.id}`} dapp={dapp} />
         ))}
       </div>
       <div className="mt-8 flex items-center justify-center gap-6">
-        <span className="text-white/50">Displaying 1-15 of 150</span>
+        <span className="text-white/50">Displaying 1-{initialDApps.length} of {initialDApps.length}</span>
         <div className="flex gap-3">
           <Button color="primary" spacing="icon" disabled>
             <ChevronLeftIcon />
           </Button>
-          <Button color="primary" spacing="icon">
+          <Button color="primary" spacing="icon" disabled>
             <ChevronRightIcon />
           </Button>
         </div>

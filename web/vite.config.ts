@@ -5,7 +5,14 @@ import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { reactRouterDevTools } from 'react-router-devtools';
 
-export default defineConfig({
+export default defineConfig(({ isSsrBuild }) => ({
+  build: {
+    rollupOptions: isSsrBuild
+      ? {
+        input: './server/app.ts',
+      }
+      : undefined,
+  },
   css: {
     postcss: {
       plugins: [tailwindcss, autoprefixer],
@@ -16,8 +23,4 @@ export default defineConfig({
     reactRouter(),
     tsconfigPaths(),
   ],
-  server: {
-    host: '0.0.0.0',
-    port: 3000,
-  },
-});
+}));
