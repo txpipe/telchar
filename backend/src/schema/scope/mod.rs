@@ -2,20 +2,20 @@ use async_graphql::{ComplexObject, SimpleObject, ID};
 
 mod query;
 
-pub use query::{TeamQuery, get_team};
+pub use query::{ScopeQuery, get_scope};
 
-use super::dapp::{DApp, get_dapps_for_team};
+use super::dapp::{DApp, get_dapps_for_scope};
 
 #[derive(SimpleObject, Clone)]
 #[graphql(complex)]
-pub struct Team {
+pub struct Scope {
     id: ID,
     name: String,
     repository: String,
 }
 
 #[ComplexObject]
-impl Team {
+impl Scope {
     #[graphql(skip)]
     pub fn new(id: Option<String>, name: &str, repository: &str) -> Self {
         Self {
@@ -26,6 +26,6 @@ impl Team {
     }
 
     async fn dapps(&self) -> Vec<DApp> {
-        get_dapps_for_team(&self.id.to_string())
+        get_dapps_for_scope(&self.id.to_string())
     }
 }

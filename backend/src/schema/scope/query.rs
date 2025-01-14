@@ -4,24 +4,24 @@ use async_graphql::{connection::{Edge, EmptyFields}, types::connection::{query, 
 
 use crate::schema::pagination::AdditionalInfo;
 
-use super::Team;
+use super::Scope;
 
 #[derive(Default)]
-pub struct TeamQuery;
+pub struct ScopeQuery;
 
-fn get_teams() -> Vec<Team> {
+fn get_scopes() -> Vec<Scope> {
     vec![
-        Team::new(
+        Scope::new(
             Some("e9e1585b-1e1d-470f-9335-0dcfa7652e30".to_string()),
             "Cardano",
             "https://github.com/cardanoscan",
         ),
-        Team::new(
+        Scope::new(
             Some("c0778651-1b16-479a-878a-365193e8f89d".to_string()),
             "Minswap",
             "https://github.com/minswap",
         ),
-        Team::new(
+        Scope::new(
             Some("94b91e56-1833-4f19-b296-5117d8eee5b0".to_string()),
             "NuFi",
             "https://github.com/nufi",
@@ -29,20 +29,20 @@ fn get_teams() -> Vec<Team> {
     ]
 }
 
-pub fn get_team(id: ID) -> Option<Team> {
-    get_teams().into_iter().find(|team| team.id == id)
+pub fn get_scope(id: ID) -> Option<Scope> {
+    get_scopes().into_iter().find(|scope| scope.id == id)
 }
 
 #[Object]
-impl TeamQuery {
-    async fn teams(
+impl ScopeQuery {
+    async fn scopes(
         &self,
         after: Option<String>,
         before: Option<String>,
         first: Option<i32>,
         last: Option<i32>,
-    ) -> Result<Connection<usize, Team, AdditionalInfo>, Error> {
-        let teams = get_teams();
+    ) -> Result<Connection<usize, Scope, AdditionalInfo>, Error> {
+        let scopes = get_scopes();
         query(
             after,
             before,
@@ -50,9 +50,9 @@ impl TeamQuery {
             last,
             |after, before, first, last| async move {
                 let mut start = 0usize;
-                let mut end = teams.len();
+                let mut end = scopes.len();
     
-                // Get first position of Teams
+                // Get first position of Scopes
                 if let Some(after) = after {
                     if after >= end {
                         return Ok(Connection::with_additional_fields(false, false, AdditionalInfo::empty()));
@@ -60,7 +60,7 @@ impl TeamQuery {
                     start = after + 1;
                 }
     
-                // Get Last position of Teams
+                // Get Last position of Scopes
                 if let Some(before) = before {
                     if before == 0 {
                         return Ok(Connection::with_additional_fields(false, false, AdditionalInfo::empty()));
@@ -68,8 +68,8 @@ impl TeamQuery {
                     end = before;
                 }
     
-                // Get the slice of Teams based on the initial and final positions
-                let mut slice = &teams[start..end];
+                // Get the slice of Scopes based on the initial and final positions
+                let mut slice = &scopes[start..end];
     
                 // Get the first N elements
                 if let Some(first) = first {
@@ -83,18 +83,18 @@ impl TeamQuery {
     
                 // Prepare the nodes based on calculated values
                 let has_next_page = if let Some(first) = first {
-                    slice.len() == first as usize && end < teams.len()
+                    slice.len() == first as usize && end < scopes.len()
                 } else {
-                    end < teams.len()
+                    end < scopes.len()
                 };
 
                 let mut connection = Connection::with_additional_fields(
                     start > 0,
                     has_next_page,
-                    AdditionalInfo::new(teams.len(), slice.len()),
+                    AdditionalInfo::new(scopes.len(), slice.len()),
                 );
                 connection.edges.extend(
-                    slice.iter().enumerate().map(|(idx, team)| Edge::new(start + idx, (*team).clone()))
+                    slice.iter().enumerate().map(|(idx, scope)| Edge::new(start + idx, (*scope).clone()))
                 );
     
     
@@ -105,7 +105,7 @@ impl TeamQuery {
     }
 
 
-    async fn team(&self, id: ID) -> Option<Team> {
-        get_team(id)
+    async fn scope(&self, id: ID) -> Option<Scope> {
+        get_scope(id)
     }
 }
