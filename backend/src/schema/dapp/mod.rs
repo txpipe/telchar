@@ -6,7 +6,7 @@ pub use query::{DAppQuery, get_dapps_for_team};
 
 use super::team::{Team, get_team};
 
-#[derive(SimpleObject)]
+#[derive(SimpleObject, Clone)]
 #[graphql(complex)]
 pub struct DApp {
     id: ID,
