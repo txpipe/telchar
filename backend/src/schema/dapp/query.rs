@@ -1,5 +1,7 @@
 use async_graphql::{connection::Edge, types::connection::{query, Connection}, Error, Object, ID};
 
+use crate::schema::pagination::AdditionalInfo;
+
 use super::DApp;
 
 #[derive(Default)]
@@ -49,7 +51,7 @@ impl DAppQuery {
         before: Option<String>,
         first: Option<i32>,
         last: Option<i32>,
-    ) -> Result<Connection<usize, DApp>, Error> {
+    ) -> Result<Connection<usize, DApp, AdditionalInfo>, Error> {
         let dapps = get_dapps();
         query(
             after,
@@ -63,7 +65,7 @@ impl DAppQuery {
                 // Get first position of DApps
                 if let Some(after) = after {
                     if after >= end {
-                        return Ok(Connection::new(false, false));
+                        return Ok(Connection::with_additional_fields(false, false, AdditionalInfo::empty()));
                     }
                     start = after + 1;
                 }
@@ -71,7 +73,7 @@ impl DAppQuery {
                 // Get Last position of DApps
                 if let Some(before) = before {
                     if before == 0 {
-                        return Ok(Connection::new(false, false))
+                        return Ok(Connection::with_additional_fields(false, false, AdditionalInfo::empty()));
                     }
                     end = before;
                 }
@@ -90,7 +92,18 @@ impl DAppQuery {
                 }
 
                 // Prepare the nodes based on calculated values
-                let mut connection: Connection<usize, DApp, _, _, _, _, _> = Connection::new(start > 0, end < dapps.len());
+                let has_next_page = if let Some(first) = first {
+                    slice.len() == first as usize && end < dapps.len()
+                } else {
+                    end < dapps.len()
+                };
+
+                // Prepare the nodes based on calculated values
+                let mut connection = Connection::with_additional_fields(
+                    start > 0,
+                    has_next_page,
+                    AdditionalInfo::new(dapps.len(), slice.len()),
+                );
                 connection.edges.extend(
                     slice.iter().enumerate().map(|(idx, dapp)| Edge::new(start + idx, (*dapp).clone()))
                 );

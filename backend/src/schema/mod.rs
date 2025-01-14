@@ -4,6 +4,7 @@ use async_graphql::{EmptyMutation, EmptySubscription, MergedObject, Schema};
 
 mod dapp;
 mod team;
+mod pagination;
 
 // MARK: Query Struct
 #[derive(MergedObject, Default)]
@@ -14,7 +15,7 @@ pub type TelcharSchema = Schema<Query, EmptyMutation, EmptySubscription>;
 
 pub fn build_schema() -> TelcharSchema {
     let schema = Schema::build(Query::default(), EmptyMutation, EmptySubscription)
-        .limit_depth(4)
+        // .limit_depth(4)
         .finish();
 
     let sdl = schema.sdl();

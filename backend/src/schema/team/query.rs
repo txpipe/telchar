@@ -1,4 +1,8 @@
-use async_graphql::{connection::Edge, types::connection::{query, Connection}, Error, Object, ID};
+use std::ptr::null;
+
+use async_graphql::{connection::{Edge, EmptyFields}, types::connection::{query, Connection}, Error, Object, ID};
+
+use crate::schema::pagination::AdditionalInfo;
 
 use super::Team;
 
@@ -37,7 +41,7 @@ impl TeamQuery {
         before: Option<String>,
         first: Option<i32>,
         last: Option<i32>,
-    ) -> Result<Connection<usize, Team>, Error> {
+    ) -> Result<Connection<usize, Team, AdditionalInfo>, Error> {
         let teams = get_teams();
         query(
             after,
@@ -47,26 +51,26 @@ impl TeamQuery {
             |after, before, first, last| async move {
                 let mut start = 0usize;
                 let mut end = teams.len();
-
+    
                 // Get first position of Teams
                 if let Some(after) = after {
                     if after >= end {
-                        return Ok(Connection::new(false, false));
+                        return Ok(Connection::with_additional_fields(false, false, AdditionalInfo::empty()));
                     }
                     start = after + 1;
                 }
-
+    
                 // Get Last position of Teams
                 if let Some(before) = before {
                     if before == 0 {
-                        return Ok(Connection::new(false, false))
+                        return Ok(Connection::with_additional_fields(false, false, AdditionalInfo::empty()));
                     }
                     end = before;
                 }
-
+    
                 // Get the slice of Teams based on the initial and final positions
                 let mut slice = &teams[start..end];
-
+    
                 // Get the first N elements
                 if let Some(first) = first {
                     slice = &slice[..first.min(slice.len())];
@@ -76,18 +80,30 @@ impl TeamQuery {
                     slice = &slice[slice.len() - last.min(slice.len())..];
                     start = end - last.min(slice.len());
                 }
-
+    
                 // Prepare the nodes based on calculated values
-                let mut connection: Connection<usize, Team, _, _, _, _, _> = Connection::new(start > 0, end < teams.len());
+                let has_next_page = if let Some(first) = first {
+                    slice.len() == first as usize && end < teams.len()
+                } else {
+                    end < teams.len()
+                };
+
+                let mut connection = Connection::with_additional_fields(
+                    start > 0,
+                    has_next_page,
+                    AdditionalInfo::new(teams.len(), slice.len()),
+                );
                 connection.edges.extend(
                     slice.iter().enumerate().map(|(idx, team)| Edge::new(start + idx, (*team).clone()))
                 );
-
+    
+    
                 Ok::<_, Error>(connection)
             }
         )
         .await
     }
+
 
     async fn team(&self, id: ID) -> Option<Team> {
         get_team(id)
