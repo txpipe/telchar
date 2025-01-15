@@ -5,27 +5,114 @@ type Dapp {
 	description: String!
 	repository: String!
 	publishedDate: Int!
-	teamId: String!
-	team: Team
+	scopeId: String!
+	scope: Scope
+}
+
+type DappConnection {
+	"""
+	Information to aid in pagination.
+	"""
+	pageInfo: PageInfo!
+	"""
+	A list of edges.
+	"""
+	edges: [DappEdge!]!
+	"""
+	A list of nodes.
+	"""
+	nodes: [Dapp!]!
+	metadata: PaginationInfo
+}
+
+"""
+An edge in a connection.
+"""
+type DappEdge {
+	"""
+	The item at the end of the edge
+	"""
+	node: Dapp!
+	"""
+	A cursor for use in pagination
+	"""
+	cursor: String!
 }
 
 
 
+
+"""
+Information about pagination in a connection
+"""
+type PageInfo {
+	"""
+	When paginating backwards, are there more items?
+	"""
+	hasPreviousPage: Boolean!
+	"""
+	When paginating forwards, are there more items?
+	"""
+	hasNextPage: Boolean!
+	"""
+	When paginating backwards, the cursor to continue.
+	"""
+	startCursor: String
+	"""
+	When paginating forwards, the cursor to continue.
+	"""
+	endCursor: String
+}
+
+type PaginationInfo {
+	totalNodes: Int!
+	pageSize: Int!
+}
 
 type Query {
-	dapps: [Dapp!]!
+	dapps(after: String, before: String, first: Int, last: Int): DappConnection!
 	dapp(id: ID!): Dapp
-	teams: [Team!]!
-	team(id: ID!): Team
+	scopes(after: String, before: String, first: Int, last: Int): ScopeConnection!
+	scope(id: ID!): Scope
 }
 
-
-type Team {
+type Scope {
 	id: ID!
 	name: String!
 	repository: String!
 	dapps: [Dapp!]!
 }
+
+type ScopeConnection {
+	"""
+	Information to aid in pagination.
+	"""
+	pageInfo: PageInfo!
+	"""
+	A list of edges.
+	"""
+	edges: [ScopeEdge!]!
+	"""
+	A list of nodes.
+	"""
+	nodes: [Scope!]!
+	metadata: PaginationInfo
+}
+
+"""
+An edge in a connection.
+"""
+type ScopeEdge {
+	"""
+	The item at the end of the edge
+	"""
+	node: Scope!
+	"""
+	A cursor for use in pagination
+	"""
+	cursor: String!
+}
+
 
 directive @include(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
 directive @skip(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT

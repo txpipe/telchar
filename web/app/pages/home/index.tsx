@@ -8,7 +8,7 @@ import { Footer } from '~/components/Footer';
 // Local components
 import { Catalogue } from './catalogue';
 
-export function Home({ initialDApps }: { initialDApps: Dapp[]; }) {
+export function Home({ initialDApps }: { initialDApps: DappConnection; }) {
   const [_search, setSearch] = useState('');
 
   return (

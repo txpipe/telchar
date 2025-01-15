@@ -21,10 +21,10 @@ export async function loader({ context }: Route.LoaderArgs) {
   });
 
   return {
-    dapps: result.dapps,
+    initialDApps: result.dapps,
   };
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  return <HomePage initialDApps={loaderData.dapps ?? []} />;
+  return <HomePage initialDApps={loaderData.initialDApps} />;
 }

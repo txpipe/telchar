@@ -3,13 +3,26 @@ import { gql } from 'graphql-request';
 export const DAPPS_QUERY = gql`
   query dapps {
     dapps {
-      id
-      name
-      team {
+      nodes {
         id
         name
+        scope {
+          id
+          name
+        }
+        description
+        publishedDate
       }
-      description
+      pageInfo {
+        hasPreviousPage
+        hasNextPage
+        startCursor
+        endCursor
+      }
+      metadata {
+        totalNodes
+        pageSize
+      }
     }
   }
 `;

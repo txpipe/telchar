@@ -6,7 +6,7 @@ import { ChevronRightIcon } from '~/components/icons/chevron-right';
 
 interface CatalogueProps {
   className?: string;
-  initialDApps: Dapp[];
+  initialDApps: DappConnection;
 }
 
 function PackageCard({ dapp }: { dapp: Dapp; }) {
@@ -14,7 +14,7 @@ function PackageCard({ dapp }: { dapp: Dapp; }) {
     <Card>
       <h3 className="text-lg font-semibold">{dapp.name}</h3>
       <div>
-        <span className="text-primary-400">@{dapp.team?.name ?? ''}</span>
+        <span className="text-primary-400">@{dapp.scope?.name ?? ''}</span>
         <span> • </span>
         <span>1 year ago</span>
       </div>
@@ -23,6 +23,9 @@ function PackageCard({ dapp }: { dapp: Dapp; }) {
 }
 
 export function Catalogue({ className, initialDApps }: CatalogueProps) {
+  const startCursor = +(initialDApps.pageInfo.startCursor ?? 0) + 1;
+  const endCursor = +(initialDApps.pageInfo.endCursor ?? 0) + 1;
+  const totalNodes = initialDApps.metadata?.totalNodes ?? 0;
   return (
     <section className={className}>
       <div className="flex justify-between items-center">
@@ -32,17 +35,19 @@ export function Catalogue({ className, initialDApps }: CatalogueProps) {
         </div>
       </div>
       <div className="grid grid-cols-3 gap-6 mt-8">
-        {initialDApps.map(dapp => (
+        {initialDApps.nodes.map(dapp => (
           <PackageCard key={`dapp-${dapp.id}`} dapp={dapp} />
         ))}
       </div>
       <div className="mt-8 flex items-center justify-center gap-6">
-        <span className="text-white/50">Displaying 1-{initialDApps.length} of {initialDApps.length}</span>
+        <span className="text-white/50">
+          Displaying {startCursor}-{endCursor} of {totalNodes}
+        </span>
         <div className="flex gap-3">
-          <Button color="primary" spacing="icon" disabled>
+          <Button color="primary" spacing="icon" disabled={!initialDApps.pageInfo.hasPreviousPage}>
             <ChevronLeftIcon />
           </Button>
-          <Button color="primary" spacing="icon" disabled>
+          <Button color="primary" spacing="icon" disabled={!initialDApps.pageInfo.hasNextPage}>
             <ChevronRightIcon />
           </Button>
         </div>
