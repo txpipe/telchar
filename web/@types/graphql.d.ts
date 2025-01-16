@@ -67,7 +67,8 @@ interface Query {
 }
 
 interface QueryDappArgs {
-  id: Scalars['ID']['input'];
+  id: InputMaybe<Scalars['ID']['input']>;
+  input: InputMaybe<SearchDAppByScope>;
 }
 
 interface QueryDappsArgs {
@@ -111,4 +112,9 @@ interface ScopeEdge {
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge */
   node: Scope;
+}
+
+interface SearchDAppByScope {
+  name: Scalars['String']['input'];
+  scopeName: Scalars['String']['input'];
 }

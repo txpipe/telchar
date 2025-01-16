@@ -2,14 +2,14 @@ use async_graphql::{ComplexObject, SimpleObject, ID};
 
 mod query;
 
-pub use query::{ScopeQuery, get_scope};
+pub use query::{ScopeQuery, get_scope, get_scope_by_name};
 
 use super::dapp::{DApp, get_dapps_for_scope};
 
 #[derive(SimpleObject, Clone)]
 #[graphql(complex)]
 pub struct Scope {
-    id: ID,
+    pub id: ID,
     name: String,
     repository: String,
 }

@@ -1,14 +1,22 @@
 use async_graphql::{connection::Edge, types::connection::{query, Connection}, Error, Object, ID};
 
-use crate::schema::pagination::AdditionalInfo;
+use crate::schema::{pagination::AdditionalInfo, scope::get_scope_by_name};
 
-use super::DApp;
+use super::{inputs::SearchDAppByScope, DApp};
 
 #[derive(Default)]
 pub struct DAppQuery;
 
 fn get_dapps() -> Vec<DApp> {
     vec![
+        DApp {
+            id: ID::from("25632e51-bb09-4a43-809d-9861a203facb".to_string()),
+            name: "asteria".to_string(),
+            description: "Asteria description".to_string(),
+            repository: "https://github.com/txpipe/asteria".to_string(),
+            published_date: 1727787600,
+            scope_id: "7f4ba203-b04c-4cbd-b714-2d5995b02484".to_string(),
+        },
         DApp {
             id: ID::from("94b4b6a5-284d-4fd5-b966-b37fec21d4ba".to_string()),
             name: "CardanoScan".to_string(),
@@ -114,7 +122,23 @@ impl DAppQuery {
         .await
     }
 
-    async fn dapp(&self, id: async_graphql::ID) -> Option<DApp> {
-        get_dapps().into_iter().find(|dapp| dapp.id == id)
+    async fn dapp(&self, id: Option<async_graphql::ID>, input: Option<SearchDAppByScope>) -> Result<Option<DApp>, Error> {
+        if let Some(id) = id {
+            return Ok(get_dapps().into_iter().find(|dapp| dapp.id == id));
+        }
+    
+        if let Some(input) = input {
+            let scope_obj = get_scope_by_name(&input.scope_name.to_lowercase());
+            if scope_obj.is_none() {
+                // Or should be return error of Scope not found?
+                return Ok(None);
+            }
+            let scope_id = scope_obj.unwrap().id.to_string();
+            return Ok(get_dapps().into_iter().find(
+                |dapp| dapp.scope_id == scope_id && dapp.name.to_lowercase() == input.name.to_lowercase()
+            ));
+        }
+
+        return Ok(None);
     }
 }

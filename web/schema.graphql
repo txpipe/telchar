@@ -71,7 +71,7 @@ type PaginationInfo {
 
 type Query {
 	dapps(after: String, before: String, first: Int, last: Int): DappConnection!
-	dapp(id: ID!): Dapp
+	dapp(id: ID, input: SearchDAppByScope): Dapp
 	scopes(after: String, before: String, first: Int, last: Int): ScopeConnection!
 	scope(id: ID!): Scope
 }
@@ -111,6 +111,11 @@ type ScopeEdge {
 	A cursor for use in pagination
 	"""
 	cursor: String!
+}
+
+input SearchDAppByScope {
+	name: String!
+	scopeName: String!
 }
 
 

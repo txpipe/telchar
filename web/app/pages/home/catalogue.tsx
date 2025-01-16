@@ -1,3 +1,6 @@
+import { Link } from 'react-router';
+import dayjs from 'dayjs';
+
 // Components
 import { Card } from '~/components/ui/Card';
 import { Button } from '~/components/ui/Button';
@@ -11,14 +14,16 @@ interface CatalogueProps {
 
 function PackageCard({ dapp }: { dapp: Dapp; }) {
   return (
-    <Card>
-      <h3 className="text-lg font-semibold">{dapp.name}</h3>
-      <div>
-        <span className="text-primary-400">@{dapp.scope?.name ?? ''}</span>
-        <span> • </span>
-        <span>1 year ago</span>
-      </div>
-    </Card>
+    <Link to={`/dapp/${dapp.scope?.name}/${dapp.name}`}>
+      <Card>
+        <h3 className="text-lg font-semibold">{dapp.name}</h3>
+        <div>
+          <span className="text-primary-400">@{dapp.scope?.name ?? ''}</span>
+          <span> • </span>
+          <span>{dapp.publishedDate ? dayjs(new Date(dapp.publishedDate * 1000)).fromNow() : ''}</span>
+        </div>
+      </Card>
+    </Link>
   );
 }
 

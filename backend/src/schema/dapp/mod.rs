@@ -1,6 +1,7 @@
 use async_graphql::{ComplexObject, SimpleObject, ID};
 
 mod query;
+mod inputs;
 
 pub use query::{DAppQuery, get_dapps_for_scope};
 

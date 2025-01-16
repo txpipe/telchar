@@ -26,3 +26,21 @@ export const DAPPS_QUERY = gql`
     }
   }
 `;
+
+export const DAPP_QUERY = gql`
+  query dapp($id: ID, $input: SearchDAppByScope) {
+    dapp(id: $id, input: $input) {
+      id
+      name
+      description
+      repository
+      publishedDate
+      scopeId
+      scope {
+        id
+        name
+        repository
+      }
+    }
+  }
+`;

@@ -18,3 +18,17 @@ body {
   mask-composite: exclude;
 }
 
+.markdown p {
+  @apply mb-4;
+}
+
+.markdown h2 {
+  @apply text-2xl font-semibold;
+  @apply mb-4;
+}
+
+.markdown h3 {
+  @apply font-semibold;
+  @apply border-b border-b-white/20;
+  @apply mb-4;
+}

@@ -7,8 +7,14 @@ import {
   ScrollRestoration,
 } from 'react-router';
 
+import relativeTime from 'dayjs/plugin/relativeTime';
+import dayjs from 'dayjs';
+
 import type { Route } from './+types/root';
 import stylesheet from './app.css?url';
+
+// Setup relativeTime as active plugin
+dayjs.extend(relativeTime);
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },

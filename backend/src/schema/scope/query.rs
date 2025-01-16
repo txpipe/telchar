@@ -1,6 +1,4 @@
-use std::ptr::null;
-
-use async_graphql::{connection::{Edge, EmptyFields}, types::connection::{query, Connection}, Error, Object, ID};
+use async_graphql::{connection::Edge, types::connection::{query, Connection}, Error, Object, ID};
 
 use crate::schema::pagination::AdditionalInfo;
 
@@ -11,6 +9,11 @@ pub struct ScopeQuery;
 
 fn get_scopes() -> Vec<Scope> {
     vec![
+        Scope::new(
+            Some("7f4ba203-b04c-4cbd-b714-2d5995b02484".to_string()),
+            "txpipe",
+            "https://github.com/txpipe",
+        ),
         Scope::new(
             Some("e9e1585b-1e1d-470f-9335-0dcfa7652e30".to_string()),
             "Cardano",
@@ -31,6 +34,10 @@ fn get_scopes() -> Vec<Scope> {
 
 pub fn get_scope(id: ID) -> Option<Scope> {
     get_scopes().into_iter().find(|scope| scope.id == id)
+}
+
+pub fn get_scope_by_name(name: &str) -> Option<Scope> {
+    get_scopes().into_iter().find(|scope| scope.name.to_lowercase() == name)
 }
 
 #[Object]
@@ -105,7 +112,7 @@ impl ScopeQuery {
     }
 
 
-    async fn scope(&self, id: ID) -> Option<Scope> {
-        get_scope(id)
+    async fn scope(&self, id: ID) -> Result<Option<Scope>, Error> {
+        Ok(get_scope(id))
     }
 }
