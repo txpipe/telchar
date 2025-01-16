@@ -63,7 +63,7 @@ export function DAppDetails({ dapp, readme }: { dapp: Dapp; readme: string | nul
         </div>
 
         <div className="flex gap-14 mt-14 items-start">
-          <div className="w-full markdown">
+          <div className="w-full">
             {activeTab === 'readme' && <TabReadme readme={readme} />}
             {activeTab === 'blueprint' && <TabBlueprint />}
             {activeTab === 'deployment' && <TabDeployment />}
