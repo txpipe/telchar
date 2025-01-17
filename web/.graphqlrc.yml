@@ -1,0 +1,3 @@
+# .graphqlrc.yml or graphql.config.yml
+schema: 'schema.graphql'
+documents: 'app/gql/**/*.{query,mutation,fragments}.ts'
