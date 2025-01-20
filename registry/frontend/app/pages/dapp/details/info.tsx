@@ -10,6 +10,15 @@ interface Props {
   dapp: DappDetail;
 }
 
+function CommonDetails({ label, value }: { label: string; value: string; }) {
+  return (
+    <div>
+      <span className="text-white/30">{label}</span>
+      <span className="text-white/50 ml-4">{value}</span>
+    </div>
+  );
+}
+
 export function Info({ dapp, className }: Props) {
   return (
     <div className={clsx('grid grid-cols-1 gap-8 w-full', className)}>
@@ -24,7 +33,7 @@ export function Info({ dapp, className }: Props) {
         <p className="text-white/50">Repository</p>
         <a href={dapp.repository} className="w-fit mt-4 text-white flex items-center gap-2.5">
           <GitIcon width="15" height="15" />
-          {dapp.repository}
+          <span className="underline">{dapp.repository.replace(/http(s)?:\/\//i, '')}</span>
         </a>
       </div>
 
@@ -37,22 +46,22 @@ export function Info({ dapp, className }: Props) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <div>
-          <span className="text-white/30">Plutus version</span>
-          <span className="text-white/50 ml-4">{dapp.plutusVersion}</span>
-        </div>
-        <div>
-          <span className="text-white/30">Compiler</span>
-          <span className="text-white/50 ml-4">{dapp.compilerName} {dapp.compilerVersion}</span>
-        </div>
-        <div>
-          <span className="text-white/30">License</span>
-          <span className="text-white/50 ml-4">{dapp.license}</span>
-        </div>
-        <div>
-          <span className="text-white/30">Publication date</span>
-          <span className="text-white/50 ml-4">Published {dapp.publishedDate ? dayjs(new Date(dapp.publishedDate * 1000)).fromNow() : ''}</span>
-        </div>
+        <CommonDetails
+          label="Plutus version"
+          value={dapp.plutusVersion}
+        />
+        <CommonDetails
+          label="Compiler"
+          value={dapp.compilerName + ' ' + dapp.compilerVersion}
+        />
+        <CommonDetails
+          label="License"
+          value={dapp.license}
+        />
+        <CommonDetails
+          label="Publication date"
+          value={`Published ${dapp.publishedDate ? dayjs(new Date(dapp.publishedDate * 1000)).fromNow() : ''}`}
+        />
       </div>
 
     </div>
