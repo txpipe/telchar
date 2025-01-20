@@ -3,12 +3,11 @@ use std::{fs::File, io::Write};
 use async_graphql::{EmptyMutation, EmptySubscription, MergedObject, Schema};
 
 mod dapp;
-mod scope;
 mod pagination;
 
 // MARK: Query Struct
 #[derive(MergedObject, Default)]
-pub struct Query(dapp::DAppQuery, scope::ScopeQuery);
+pub struct Query(dapp::DAppQuery);
 
 // MARK: End Query Struct
 pub type TelcharSchema = Schema<Query, EmptyMutation, EmptySubscription>;

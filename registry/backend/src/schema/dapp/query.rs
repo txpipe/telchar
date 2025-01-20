@@ -1,54 +1,62 @@
+use std::fs;
+use serde_json;
+use telchar_codegen::blueprint::Blueprint;
+use telchar_codegen::{get_blueprint_from_path};
 use async_graphql::{connection::Edge, types::connection::{query, Connection}, Error, Object, ID};
 
-use crate::schema::{pagination::AdditionalInfo, scope::get_scope_by_name};
-
-use super::{inputs::SearchDAppByScope, DApp};
+use crate::schema::{pagination::AdditionalInfo};
+use super::{json::DataJson, json::DAppJson, DApp, DAppDetail};
 
 #[derive(Default)]
 pub struct DAppQuery;
 
-fn get_dapps() -> Vec<DApp> {
-    vec![
-        DApp {
-            id: ID::from("25632e51-bb09-4a43-809d-9861a203facb".to_string()),
-            name: "asteria".to_string(),
-            description: "Asteria description".to_string(),
-            repository: "https://github.com/txpipe/asteria".to_string(),
-            published_date: 1727787600,
-            scope_id: "7f4ba203-b04c-4cbd-b714-2d5995b02484".to_string(),
-        },
-        DApp {
-            id: ID::from("94b4b6a5-284d-4fd5-b966-b37fec21d4ba".to_string()),
-            name: "CardanoScan".to_string(),
-            description: "Cardano blockchain explorer".to_string(),
-            repository: "https://github.com/cardanoscan/explorer".to_string(),
-            published_date: 1672531200,
-            scope_id: "e9e1585b-1e1d-470f-9335-0dcfa7652e30".to_string(),
-        },
-        DApp {
-            id: ID::from("94bdf5aa-46d7-44ef-8cda-d165b6868631".to_string()),
-            name: "Minswap".to_string(),
-            description: "Decentralized exchange on Cardano".to_string(),
-            repository: "https://github.com/minswap/dex".to_string(),
-            published_date: 1677628800,
-            scope_id: "c0778651-1b16-479a-878a-365193e8f89d".to_string(),
-        },
-        DApp {
-            id: ID::from("987f92f4-08b2-4f3d-b4e8-d0c0eef4c743".to_string()),
-            name: "NuFi Wallet".to_string(),
-            description: "Secure Cardano wallet".to_string(),
-            repository: "https://github.com/nufi/wallet".to_string(),
-            published_date: 1683072000,
-            scope_id: "94b91e56-1833-4f19-b296-5117d8eee5b0".to_string(),
-        },
-    ]
+fn get_data() -> Vec<DAppJson> {
+    let json = fs::read_to_string("../data/data.json").expect("Unable to read file");
+    let data: DataJson = serde_json::from_str(&json).expect("Unable to parse");
+    data.dapps
 }
 
-pub fn get_dapps_for_scope(scope_id: &str) -> Vec<DApp> {
-    get_dapps()
-        .into_iter()
-        .filter(|dapp| dapp.scope_id == scope_id)
-        .collect()
+fn get_dapps() -> Vec<DApp> {
+    let mut dapps: Vec<DApp> = vec![];
+    for dapp in get_data().iter() {
+        dapps.push(DApp {
+            id: ID::from(dapp.id.clone()),
+            name: dapp.name.clone(),
+            scope: dapp.scope.clone(),
+            repository: dapp.repository.clone(),
+            published_date: dapp.published_date.as_i64().unwrap(),
+        })
+    }
+    dapps
+}
+
+fn get_dapp(id: async_graphql::ID) -> Option<DAppDetail> {
+    let dapp: Option<DAppJson> = get_data().into_iter().find(|dapp| dapp.id == *id);
+    if let Some(dapp) = dapp {
+        let blueprint: Blueprint = get_blueprint_from_path("../data/".to_owned() + &dapp.blueprint);
+
+        let mut compiler_name = "".to_string();
+        let mut compiler_version = "".to_string();
+        if let Some(compiler) = blueprint.preamble.compiler {
+            compiler_name = compiler.name;
+            compiler_version = compiler.version.unwrap_or("".to_string());
+        }
+
+        return Some(DAppDetail {
+            id: ID::from(dapp.id.clone()),
+            name: dapp.name.clone(),
+            scope: dapp.scope.clone(),
+            repository: dapp.repository.clone(),
+            published_date: dapp.published_date.as_i64().unwrap(),
+            description: blueprint.preamble.description.unwrap_or("".to_string()),
+            version: blueprint.preamble.version,
+            license: blueprint.preamble.license.unwrap_or("".to_string()),
+            compiler_name: compiler_name,
+            compiler_version: compiler_version,
+            plutus_version: blueprint.preamble.plutus_version.to_string(),
+        });
+    }
+    return None;
 }
 
 #[Object]
@@ -122,23 +130,7 @@ impl DAppQuery {
         .await
     }
 
-    async fn dapp(&self, id: Option<async_graphql::ID>, input: Option<SearchDAppByScope>) -> Result<Option<DApp>, Error> {
-        if let Some(id) = id {
-            return Ok(get_dapps().into_iter().find(|dapp| dapp.id == id));
-        }
-    
-        if let Some(input) = input {
-            let scope_obj = get_scope_by_name(&input.scope_name.to_lowercase());
-            if scope_obj.is_none() {
-                // Or should be return error of Scope not found?
-                return Ok(None);
-            }
-            let scope_id = scope_obj.unwrap().id.to_string();
-            return Ok(get_dapps().into_iter().find(
-                |dapp| dapp.scope_id == scope_id && dapp.name.to_lowercase() == input.name.to_lowercase()
-            ));
-        }
-
-        return Ok(None);
+    async fn dapp(&self, id: async_graphql::ID) -> Result<Option<DAppDetail>, Error> {
+        return Ok(get_dapp(id));
     }
 }

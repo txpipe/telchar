@@ -1,0 +1,64 @@
+{
+  "preamble": {
+    "title": "ctf/hello_world",
+    "description": "Aiken contracts for project 'ctf/hello_world'",
+    "version": "0.0.0",
+    "plutusVersion": "v2",
+    "compiler": {
+      "name": "Aiken",
+      "version": "v1.0.28-alpha+c9a1519"
+    },
+    "license": "GPL-3.0"
+  },
+  "validators": [
+    {
+      "title": "hello_world.hello_world",
+      "datum": {
+        "title": "_datum",
+        "schema": {
+          "$ref": "#/definitions/Void"
+        }
+      },
+      "redeemer": {
+        "title": "redeemer",
+        "schema": {
+          "$ref": "#/definitions/hello_world~1Redeemer"
+        }
+      },
+      "compiledCode": "587b010000323232323232232232253330063371e6eb8c028c020dd5001a450a48656c6c6f20435446210014984d9594ccc010cdc3a4000600a6ea80044c8c94ccc024c02c00852616375c6012002600c6ea800458c94ccc00ccdc3a400060080022a66600c600a0022930b0b1baa0015734aae7555cf2ab9f5742ae89",
+      "hash": "2d0de24e25bc52191772dc70a30a35b6757976c2dd644e927533b1c2"
+    }
+  ],
+  "definitions": {
+    "ByteArray": {
+      "dataType": "bytes"
+    },
+    "Void": {
+      "title": "Unit",
+      "description": "The nullary constructor.",
+      "anyOf": [
+        {
+          "dataType": "constructor",
+          "index": 0,
+          "fields": []
+        }
+      ]
+    },
+    "hello_world/Redeemer": {
+      "title": "Redeemer",
+      "anyOf": [
+        {
+          "title": "Redeemer",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "msg",
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
