@@ -15,13 +15,11 @@ interface Scalars {
 }
 
 interface Dapp {
-  description: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   publishedDate: Scalars['Int']['output'];
   repository: Scalars['String']['output'];
-  scope: Maybe<Scope>;
-  scopeId: Scalars['String']['output'];
+  scope: Scalars['String']['output'];
 }
 
 interface DappConnection {
@@ -32,6 +30,20 @@ interface DappConnection {
   nodes: Array<Dapp>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
+}
+
+interface DappDetail {
+  compilerName: Scalars['String']['output'];
+  compilerVersion: Scalars['String']['output'];
+  description: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  license: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  plutusVersion: Scalars['String']['output'];
+  publishedDate: Scalars['Int']['output'];
+  repository: Scalars['String']['output'];
+  scope: Scalars['String']['output'];
+  version: Scalars['String']['output'];
 }
 
 /** An edge in a connection. */
@@ -60,15 +72,12 @@ interface PaginationInfo {
 }
 
 interface Query {
-  dapp: Maybe<Dapp>;
+  dapp: Maybe<DappDetail>;
   dapps: DappConnection;
-  scope: Maybe<Scope>;
-  scopes: ScopeConnection;
 }
 
 interface QueryDappArgs {
-  id: InputMaybe<Scalars['ID']['input']>;
-  input: InputMaybe<SearchDAppByScope>;
+  id: Scalars['ID']['input'];
 }
 
 interface QueryDappsArgs {
@@ -76,45 +85,4 @@ interface QueryDappsArgs {
   before: InputMaybe<Scalars['String']['input']>;
   first: InputMaybe<Scalars['Int']['input']>;
   last: InputMaybe<Scalars['Int']['input']>;
-}
-
-interface QueryScopeArgs {
-  id: Scalars['ID']['input'];
-}
-
-interface QueryScopesArgs {
-  after: InputMaybe<Scalars['String']['input']>;
-  before: InputMaybe<Scalars['String']['input']>;
-  first: InputMaybe<Scalars['Int']['input']>;
-  last: InputMaybe<Scalars['Int']['input']>;
-}
-
-interface Scope {
-  dapps: Array<Dapp>;
-  id: Scalars['ID']['output'];
-  name: Scalars['String']['output'];
-  repository: Scalars['String']['output'];
-}
-
-interface ScopeConnection {
-  /** A list of edges. */
-  edges: Array<ScopeEdge>;
-  metadata: Maybe<PaginationInfo>;
-  /** A list of nodes. */
-  nodes: Array<Scope>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-}
-
-/** An edge in a connection. */
-interface ScopeEdge {
-  /** A cursor for use in pagination */
-  cursor: Scalars['String']['output'];
-  /** The item at the end of the edge */
-  node: Scope;
-}
-
-interface SearchDAppByScope {
-  name: Scalars['String']['input'];
-  scopeName: Scalars['String']['input'];
 }

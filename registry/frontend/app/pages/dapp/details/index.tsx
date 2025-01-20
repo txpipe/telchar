@@ -27,7 +27,7 @@ function getValidTab(tab?: string): Tab {
   return 'readme';
 }
 
-export function DAppDetails({ dapp, readme }: { dapp: Dapp; readme: string | null; }) {
+export function DAppDetails({ dapp, readme }: { dapp: DappDetail; readme: string | null; }) {
   const [searchParams, setSearchParams] = useSearchParams({ activeTab: 'readme' });
   const activeTab: Tab = getValidTab(searchParams.get('activeTab')?.toLowerCase());
   return (
@@ -36,7 +36,7 @@ export function DAppDetails({ dapp, readme }: { dapp: Dapp; readme: string | nul
       <main className="mt-20">
         <h1 className="text-2xl font-semibold">{dapp.name}</h1>
         <div className="mt-3 opacity-60">
-          <h2 className="inline text-primary-400">@{dapp.scope?.name ?? ''}</h2>
+          <h2 className="inline text-primary-400">@{dapp.scope}</h2>
           <span> • </span>
           <span>Published {dapp.publishedDate ? dayjs(new Date(dapp.publishedDate * 1000)).fromNow() : ''}</span>
         </div>
