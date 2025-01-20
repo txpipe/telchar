@@ -23,14 +23,12 @@ export function meta({ data }: Route.MetaArgs) {
 }
 
 export async function loader({ context, params }: Route.LoaderArgs) {
+  const id = `${params.dapp}/${params.scope}`;
   const result = await context.queryClient.fetchQuery({
-    queryKey: ['dapp', params.scope, params.dapp],
+    queryKey: ['dapp', id],
     queryFn: requestGraphQL<{ dapp: Query['dapp']; }, QueryDappArgs>(
       DAPP_QUERY,
-      {
-        id: null,
-        input: { name: params.dapp, scopeName: params.scope },
-      },
+      { id },
     ),
   });
 
