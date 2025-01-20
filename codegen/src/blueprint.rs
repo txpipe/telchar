@@ -2,15 +2,6 @@ use serde::{Deserialize, Serialize};
 use serde_json::Number;
 use std::collections::BTreeMap;
 
-#[derive(Debug, Default, Deserialize, Serialize, Clone, Copy, PartialEq)]
-#[serde(rename_all = "camelCase")]
-pub enum PlutusVersion {
-    V1,
-    #[default]
-    V2,
-    V3,
-}
-
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Blueprint {
     pub preamble: Preamble,
@@ -24,7 +15,7 @@ pub struct Preamble {
     pub title: String,
     pub description: Option<String>,
     pub version: String,
-    pub plutus_version: PlutusVersion,
+    pub plutus_version: String,
     pub compiler: Option<Compiler>,
     pub license: Option<String>,
 }
@@ -43,7 +34,7 @@ pub struct Validator {
     pub compiled_code: Option<String>,
     pub hash: Option<String>,
     pub datum: Option<Argument>,
-    pub redeemer: Argument,
+    pub redeemer: Option<Argument>,
     pub parameters: Option<Vec<Parameter>>,
 }
 

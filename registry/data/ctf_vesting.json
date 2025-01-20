@@ -1,0 +1,71 @@
+{
+  "preamble": {
+    "title": "ctf/vesting",
+    "description": "Aiken contracts for project 'ctf/vesting'",
+    "version": "0.0.0",
+    "plutusVersion": "v2",
+    "compiler": {
+      "name": "Aiken",
+      "version": "v1.0.28-alpha+c9a1519"
+    },
+    "license": "GPL-3.0"
+  },
+  "validators": [
+    {
+      "title": "vesting.vesting",
+      "datum": {
+        "title": "datum",
+        "schema": {
+          "$ref": "#/definitions/vesting~1Datum"
+        }
+      },
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/Void"
+        }
+      },
+      "compiledCode": "5901240100003232323232322322322533300632323232533300a3370e900118059baa300e300f004132533300b32323300100100422533301100114a0264a66601e66e3cdd718098010020a511330030030013013001375c6002601a6ea80284c8c8c94ccc038cdc3a4004601e6ea80044cdc48011bad3012301037540022940c008c03cdd5180198079baa005375a6002601c6ea802c8c0400045281180798080008a503758601a601c0046018002601860186018601860186018601860126ea8c02c004c020dd50008a4c26cac64a66600a66e1d2000300600115333008300700114985858dd5000a99980119b8748000c00cdd5000899191919299980498058010a4c2c6eb8c024004c024008dd6980380098021baa001165734aae7555cf2ab9f5742ae89",
+      "hash": "e56c1d46672868897eb8c9abe18dccf1a1aa1b495aeedcc77a11d7e8"
+    }
+  ],
+  "definitions": {
+    "ByteArray": {
+      "dataType": "bytes"
+    },
+    "Int": {
+      "dataType": "integer"
+    },
+    "Void": {
+      "title": "Unit",
+      "description": "The nullary constructor.",
+      "anyOf": [
+        {
+          "dataType": "constructor",
+          "index": 0,
+          "fields": []
+        }
+      ]
+    },
+    "vesting/Datum": {
+      "title": "Datum",
+      "anyOf": [
+        {
+          "title": "Datum",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "lock_until",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "beneficiary",
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

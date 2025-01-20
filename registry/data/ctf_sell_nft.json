@@ -1,0 +1,256 @@
+{
+  "preamble": {
+    "title": "ctf/sell_nft",
+    "description": "Aiken contracts for project 'ctf/sell_nft'",
+    "version": "0.0.0",
+    "plutusVersion": "v2",
+    "compiler": {
+      "name": "Aiken",
+      "version": "v1.0.28-alpha+c9a1519"
+    },
+    "license": "GPL-3.0"
+  },
+  "validators": [
+    {
+      "title": "locked.always_fails",
+      "datum": {
+        "title": "_datum",
+        "schema": {
+          "$ref": "#/definitions/Void"
+        }
+      },
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/Void"
+        }
+      },
+      "compiledCode": "585401000032323232232232253330064a029309b2b19299980299b8748000c01800454ccc020c01c0045261616375400264a66600666e1d2000300400115333006300500114985858dd5000ab9a5573aaae7955cf81",
+      "hash": "c7536cba712dac34a4e450960f1b5ca0a16772b119554c058dd96e40"
+    },
+    {
+      "title": "nft.unique_nft",
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/Void"
+        }
+      },
+      "parameters": [
+        {
+          "title": "token_name",
+          "schema": {
+            "$ref": "#/definitions/ByteArray"
+          }
+        },
+        {
+          "title": "utxo_ref",
+          "schema": {
+            "$ref": "#/definitions/aiken~1transaction~1OutputReference"
+          }
+        }
+      ],
+      "compiledCode": "59019b01000032323232323232232223225333007323232533300a3370e900018059baa00113232323253330113014002132325333010323300100100622533301500114a0264a66602666ebcc060c054dd5180c0010080a511330030030013018001153330103370e0029001099b8f00200e14a02c6eb4c050c054008dd718098008b1bac3012001332232533300f3370e900118081baa00114bd7009bac301430113754002646600200200644a6660260022980103d87a8000132323253330133371e00c6eb8c06000c4cdd2a40006602e6e9c0052f5c026600a00a0046eb0c05cc060008c05c008dd6180a80099198008009bac3012301330133013301300322533301100114bd70099191919299980919b8f4881000021003133016374e6602c6ea4008cc058dd3800a5eb80cc01801800cdd6180b180b8019bae30150023015002375860260026eb8c044c038dd50019bac3010001300c37540042c601c601e004601a00260126ea8004526136563253330063370e900018038008a99980498040008a4c2c2c6ea8004dd7000ab9a5573aaae7955cfaba05742ae89",
+      "hash": "294c0d05ac550d456985b43dce34e3277ddaca89b86eca62f9acc51b"
+    },
+    {
+      "title": "nft_sell.buy",
+      "datum": {
+        "title": "datum",
+        "schema": {
+          "$ref": "#/definitions/nft_sell~1Datum"
+        }
+      },
+      "redeemer": {
+        "title": "_redeemer",
+        "schema": {
+          "$ref": "#/definitions/Void"
+        }
+      },
+      "compiledCode": "5902d9010000323232323232322323232232253330083253330093006300a3754600260166ea800854ccc024c01cc028dd51919198008009bac301030113011300d37546004601a6ea8010894ccc03c004530103d87a80001323253323300f533300f3375e600c60226ea800cc018c044dd5007099b89375a600e60226ea8038c94ccc040c034c044dd50008a400026eb4c054c048dd5000992999808180698089baa00114c103d87a8000132330010013758602c60266ea8008894ccc054004530103d87a8000132323253330153371e91100375c60340062600e660326ea00052f5c026600a00a0046eb4c064c068008c064008dd6180b80099198008009bac30083012375400844a666028002298103d87a8000132323253330143371e91100375c60320062600c660306e9c0052f5c026600a00a0046eb0c060c064008c060008dd6180b0008a5013001330130034bd701ba5480004cc010010004c04c008c0440048c03c0045288b0b1180718078008a4c26cac64a66600e600a60100022a66601460120022930b0b1baa001325333005300330063754008264646464a666018601e004264932999804980398051baa0031323232325333010301300213232498c94ccc03cc0340044c8c94ccc050c05c0084c9263253330123010001132325333017301a002132498c04000458c060004c050dd50010a99980918078008991919191919299980d980f0010a4c2c6eb4c070004c070008dd6980d000980d0011bad3018001301437540042c60246ea800458c054004c044dd50018a99980798060008a99980918089baa00314985858c03cdd500118048018b18088009808801180780098059baa0031616375a601a002601a0046016002600e6ea8010588c94ccc018c0100044c8c94ccc02cc03800852616375c601800260106ea800854ccc018c00c0044c8c94ccc02cc03800852616375c601800260106ea800858c018dd50009b8748008dc3a4000ae6955ceaab9e5573eae815d0aba21",
+      "hash": "846efad22808c9a76e3c117fb7428f65810a4957fc97b805b64734c3"
+    }
+  ],
+  "definitions": {
+    "ByteArray": {
+      "dataType": "bytes"
+    },
+    "Int": {
+      "dataType": "integer"
+    },
+    "Option$aiken/transaction/credential/Referenced$aiken/transaction/credential/Credential": {
+      "title": "Optional",
+      "anyOf": [
+        {
+          "title": "Some",
+          "description": "An optional value.",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "$ref": "#/definitions/aiken~1transaction~1credential~1Referenced$aiken~1transaction~1credential~1Credential"
+            }
+          ]
+        },
+        {
+          "title": "None",
+          "description": "Nothing.",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": []
+        }
+      ]
+    },
+    "Void": {
+      "title": "Unit",
+      "description": "The nullary constructor.",
+      "anyOf": [
+        {
+          "dataType": "constructor",
+          "index": 0,
+          "fields": []
+        }
+      ]
+    },
+    "aiken/transaction/OutputReference": {
+      "title": "OutputReference",
+      "description": "An `OutputReference` is a unique reference to an output on-chain. The `output_index`\n corresponds to the position in the output list of the transaction (identified by its id)\n that produced that output",
+      "anyOf": [
+        {
+          "title": "OutputReference",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "transaction_id",
+              "$ref": "#/definitions/aiken~1transaction~1TransactionId"
+            },
+            {
+              "title": "output_index",
+              "$ref": "#/definitions/Int"
+            }
+          ]
+        }
+      ]
+    },
+    "aiken/transaction/TransactionId": {
+      "title": "TransactionId",
+      "description": "A unique transaction identifier, as the hash of a transaction body. Note that the transaction id\n isn't a direct hash of the `Transaction` as visible on-chain. Rather, they correspond to hash\n digests of transaction body as they are serialized on the network.",
+      "anyOf": [
+        {
+          "title": "TransactionId",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "hash",
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        }
+      ]
+    },
+    "aiken/transaction/credential/Address": {
+      "title": "Address",
+      "description": "A Cardano `Address` typically holding one or two credential references.\n\n Note that legacy bootstrap addresses (a.k.a. 'Byron addresses') are\n completely excluded from Plutus contexts. Thus, from an on-chain\n perspective only exists addresses of type 00, 01, ..., 07 as detailed\n in [CIP-0019 :: Shelley Addresses](https://github.com/cardano-foundation/CIPs/tree/master/CIP-0019/#shelley-addresses).",
+      "anyOf": [
+        {
+          "title": "Address",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "payment_credential",
+              "$ref": "#/definitions/aiken~1transaction~1credential~1Credential"
+            },
+            {
+              "title": "stake_credential",
+              "$ref": "#/definitions/Option$aiken~1transaction~1credential~1Referenced$aiken~1transaction~1credential~1Credential"
+            }
+          ]
+        }
+      ]
+    },
+    "aiken/transaction/credential/Credential": {
+      "title": "Credential",
+      "description": "A general structure for representing an on-chain `Credential`.\n\n Credentials are always one of two kinds: a direct public/private key\n pair, or a script (native or Plutus).",
+      "anyOf": [
+        {
+          "title": "VerificationKeyCredential",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        },
+        {
+          "title": "ScriptCredential",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": [
+            {
+              "$ref": "#/definitions/ByteArray"
+            }
+          ]
+        }
+      ]
+    },
+    "aiken/transaction/credential/Referenced$aiken/transaction/credential/Credential": {
+      "title": "Referenced",
+      "description": "Represent a type of object that can be represented either inline (by hash)\n or via a reference (i.e. a pointer to an on-chain location).\n\n This is mainly use for capturing pointers to a stake credential\n registration certificate in the case of so-called pointer addresses.",
+      "anyOf": [
+        {
+          "title": "Inline",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "$ref": "#/definitions/aiken~1transaction~1credential~1Credential"
+            }
+          ]
+        },
+        {
+          "title": "Pointer",
+          "dataType": "constructor",
+          "index": 1,
+          "fields": [
+            {
+              "title": "slot_number",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "transaction_index",
+              "$ref": "#/definitions/Int"
+            },
+            {
+              "title": "certificate_index",
+              "$ref": "#/definitions/Int"
+            }
+          ]
+        }
+      ]
+    },
+    "nft_sell/Datum": {
+      "title": "Datum",
+      "anyOf": [
+        {
+          "title": "Datum",
+          "dataType": "constructor",
+          "index": 0,
+          "fields": [
+            {
+              "title": "seller",
+              "$ref": "#/definitions/aiken~1transaction~1credential~1Address"
+            },
+            {
+              "title": "price",
+              "$ref": "#/definitions/Int"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

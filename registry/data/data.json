@@ -1,0 +1,87 @@
+{
+  "dapps": [{
+    "id": "1",
+    "name": "asteria",
+    "scope": "txpipe",
+    "repository": "https://github.com/txpipe/asteria",
+    "published_date": 1727787600,
+    "blueprint": "txpipe_asteria.json"
+  },{
+    "id": "2",
+    "name": "hello_world",
+    "scope": "ctf",
+    "repository": "https://github.com/vacuumlabs/cardano-ctf",
+    "published_date": 1727787600,
+    "blueprint": "ctf_hello_world.json"
+  },{
+    "id": "3",
+    "name": "king_of_cardano",
+    "scope": "ctf",
+    "repository": "https://github.com/vacuumlabs/cardano-ctf",
+    "published_date": 1727787600,
+    "blueprint": "ctf_king_of_cardano.json"
+  },{
+    "id": "4",
+    "name": "lending",
+    "scope": "ctf",
+    "repository": "https://github.com/vacuumlabs/cardano-ctf",
+    "published_date": 1727787600,
+    "blueprint": "ctf_lending.json"
+  },{
+    "id": "5",
+    "name": "multisig_treasury_v2",
+    "scope": "ctf",
+    "repository": "https://github.com/vacuumlabs/cardano-ctf",
+    "published_date": 1727787600,
+    "blueprint": "ctf_multisig_treasury_v2.json"
+  },{
+    "id": "6",
+    "name": "multisig_treasury_v3",
+    "scope": "ctf",
+    "repository": "https://github.com/vacuumlabs/cardano-ctf",
+    "published_date": 1727787600,
+    "blueprint": "ctf_multisig_treasury_v3.json"
+  },{
+    "id": "7",
+    "name": "multisig_treasury",
+    "scope": "ctf",
+    "repository": "https://github.com/vacuumlabs/cardano-ctf",
+    "published_date": 1727787600,
+    "blueprint": "ctf_multisig_treasury.json"
+  },{
+    "id": "8",
+    "name": "purchase_offer",
+    "scope": "ctf",
+    "repository": "https://github.com/vacuumlabs/cardano-ctf",
+    "published_date": 1727787600,
+    "blueprint": "ctf_purchase_offer.json"
+  },{
+    "id": "9",
+    "name": "sell_nft",
+    "scope": "ctf",
+    "repository": "https://github.com/vacuumlabs/cardano-ctf",
+    "published_date": 1727787600,
+    "blueprint": "ctf_sell_nft.json"
+  },{
+    "id": "10",
+    "name": "tipjar_v2",
+    "scope": "ctf",
+    "repository": "https://github.com/vacuumlabs/cardano-ctf",
+    "published_date": 1727787600,
+    "blueprint": "ctf_tipjar_v2.json"
+  },{
+    "id": "11",
+    "name": "tipjar",
+    "scope": "ctf",
+    "repository": "https://github.com/vacuumlabs/cardano-ctf",
+    "published_date": 1727787600,
+    "blueprint": "ctf_tipjar.json"
+  },{
+    "id": "12",
+    "name": "vesting",
+    "scope": "ctf",
+    "repository": "https://github.com/vacuumlabs/cardano-ctf",
+    "published_date": 1727787600,
+    "blueprint": "ctf_vesting.json"
+  }]
+}
