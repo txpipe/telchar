@@ -1,87 +1,75 @@
 {
   "dapps": [{
-    "id": "1",
     "name": "asteria",
     "scope": "txpipe",
-    "repository": "https://github.com/txpipe/asteria",
-    "published_date": 1727787600,
-    "blueprint": "txpipe_asteria.json"
+    "repository_url": "https://github.com/txpipe/asteria",
+    "blueprint_url": "https://github.com/txpipe/asteria/blob/main/onchain/src/plutus.json",
+    "published_date": 1727787600
   },{
-    "id": "2",
     "name": "hello_world",
     "scope": "ctf",
-    "repository": "https://github.com/vacuumlabs/cardano-ctf",
-    "published_date": 1727787600,
-    "blueprint": "ctf_hello_world.json"
+    "repository_url": "https://github.com/vacuumlabs/cardano-ctf",
+    "blueprint_url": "https://github.com/vacuumlabs/cardano-ctf/blob/main/00_hello_world/plutus.json",
+    "published_date": 1727787600
   },{
-    "id": "3",
-    "name": "king_of_cardano",
-    "scope": "ctf",
-    "repository": "https://github.com/vacuumlabs/cardano-ctf",
-    "published_date": 1727787600,
-    "blueprint": "ctf_king_of_cardano.json"
-  },{
-    "id": "4",
-    "name": "lending",
-    "scope": "ctf",
-    "repository": "https://github.com/vacuumlabs/cardano-ctf",
-    "published_date": 1727787600,
-    "blueprint": "ctf_lending.json"
-  },{
-    "id": "5",
-    "name": "multisig_treasury_v2",
-    "scope": "ctf",
-    "repository": "https://github.com/vacuumlabs/cardano-ctf",
-    "published_date": 1727787600,
-    "blueprint": "ctf_multisig_treasury_v2.json"
-  },{
-    "id": "6",
-    "name": "multisig_treasury_v3",
-    "scope": "ctf",
-    "repository": "https://github.com/vacuumlabs/cardano-ctf",
-    "published_date": 1727787600,
-    "blueprint": "ctf_multisig_treasury_v3.json"
-  },{
-    "id": "7",
-    "name": "multisig_treasury",
-    "scope": "ctf",
-    "repository": "https://github.com/vacuumlabs/cardano-ctf",
-    "published_date": 1727787600,
-    "blueprint": "ctf_multisig_treasury.json"
-  },{
-    "id": "8",
-    "name": "purchase_offer",
-    "scope": "ctf",
-    "repository": "https://github.com/vacuumlabs/cardano-ctf",
-    "published_date": 1727787600,
-    "blueprint": "ctf_purchase_offer.json"
-  },{
-    "id": "9",
     "name": "sell_nft",
     "scope": "ctf",
-    "repository": "https://github.com/vacuumlabs/cardano-ctf",
-    "published_date": 1727787600,
-    "blueprint": "ctf_sell_nft.json"
+    "repository_url": "https://github.com/vacuumlabs/cardano-ctf",
+    "blueprint_url": "https://github.com/vacuumlabs/cardano-ctf/blob/main/01_sell_nft/plutus.json",
+    "published_date": 1727787600
   },{
-    "id": "10",
-    "name": "tipjar_v2",
-    "scope": "ctf",
-    "repository": "https://github.com/vacuumlabs/cardano-ctf",
-    "published_date": 1727787600,
-    "blueprint": "ctf_tipjar_v2.json"
-  },{
-    "id": "11",
-    "name": "tipjar",
-    "scope": "ctf",
-    "repository": "https://github.com/vacuumlabs/cardano-ctf",
-    "published_date": 1727787600,
-    "blueprint": "ctf_tipjar.json"
-  },{
-    "id": "12",
     "name": "vesting",
     "scope": "ctf",
-    "repository": "https://github.com/vacuumlabs/cardano-ctf",
-    "published_date": 1727787600,
-    "blueprint": "ctf_vesting.json"
+    "repository_url": "https://github.com/vacuumlabs/cardano-ctf",
+    "blueprint_url": "https://github.com/vacuumlabs/cardano-ctf/blob/main/02_vesting/plutus.json",
+    "published_date": 1727787600
+  },{
+    "name": "multisig_treasury",
+    "scope": "ctf",
+    "repository_url": "https://github.com/vacuumlabs/cardano-ctf",
+    "blueprint_url": "https://github.com/vacuumlabs/cardano-ctf/blob/main/03_multisig_treasury/plutus.json",
+    "published_date": 1727787600
+  },{
+    "name": "tipjar",
+    "scope": "ctf",
+    "repository_url": "https://github.com/vacuumlabs/cardano-ctf",
+    "blueprint_url": "https://github.com/vacuumlabs/cardano-ctf/blob/main/04_tipjar/plutus.json",
+    "published_date": 1727787600
+  },{
+    "name": "purchase_offer",
+    "scope": "ctf",
+    "repository_url": "https://github.com/vacuumlabs/cardano-ctf",
+    "blueprint_url": "https://github.com/vacuumlabs/cardano-ctf/blob/main/05_purchase_offer/plutus.json",
+    "published_date": 1727787600
+  },{
+    "name": "tipjar_v2",
+    "scope": "ctf",
+    "repository_url": "https://github.com/vacuumlabs/cardano-ctf",
+    "blueprint_url": "https://github.com/vacuumlabs/cardano-ctf/blob/main/06_tipjar_v2/plutus.json",
+    "published_date": 1727787600
+  },{
+    "name": "multisig_treasury_v2",
+    "scope": "ctf",
+    "repository_url": "https://github.com/vacuumlabs/cardano-ctf",
+    "blueprint_url": "https://github.com/vacuumlabs/cardano-ctf/blob/main/07_multisig_treasury_v2/plutus.json",
+    "published_date": 1727787600
+  },{
+    "name": "lending",
+    "scope": "ctf",
+    "repository_url": "https://github.com/vacuumlabs/cardano-ctf",
+    "blueprint_url": "https://github.com/vacuumlabs/cardano-ctf/blob/main/08_lending/plutus.json",
+    "published_date": 1727787600
+  },{
+    "name": "multisig_treasury_v3",
+    "scope": "ctf",
+    "repository_url": "https://github.com/vacuumlabs/cardano-ctf",
+    "blueprint_url": "https://github.com/vacuumlabs/cardano-ctf/blob/main/09_multisig_treasury_v3/plutus.json",
+    "published_date": 1727787600
+  },{
+    "name": "king_of_cardano",
+    "scope": "ctf",
+    "repository_url": "https://github.com/vacuumlabs/cardano-ctf",
+    "blueprint_url": "https://github.com/vacuumlabs/cardano-ctf/blob/main/10_king_of_cardano/plutus.json",
+    "published_date": 1727787600
   }]
 }
