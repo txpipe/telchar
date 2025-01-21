@@ -13,4 +13,5 @@ pub struct DAppJson {
     pub repository_url: String,
     pub blueprint_url: String,
     pub published_date: Number,
+    pub readme: String,
 }

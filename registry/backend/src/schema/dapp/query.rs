@@ -19,6 +19,7 @@ fn get_dapps() -> Vec<DApp> {
             repository_url: dapp.repository_url.clone(),
             blueprint_url: dapp.blueprint_url.clone(),
             published_date: dapp.published_date.as_i64().unwrap(),
+            readme: dapp.readme.clone(),
         })
     }
     dapps
