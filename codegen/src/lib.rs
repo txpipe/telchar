@@ -37,13 +37,14 @@ pub fn get_schemas_from_blueprint(blueprint: blueprint::Blueprint) -> Vec<schema
     if blueprint.definitions.is_some() {
         for definition in blueprint.definitions.unwrap().inner.iter() {
             let definition_name = get_schema_name(definition.0.clone());
+            let definition_json = serde_json::to_string(&definition.1).unwrap();
             if definition.1.data_type.is_some() {
                 match definition.1.data_type.unwrap() {
                     blueprint::DataType::Integer => {
-                        schemas.push(schema::Schema::new_integer(definition_name.clone()));
+                        schemas.push(schema::Schema::new_integer(definition_name.clone(), definition_json.clone()));
                     }
                     blueprint::DataType::Bytes => {
-                        schemas.push(schema::Schema::new_bytes(definition_name.clone()));
+                        schemas.push(schema::Schema::new_bytes(definition_name.clone(), definition_json.clone()));
                     }
                     blueprint::DataType::List => {
                         schemas.push(schema::Schema::new_list(
@@ -51,7 +52,8 @@ pub fn get_schemas_from_blueprint(blueprint: blueprint::Blueprint) -> Vec<schema
                             schema::Reference{
                                 name: None,
                                 schema_name: get_schema_name(definition.1.items.as_ref().unwrap().reference.clone())
-                            }
+                            },
+                            definition_json.clone()
                         ));
                     }
                     _ => {}
@@ -73,12 +75,12 @@ pub fn get_schemas_from_blueprint(blueprint: blueprint::Blueprint) -> Vec<schema
                             let schema: schema::Schema;
                             if properties.len().gt(&0) || parameter.title.is_none() {
                                 if properties.iter().any(|p| p.name.is_none()) {
-                                    schema = schema::Schema::new_tuple(schema_name, properties);
+                                    schema = schema::Schema::new_tuple(schema_name, properties, definition_json.clone());
                                 } else {
-                                    schema = schema::Schema::new_object(schema_name, properties);
+                                    schema = schema::Schema::new_object(schema_name, properties, definition_json.clone());
                                 }
                             } else {
-                                schema = schema::Schema::new_literal(schema_name, parameter.title.clone().unwrap());
+                                schema = schema::Schema::new_literal(schema_name, parameter.title.clone().unwrap(), definition_json.clone());
                             }
                             internal_schemas.push(schema);
                         }
@@ -98,11 +100,12 @@ pub fn get_schemas_from_blueprint(blueprint: blueprint::Blueprint) -> Vec<schema
                         let reference = internal_schemas.iter().find(|s| s.type_name.ne(&TypeName::Literal));
                         schemas.push(schema::Schema::new_nullable(
                             definition_name.clone(),
-                            reference.unwrap().name.clone()
+                            reference.unwrap().name.clone(),
+                            definition_json.clone()
                         ));
                         schemas.push(reference.unwrap().clone());
                     } else {
-                        schemas.push(schema::Schema::new_enum(definition_name.clone(), &internal_schemas));
+                        schemas.push(schema::Schema::new_enum(definition_name.clone(), &internal_schemas, definition_json.clone()));
                         for schema in &internal_schemas {
                             schemas.push(schema.clone());
                         }
@@ -113,6 +116,46 @@ pub fn get_schemas_from_blueprint(blueprint: blueprint::Blueprint) -> Vec<schema
     }
     
     schemas
+}
+
+pub fn get_validators_from_blueprint(blueprint: blueprint::Blueprint) -> Vec<schema::Validator> {
+    let mut validators: Vec<schema::Validator> = vec![];
+    for validator in blueprint.validators.iter() {
+        let mut datum: Option<schema::Reference> = None;
+        if let Some(d) = &validator.datum {
+            datum = Some(schema::Reference {
+                name: d.title.clone(),
+                schema_name: get_schema_name(d.schema.reference.clone()),
+            });
+        }
+        let mut redeemer: Option<schema::Reference> = None;
+        if let Some(r) = &validator.redeemer {
+            redeemer = Some(schema::Reference {
+                name: r.title.clone(),
+                schema_name: get_schema_name(r.schema.reference.clone()),
+            });
+        }
+        let mut parameters: Vec<schema::Reference> = vec![];
+        if let Some(p) = &validator.parameters {
+            for parameter in p {
+                parameters.push(
+                    schema::Reference {
+                        name: parameter.title.clone(),
+                        schema_name: get_schema_name(parameter.schema.reference.clone()),
+                    }
+                )
+            }
+        }
+        validators.push(
+            schema::Validator {
+                name: validator.title.clone(),
+                datum: datum,
+                redeemer: redeemer,
+                parameters: parameters,
+            }
+        );
+    }
+    validators
 }
 
 pub fn get_template_from_blueprint(blueprint: blueprint::Blueprint) -> String {
