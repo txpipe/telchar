@@ -1,4 +1,4 @@
-use async_graphql::{ComplexObject, SimpleObject};
+use async_graphql::{ComplexObject, SimpleObject, ID};
 use telchar_codegen::{get_blueprint_from_path, get_validators_from_blueprint, get_schemas_from_blueprint};
 use telchar_codegen::blueprint::Blueprint;
 use serde::{Deserialize, Serialize};
@@ -23,6 +23,7 @@ pub struct DApp {
 #[derive(SimpleObject, Clone)]
 #[graphql(complex)]
 pub struct DAppBlueprint {
+    id: ID
     description: String,
     version: String,
     license: String,
@@ -59,6 +60,10 @@ pub struct DAppSchema {
 
 #[ComplexObject]
 impl DApp {
+    async fn id(&self) -> ID {
+        ID::from(format!("{}/{}", self.scope, self.name))
+    }
+
     async fn blueprint(&self) -> DAppBlueprint {
         let blueprint: Blueprint = get_blueprint_from_path(format!("../data/{}_{}.json", self.scope, self.name));
         let mut compiler_name = "".to_string();
@@ -68,6 +73,7 @@ impl DApp {
             compiler_version = compiler.version.unwrap_or("".to_string());
         }
         return DAppBlueprint {
+            id: ID::from(format!("{}/{}/blueprint", self.scope, self.name)),
             description: blueprint.preamble.description.clone().unwrap_or("".to_string()),
             version: blueprint.preamble.version.clone(),
             license: blueprint.preamble.license.clone().unwrap_or("".to_string()),
