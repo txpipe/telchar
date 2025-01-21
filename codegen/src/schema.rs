@@ -18,6 +18,7 @@ pub struct Schema {
     pub name: String,
     pub type_name: TypeName,
     pub properties: Option<Vec<Reference>>,
+    pub json: String,
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
@@ -26,35 +27,44 @@ pub struct Reference {
     pub schema_name: String,
 }
 
+#[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct Validator {
+    pub name: String,
+    pub datum: Option<Reference>,
+    pub redeemer: Option<Reference>,
+    pub parameters: Vec<Reference>,
+}
+
 impl Schema {
-    pub fn new_integer(name: String) -> Self {
-        Self { name, type_name: TypeName::Integer, properties: None }
+    pub fn new_integer(name: String, json: String) -> Self {
+        Self { name, type_name: TypeName::Integer, properties: None, json }
     }
-    pub fn new_bytes(name: String) -> Self {
-        Self { name, type_name: TypeName::Bytes, properties: None }
+    pub fn new_bytes(name: String, json: String) -> Self {
+        Self { name, type_name: TypeName::Bytes, properties: None, json }
     }
-    pub fn new_literal(name: String, value: String) -> Self {
-        Self { name, type_name: TypeName::Literal, properties: Some(vec![Reference{ name: None, schema_name: value }]) }
+    pub fn new_literal(name: String, value: String, json: String) -> Self {
+        Self { name, type_name: TypeName::Literal, properties: Some(vec![Reference{ name: None, schema_name: value }]), json }
     }
-    pub fn new_nullable(name: String, reference: String) -> Self {
-        Self { name, type_name: TypeName::Nullable, properties: Some(vec![Reference{ name: None, schema_name: reference }]) }
+    pub fn new_nullable(name: String, reference: String, json: String) -> Self {
+        Self { name, type_name: TypeName::Nullable, properties: Some(vec![Reference{ name: None, schema_name: reference }]), json }
     }
-    pub fn new_object(name: String, properties: Vec<Reference>) -> Self {
-        Self { name, type_name: TypeName::Object, properties: Some(properties) }
+    pub fn new_object(name: String, properties: Vec<Reference>, json: String) -> Self {
+        Self { name, type_name: TypeName::Object, properties: Some(properties), json }
     }
-    pub fn new_enum(name: String, schemas: &Vec<Schema>) -> Self {
+    pub fn new_enum(name: String, schemas: &Vec<Schema>, json: String) -> Self {
         Self {
             name, type_name: TypeName::Enum,
             properties: Some(schemas.iter().map(|s|
                 Reference{ name: None, schema_name: s.name.clone() }
-            ).collect())
+            ).collect()),
+            json
         }
     }
-    pub fn new_tuple(name: String, properties: Vec<Reference>) -> Self {
-        Self { name, type_name: TypeName::Tuple, properties: Some(properties) }
+    pub fn new_tuple(name: String, properties: Vec<Reference>, json: String) -> Self {
+        Self { name, type_name: TypeName::Tuple, properties: Some(properties), json }
     }
-    pub fn new_list(name: String, reference: Reference) -> Self {
-        Self { name, type_name: TypeName::List, properties: Some(vec![reference]) }
+    pub fn new_list(name: String, reference: Reference, json: String) -> Self {
+        Self { name, type_name: TypeName::List, properties: Some(vec![reference]), json }
     }
 }
 

@@ -1,62 +1,32 @@
 use std::fs;
 use serde_json;
-use telchar_codegen::blueprint::Blueprint;
-use telchar_codegen::{get_blueprint_from_path};
-use async_graphql::{connection::Edge, types::connection::{query, Connection}, Error, Object, ID};
+use async_graphql::{connection::Edge, types::connection::{query, Connection}, Error, Object};
 
 use crate::schema::{pagination::AdditionalInfo};
-use super::{json::DataJson, json::DAppJson, DApp, DAppDetail};
+use super::{json::DataJson, DApp};
 
 #[derive(Default)]
 pub struct DAppQuery;
 
-fn get_data() -> Vec<DAppJson> {
+fn get_dapps() -> Vec<DApp> {
     let json = fs::read_to_string("../data/data.json").expect("Unable to read file");
     let data: DataJson = serde_json::from_str(&json).expect("Unable to parse");
-    data.dapps
-}
-
-fn get_dapps() -> Vec<DApp> {
     let mut dapps: Vec<DApp> = vec![];
-    for dapp in get_data().iter() {
+    for dapp in data.dapps.iter() {
         dapps.push(DApp {
-            id: ID::from(dapp.id.clone()),
             name: dapp.name.clone(),
             scope: dapp.scope.clone(),
-            repository: dapp.repository.clone(),
+            repository_url: dapp.repository_url.clone(),
+            blueprint_url: dapp.blueprint_url.clone(),
             published_date: dapp.published_date.as_i64().unwrap(),
+            readme: dapp.readme.clone(),
         })
     }
     dapps
 }
 
-fn get_dapp(id: async_graphql::ID) -> Option<DAppDetail> {
-    let dapp: Option<DAppJson> = get_data().into_iter().find(|dapp| dapp.id == *id);
-    if let Some(dapp) = dapp {
-        let blueprint: Blueprint = get_blueprint_from_path("../data/".to_owned() + &dapp.blueprint);
-
-        let mut compiler_name = "".to_string();
-        let mut compiler_version = "".to_string();
-        if let Some(compiler) = blueprint.preamble.compiler {
-            compiler_name = compiler.name;
-            compiler_version = compiler.version.unwrap_or("".to_string());
-        }
-
-        return Some(DAppDetail {
-            id: ID::from(dapp.id.clone()),
-            name: dapp.name.clone(),
-            scope: dapp.scope.clone(),
-            repository: dapp.repository.clone(),
-            published_date: dapp.published_date.as_i64().unwrap(),
-            description: blueprint.preamble.description.unwrap_or("".to_string()),
-            version: blueprint.preamble.version,
-            license: blueprint.preamble.license.unwrap_or("".to_string()),
-            compiler_name: compiler_name,
-            compiler_version: compiler_version,
-            plutus_version: blueprint.preamble.plutus_version.to_string(),
-        });
-    }
-    return None;
+fn get_dapp(scope: String, name: String) -> Option<DApp> {
+    get_dapps().into_iter().find(|dapp| dapp.scope == scope && dapp.name == name)
 }
 
 #[Object]
@@ -130,7 +100,7 @@ impl DAppQuery {
         .await
     }
 
-    async fn dapp(&self, id: async_graphql::ID) -> Result<Option<DAppDetail>, Error> {
-        return Ok(get_dapp(id));
+    async fn dapp(&self, scope: String, name: String) -> Result<Option<DApp>, Error> {
+        Ok(get_dapp(scope, name))
     }
 }

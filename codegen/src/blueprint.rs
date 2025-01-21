@@ -2,14 +2,14 @@ use serde::{Deserialize, Serialize};
 use serde_json::Number;
 use std::collections::BTreeMap;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Blueprint {
     pub preamble: Preamble,
     pub validators: Vec<Validator>,
     pub definitions: Option<Definitions>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Preamble {
     pub title: String,
@@ -20,13 +20,13 @@ pub struct Preamble {
     pub license: Option<String>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Compiler {
     pub name: String,
     pub version: Option<String>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Validator {
     pub title: String,
@@ -38,7 +38,7 @@ pub struct Validator {
     pub parameters: Option<Vec<Parameter>>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Argument {
     pub title: Option<String>,
     pub description: Option<String>,
@@ -46,7 +46,7 @@ pub struct Argument {
     pub schema: Reference,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(untagged)]
 pub enum PurposeArray {
     Single(Purpose),
@@ -62,13 +62,13 @@ pub enum Purpose {
     Publish,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Reference {
     #[serde(rename = "$ref")]
     pub reference: String,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Parameter {
     pub title: Option<String>,
     pub description: Option<String>,
@@ -76,13 +76,13 @@ pub struct Parameter {
     pub schema: Reference,
 }
 
-#[derive(Debug, Default, Deserialize, Serialize)]
+#[derive(Debug, Default, Deserialize, Serialize, Clone)]
 pub struct Definitions {
     #[serde(flatten, default)]
     pub inner: BTreeMap<String, Definition>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Definition {
     pub title: Option<String>,
@@ -94,7 +94,7 @@ pub struct Definition {
     pub values: Option<Reference>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Schema {
     pub title: Option<String>,
@@ -114,7 +114,7 @@ pub enum DataType {
     Constructor,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Field {
     pub title: Option<String>,
     #[serde(rename = "$ref")]
