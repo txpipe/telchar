@@ -6,13 +6,15 @@ import { GitIcon } from '~/components/icons/git';
 
 // Local
 import { ValidatorInfo } from './ValidatorInfo';
+import { SchemaInfo } from './SchemaInfo';
 
 interface Props {
   validators: DappValidator[];
+  schemas: DappSchema[];
   blueprintUrl: string;
 }
 
-export function TabBlueprint({ validators, blueprintUrl }: Props) {
+export function TabBlueprint({ validators, blueprintUrl, schemas }: Props) {
   const downloadBlueprint = async () => {
     if (blueprintUrl) {
       const rawUrl = blueprintUrl
@@ -44,7 +46,7 @@ export function TabBlueprint({ validators, blueprintUrl }: Props) {
     <div>
       <h2 className="text-xl font-semibold pb-1.5 border-b border-b-white/20">Blueprint file</h2>
       <div className="flex flex-row justify-between items-center mt-4">
-        <a href={blueprintUrl} className="w-fit text-white flex items-center gap-2.5">
+        <a href={blueprintUrl} className="w-fit text-white flex items-center gap-2.5" target="_blank" rel="noreferrer">
           <GitIcon width="15" height="15" />
           <span className="underline">{(blueprintUrl ?? '').replace(/http(s)?:\/\//, '')}</span>
         </a>
@@ -53,11 +55,21 @@ export function TabBlueprint({ validators, blueprintUrl }: Props) {
           <ImportIcon />
         </Button>
       </div>
+
       <div className="flex flex-col gap-4 mt-8">
         <h2 className="text-xl font-semibold pb-1.5 border-b border-b-white/20">Validators</h2>
         {validators.map(validator => (
           <ExpandableCell key={validator.name} label={validator.name}>
             <ValidatorInfo validator={validator} />
+          </ExpandableCell>
+        ))}
+      </div>
+
+      <div className="flex flex-col gap-4 mt-8">
+        <h2 className="text-xl font-semibold pb-1.5 border-b border-b-white/20">Schemas</h2>
+        {schemas.map(schema => (
+          <ExpandableCell key={schema.name} label={schema.name}>
+            <SchemaInfo schema={schema.schema} />
           </ExpandableCell>
         ))}
       </div>
