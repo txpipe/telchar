@@ -23,7 +23,7 @@ pub struct DApp {
 #[derive(SimpleObject, Clone)]
 #[graphql(complex)]
 pub struct DAppBlueprint {
-    id: ID
+    id: ID,
     description: String,
     version: String,
     license: String,

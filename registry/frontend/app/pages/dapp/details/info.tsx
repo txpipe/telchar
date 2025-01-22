@@ -7,7 +7,7 @@ import { GitIcon } from '~/components/icons/git';
 
 interface Props {
   className?: string;
-  dapp: DappDetail;
+  dapp: Dapp;
 }
 
 function CommonDetails({ label, value }: { label: string; value: string; }) {
@@ -31,9 +31,9 @@ export function Info({ dapp, className }: Props) {
 
       <div>
         <p className="text-white/50">Repository</p>
-        <a href={dapp.repository} className="w-fit mt-4 text-white flex items-center gap-2.5">
+        <a href={dapp.repositoryUrl} className="w-fit mt-4 text-white flex items-center gap-2.5">
           <GitIcon width="15" height="15" />
-          <span className="underline">{dapp.repository.replace(/http(s)?:\/\//i, '')}</span>
+          <span className="underline">{dapp.repositoryUrl.replace(/http(s)?:\/\//i, '')}</span>
         </a>
       </div>
 
@@ -48,15 +48,15 @@ export function Info({ dapp, className }: Props) {
       <div className="flex flex-col gap-2">
         <CommonDetails
           label="Plutus version"
-          value={dapp.plutusVersion}
+          value={dapp.blueprint.plutusVersion}
         />
         <CommonDetails
           label="Compiler"
-          value={dapp.compilerName + ' ' + dapp.compilerVersion}
+          value={dapp.blueprint.compilerName + ' ' + dapp.blueprint.compilerVersion}
         />
         <CommonDetails
           label="License"
-          value={dapp.license}
+          value={dapp.blueprint.license}
         />
         <CommonDetails
           label="Publication date"

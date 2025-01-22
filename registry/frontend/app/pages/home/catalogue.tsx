@@ -1,5 +1,4 @@
 import { Link } from 'react-router';
-import dayjs from 'dayjs';
 
 // Components
 import { Card } from '~/components/ui/Card';
@@ -20,7 +19,7 @@ function PackageCard({ dapp }: { dapp: Dapp; }) {
         <div>
           <span className="text-primary-400">@{dapp.scope ?? ''}</span>
           <span> • </span>
-          <span>{dapp.publishedDate ? dayjs(new Date(dapp.publishedDate * 1000)).fromNow() : ''}</span>
+          <span>v{dapp.blueprint.version}</span>
         </div>
       </Card>
     </Link>

@@ -7,7 +7,9 @@ export const DAPPS_QUERY = gql`
         id
         name
         scope
-        publishedDate
+        blueprint {
+          version
+        }
       }
       pageInfo {
         hasPreviousPage
@@ -24,20 +26,38 @@ export const DAPPS_QUERY = gql`
 `;
 
 export const DAPP_QUERY = gql`
-  query dapp($id: ID!) {
-    dapp(id: $id) {
+  query dapp($scope: String!, $name: String!) {
+    dapp(scope: $scope, name: $name) {
       id
       name
       scope
-      description
-      repository
       publishedDate
-
-      plutusVersion
-      version
-      license
-      compilerName
-      compilerVersion
+      repositoryUrl
+      blueprintUrl
+      readme
+      blueprint {
+        description
+        version
+        license
+        compilerName
+        compilerVersion
+        plutusVersion
+        validators {
+          name
+          datum {
+            name
+            schemaName
+          }
+          redeemer {
+            name
+            schemaName
+          }
+          parameters {
+            name
+            schemaName
+          }
+        }
+      }
     }
   }
 `;

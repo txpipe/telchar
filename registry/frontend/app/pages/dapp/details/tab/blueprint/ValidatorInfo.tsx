@@ -1,24 +1,5 @@
 import clsx from 'clsx';
 
-// https://cips.cardano.org/cip/CIP-0057
-type ValidatorPurpose = 'spend' | 'mint' | 'withdraw' | 'publish';
-
-type ValidatorSchema = {
-  title?: string;
-  description?: string;
-  purpose?: 'spend' | 'mint' | 'withdraw' | 'publish' | ValidatorPurpose[];
-  schema: { $ref: string; };
-};
-
-export type Validator = {
-  title: string;
-  redeemer?: ValidatorSchema;
-  datum?: ValidatorSchema;
-  parameters?: ValidatorSchema[];
-  compiledCode?: string;
-  hash?: string;
-};
-
 function InfoRow({ title, value, className }: { title: string; value: string | string[]; className?: string; }) {
   return (
     <>
@@ -49,17 +30,17 @@ function InfoRow({ title, value, className }: { title: string; value: string | s
 }
 
 interface ValidatorInfoProps {
-  validator: Validator;
+  validator: DappValidator;
 }
 
 export function ValidatorInfo({ validator }: ValidatorInfoProps) {
   return (
     <div className="grid grid-cols-[auto_auto_1fr] gap-x-2.5 gap-y-2 mt-6">
       {validator.datum && (
-        <InfoRow title={validator.datum.title ?? 'datum'} value={validator.datum.schema.$ref} />
+        <InfoRow title={validator.datum.name ?? 'datum'} value={validator.datum.schemaName} />
       )}
       {validator.redeemer && (
-        <InfoRow title={validator.redeemer.title ?? 'reedemer'} value={validator.redeemer.schema.$ref} />
+        <InfoRow title={validator.redeemer.name ?? 'reedemer'} value={validator.redeemer.schemaName} />
       )}
       {(validator.datum || validator.redeemer) && (
         <div className="col-span-3 h-4" />
@@ -68,7 +49,7 @@ export function ValidatorInfo({ validator }: ValidatorInfoProps) {
       {(validator.parameters?.length ?? 0) > 0 && (
         <InfoRow
           title="parameters"
-          value={validator.parameters!.map(p => p.title ?? p.schema.$ref)}
+          value={validator.parameters!.map(p => p.name ?? p.schemaName)}
         />
       )}
     </div>

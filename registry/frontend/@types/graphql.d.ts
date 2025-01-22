@@ -15,11 +15,25 @@ interface Scalars {
 }
 
 interface Dapp {
+  blueprint: DappBlueprint;
+  blueprintUrl: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   publishedDate: Scalars['Int']['output'];
-  repository: Scalars['String']['output'];
+  readme: Scalars['String']['output'];
+  repositoryUrl: Scalars['String']['output'];
   scope: Scalars['String']['output'];
+}
+
+interface DappBlueprint {
+  compilerName: Scalars['String']['output'];
+  compilerVersion: Scalars['String']['output'];
+  description: Scalars['String']['output'];
+  license: Scalars['String']['output'];
+  plutusVersion: Scalars['String']['output'];
+  schemas: Array<DappSchema>;
+  validators: Array<DappValidator>;
+  version: Scalars['String']['output'];
 }
 
 interface DappConnection {
@@ -32,26 +46,29 @@ interface DappConnection {
   pageInfo: PageInfo;
 }
 
-interface DappDetail {
-  compilerName: Scalars['String']['output'];
-  compilerVersion: Scalars['String']['output'];
-  description: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  license: Scalars['String']['output'];
-  name: Scalars['String']['output'];
-  plutusVersion: Scalars['String']['output'];
-  publishedDate: Scalars['Int']['output'];
-  repository: Scalars['String']['output'];
-  scope: Scalars['String']['output'];
-  version: Scalars['String']['output'];
-}
-
 /** An edge in a connection. */
 interface DappEdge {
   /** A cursor for use in pagination */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge */
   node: Dapp;
+}
+
+interface DappReference {
+  name: Maybe<Scalars['String']['output']>;
+  schemaName: Scalars['String']['output'];
+}
+
+interface DappSchema {
+  name: Scalars['String']['output'];
+  schema: Scalars['String']['output'];
+}
+
+interface DappValidator {
+  datum: Maybe<DappReference>;
+  name: Scalars['String']['output'];
+  parameters: Array<DappReference>;
+  redeemer: Maybe<DappReference>;
 }
 
 /** Information about pagination in a connection */
@@ -72,12 +89,13 @@ interface PaginationInfo {
 }
 
 interface Query {
-  dapp: Maybe<DappDetail>;
+  dapp: Maybe<Dapp>;
   dapps: DappConnection;
 }
 
 interface QueryDappArgs {
-  id: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
+  scope: Scalars['String']['input'];
 }
 
 interface QueryDappsArgs {

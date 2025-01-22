@@ -1,10 +1,24 @@
 
 type Dapp {
-	id: ID!
 	name: String!
 	scope: String!
-	repository: String!
+	repositoryUrl: String!
+	blueprintUrl: String!
 	publishedDate: Int!
+	readme: String!
+	id: ID!
+	blueprint: DappBlueprint!
+}
+
+type DappBlueprint {
+	description: String!
+	version: String!
+	license: String!
+	compilerName: String!
+	compilerVersion: String!
+	plutusVersion: String!
+	validators: [DappValidator!]!
+	schemas: [DappSchema!]!
 }
 
 type DappConnection {
@@ -23,20 +37,6 @@ type DappConnection {
 	metadata: PaginationInfo
 }
 
-type DappDetail {
-	id: ID!
-	name: String!
-	scope: String!
-	repository: String!
-	publishedDate: Int!
-	description: String!
-	version: String!
-	license: String!
-	compilerName: String!
-	compilerVersion: String!
-	plutusVersion: String!
-}
-
 """
 An edge in a connection.
 """
@@ -49,6 +49,23 @@ type DappEdge {
 	A cursor for use in pagination
 	"""
 	cursor: String!
+}
+
+type DappReference {
+	name: String
+	schemaName: String!
+}
+
+type DappSchema {
+	name: String!
+	schema: String!
+}
+
+type DappValidator {
+	name: String!
+	datum: DappReference
+	redeemer: DappReference
+	parameters: [DappReference!]!
 }
 
 
@@ -83,7 +100,7 @@ type PaginationInfo {
 
 type Query {
 	dapps(after: String, before: String, first: Int, last: Int): DappConnection!
-	dapp(id: ID!): DappDetail
+	dapp(scope: String!, name: String!): Dapp
 }
 
 

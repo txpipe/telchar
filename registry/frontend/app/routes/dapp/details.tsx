@@ -28,7 +28,7 @@ export async function loader({ context, params }: Route.LoaderArgs) {
     queryKey: ['dapp', id],
     queryFn: requestGraphQL<{ dapp: Query['dapp']; }, QueryDappArgs>(
       DAPP_QUERY,
-      { id },
+      { scope: params.scope, name: params.dapp },
     ),
   });
 
@@ -36,12 +36,12 @@ export async function loader({ context, params }: Route.LoaderArgs) {
     throw redirect('/');
   }
 
-  let readme: string | null = null;
+  let readme: string | null = result.dapp.readme;
 
-  if (result.dapp.repository) {
+  if (!readme && result.dapp.repositoryUrl) {
     let repoPath = '';
     try {
-      repoPath = (URL.parse(result.dapp.repository)?.pathname ?? '').replace(/^\//, '');
+      repoPath = (URL.parse(result.dapp.repositoryUrl)?.pathname ?? '').replace(/^\//, '');
     } catch {}
 
     // Improve it by storing on cache
