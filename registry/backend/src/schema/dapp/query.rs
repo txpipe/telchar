@@ -2,7 +2,7 @@ use std::fs;
 use serde_json;
 use async_graphql::{connection::Edge, types::connection::{query, Connection}, Error, Object};
 
-use crate::schema::{pagination::AdditionalInfo};
+use crate::schema::pagination::AdditionalInfo;
 use super::{json::DataJson, DApp};
 
 #[derive(Default)]
