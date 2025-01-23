@@ -57,6 +57,10 @@ export const DAPP_QUERY = gql`
             schemaName
           }
         }
+        schemas {
+          name
+          schema
+        }
       }
     }
   }

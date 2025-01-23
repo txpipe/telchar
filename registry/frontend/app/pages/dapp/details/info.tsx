@@ -31,7 +31,7 @@ export function Info({ dapp, className }: Props) {
 
       <div>
         <p className="text-white/50">Repository</p>
-        <a href={dapp.repositoryUrl} className="w-fit mt-4 text-white flex items-center gap-2.5">
+        <a href={dapp.repositoryUrl} className="w-fit mt-4 text-white flex items-center gap-2.5" target="_blank" rel="noreferrer">
           <GitIcon width="15" height="15" />
           <span className="underline">{dapp.repositoryUrl.replace(/http(s)?:\/\//i, '')}</span>
         </a>

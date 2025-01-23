@@ -69,6 +69,7 @@ export function DAppDetails({ dapp, readme }: { dapp: Dapp; readme: string | nul
               <TabBlueprint
                 validators={dapp.blueprint.validators}
                 blueprintUrl={dapp.blueprintUrl}
+                schemas={dapp.blueprint.schemas}
               />
             )}
             {activeTab === 'deployment' && <TabDeployment />}
