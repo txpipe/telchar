@@ -162,7 +162,7 @@ pub fn get_template_from_blueprint(blueprint: blueprint::Blueprint) -> String {
     let schemas = get_schemas_from_blueprint(blueprint);
 
     let mut handlebars = Handlebars::new();
-    handlebars.register_template_file("blaze_cardano", "../codegen/templates/blaze_cardano.hbs").unwrap();
+    handlebars.register_template_file("blaze_cardano", "../../codegen/templates/blaze_cardano.hbs").unwrap();
 
     handlebars_helper!(is_integer: |type_name: str| helper_is_type(type_name.into(), TypeName::Integer));
     handlebars.register_helper("is_integer", Box::new(is_integer));
