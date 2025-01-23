@@ -16,7 +16,7 @@ export function Hero({ className, onSearch }: Props) {
     <section className={clsx(className)}>
       <h1 className="text-4xl font-bold text-center">Registry of Plutus blueprints</h1>
 
-      <SearchBar className="mt-14 mx-auto  max-w-[880px]" onSearch={onSearch} />
+      <SearchBar className="mt-14 mx-auto  max-w-[836px]" onSearch={onSearch} />
 
       {/* <div className="relative flex flex-col items-center mt-20 p-8 before:bg-gradient-to-b before:from-[#434343]/[0.86] before:to-transparent before:rounded-t-xl before:absolute before:top-0 before:bottom-0 before:left-0 before:right-0 before:-z-10 z-0 before:pointer-events-none before:opacity-[0.41]"> */}
       <div className="flex flex-col items-center mt-20 p-8 bg-gradient-to-b from-[#434343]/[0.35] to-transparent rounded-t-xl backdrop-blur-[14.605px]">

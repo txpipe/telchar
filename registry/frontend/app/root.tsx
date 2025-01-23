@@ -10,6 +10,10 @@ import {
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
 
+// Components
+import { Header } from '~/components/Header';
+import { Footer } from '~/components/Footer';
+
 import type { Route } from './+types/root';
 import stylesheet from './app.css?url';
 
@@ -39,7 +43,7 @@ export function Layout({ children }: { children: React.ReactNode; }) {
         <Meta />
         <Links />
       </head>
-      <body className="container m-auto py-14">
+      <body className="container m-auto pt-14 pb-6">
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -49,7 +53,13 @@ export function Layout({ children }: { children: React.ReactNode; }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <>
+      <Header appName="Registry" />
+      <Outlet />
+      <Footer className="mt-20" />
+    </>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
