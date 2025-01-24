@@ -85,19 +85,28 @@ pub struct Definitions {
 #[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Definition {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub title: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub data_type: Option<DataType>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub any_of: Option<Vec<Schema>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub items: Option<Reference>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub keys: Option<Reference>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub values: Option<Reference>,
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Schema {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub title: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
     pub data_type: DataType,
     pub index: Number,
@@ -116,6 +125,7 @@ pub enum DataType {
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Field {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub title: Option<String>,
     #[serde(rename = "$ref")]
     pub reference: String,

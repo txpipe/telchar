@@ -1,5 +1,5 @@
 use async_graphql::{ComplexObject, SimpleObject, ID};
-use telchar_codegen::{get_blueprint_from_path, get_validators_from_blueprint, get_schemas_from_blueprint};
+use telchar_codegen::{get_blueprint_from_path, get_validators_from_blueprint, get_schemas_from_blueprint, get_template_from_blueprint};
 use telchar_codegen::blueprint::Blueprint;
 use serde::{Deserialize, Serialize};
 use serde_json;
@@ -7,7 +7,7 @@ use serde_json;
 mod query;
 mod json;
 
-pub use query::{DAppQuery};
+pub use query::DAppQuery;
 
 #[derive(SimpleObject, Clone)]
 #[graphql(complex)]
@@ -36,7 +36,6 @@ pub struct DAppBlueprint {
 }
 
 #[derive(SimpleObject, Deserialize, Serialize, Clone)]
-#[graphql(complex)]
 pub struct DAppValidator {
     name: String,
     datum: Option<DAppReference>,
@@ -45,14 +44,12 @@ pub struct DAppValidator {
 }
 
 #[derive(SimpleObject, Deserialize, Serialize, Clone)]
-#[graphql(complex)]
 pub struct DAppReference {
     name: Option<String>,
     schema_name: String,
 }
 
 #[derive(SimpleObject, Deserialize, Serialize, Clone)]
-#[graphql(complex)]
 pub struct DAppSchema {
     name: String,
     schema: String,
@@ -72,7 +69,7 @@ impl DApp {
             compiler_name = compiler.name;
             compiler_version = compiler.version.unwrap_or("".to_string());
         }
-        return DAppBlueprint {
+        DAppBlueprint {
             id: ID::from(format!("{}/{}/blueprint", self.scope, self.name)),
             description: blueprint.preamble.description.clone().unwrap_or("".to_string()),
             version: blueprint.preamble.version.clone(),
@@ -81,7 +78,7 @@ impl DApp {
             compiler_version: compiler_version,
             plutus_version: blueprint.preamble.plutus_version.clone().to_string(),
             blueprint: blueprint,
-        };
+        }
     }
 }
 
@@ -105,13 +102,8 @@ impl DAppBlueprint {
         }
         schemas
     }
+
+    async fn codegen(&self) -> String {
+        get_template_from_blueprint(self.blueprint.clone())
+    }
 }
-
-#[ComplexObject]
-impl DAppValidator {}
-
-#[ComplexObject]
-impl DAppReference {}
-
-#[ComplexObject]
-impl DAppSchema {}
