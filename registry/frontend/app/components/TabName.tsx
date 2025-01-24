@@ -13,8 +13,8 @@ export function TabName({ icon, name, onClick, active }: TabProps) {
     <button
       type="button"
       className={clsx(
-        'flex items-center gap-1.5 pb-1 border-b-4 transition-colors duration-500',
-        active ? 'text-primary-400 border-b-primary-400' : 'text-white/60 border-b-transparent',
+        'flex items-center gap-1.5 pb-1 after:border-b-4 border-bottom-gradient border-transparent ',
+        active ? 'bg-gradient-to-r from-secondary-400 to-secondary-500 text-transparent bg-clip-text after:bg-gradient-to-r after:from-secondary-400 after:to-secondary-500 after:bg-clip-border' : 'text-white/60',
       )}
       onClick={onClick}
     >

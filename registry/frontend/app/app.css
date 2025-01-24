@@ -17,3 +17,31 @@ body {
   -webkit-mask-composite: destination-out;
   mask-composite: exclude;
 }
+
+
+.btn-outline-primary-gradient {
+  @apply relative z-0;
+}
+
+.btn-outline-primary-gradient::after { 
+  @apply absolute top-0 left-0 right-0 bottom-0 -z-10;
+  @apply border border-solid border-transparent;
+  content: '';
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+}
+
+.border-bottom-gradient {
+  @apply relative z-0;
+}
+
+.border-bottom-gradient::after { 
+  @apply absolute top-0 left-0 right-0 bottom-0 -z-10;
+  @apply border-b border-solid border-transparent;
+  content: '';
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+}
+

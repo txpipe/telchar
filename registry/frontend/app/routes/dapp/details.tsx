@@ -23,14 +23,12 @@ export function meta({ data }: Route.MetaArgs) {
 }
 
 export async function loader({ context, params }: Route.LoaderArgs) {
+  const id = `${params.dapp}/${params.scope}`;
   const result = await context.queryClient.fetchQuery({
-    queryKey: ['dapp', params.scope, params.dapp],
+    queryKey: ['dapp', id],
     queryFn: requestGraphQL<{ dapp: Query['dapp']; }, QueryDappArgs>(
       DAPP_QUERY,
-      {
-        id: null,
-        input: { name: params.dapp, scopeName: params.scope },
-      },
+      { scope: params.scope, name: params.dapp },
     ),
   });
 
@@ -38,12 +36,12 @@ export async function loader({ context, params }: Route.LoaderArgs) {
     throw redirect('/');
   }
 
-  let readme: string | null = null;
+  let readme: string | null = result.dapp.readme;
 
-  if (result.dapp.repository) {
+  if (!readme && result.dapp.repositoryUrl) {
     let repoPath = '';
     try {
-      repoPath = (URL.parse(result.dapp.repository)?.pathname ?? '').replace(/^\//, '');
+      repoPath = (URL.parse(result.dapp.repositoryUrl)?.pathname ?? '').replace(/^\//, '');
     } catch {}
 
     // Improve it by storing on cache

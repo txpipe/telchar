@@ -1,12 +1,25 @@
 
 type Dapp {
-	id: ID!
 	name: String!
-	description: String!
-	repository: String!
+	scope: String!
+	repositoryUrl: String!
+	blueprintUrl: String!
 	publishedDate: Int!
-	scopeId: String!
-	scope: Scope
+	readme: String!
+	id: ID!
+	blueprint: DappBlueprint!
+}
+
+type DappBlueprint {
+	description: String!
+	version: String!
+	license: String!
+	compilerName: String!
+	compilerVersion: String!
+	plutusVersion: String!
+	validators: [DappValidator!]!
+	schemas: [DappSchema!]!
+	codegen: String!
 }
 
 type DappConnection {
@@ -37,6 +50,23 @@ type DappEdge {
 	A cursor for use in pagination
 	"""
 	cursor: String!
+}
+
+type DappReference {
+	name: String
+	schemaName: String!
+}
+
+type DappSchema {
+	name: String!
+	schema: String!
+}
+
+type DappValidator {
+	name: String!
+	datum: DappReference
+	redeemer: DappReference
+	parameters: [DappReference!]!
 }
 
 
@@ -71,51 +101,7 @@ type PaginationInfo {
 
 type Query {
 	dapps(after: String, before: String, first: Int, last: Int): DappConnection!
-	dapp(id: ID, input: SearchDAppByScope): Dapp
-	scopes(after: String, before: String, first: Int, last: Int): ScopeConnection!
-	scope(id: ID!): Scope
-}
-
-type Scope {
-	id: ID!
-	name: String!
-	repository: String!
-	dapps: [Dapp!]!
-}
-
-type ScopeConnection {
-	"""
-	Information to aid in pagination.
-	"""
-	pageInfo: PageInfo!
-	"""
-	A list of edges.
-	"""
-	edges: [ScopeEdge!]!
-	"""
-	A list of nodes.
-	"""
-	nodes: [Scope!]!
-	metadata: PaginationInfo
-}
-
-"""
-An edge in a connection.
-"""
-type ScopeEdge {
-	"""
-	The item at the end of the edge
-	"""
-	node: Scope!
-	"""
-	A cursor for use in pagination
-	"""
-	cursor: String!
-}
-
-input SearchDAppByScope {
-	name: String!
-	scopeName: String!
+	dapp(scope: String!, name: String!): Dapp
 }
 
 

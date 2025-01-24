@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { useSearchParams } from 'react-router';
 
 // Components
@@ -6,6 +5,7 @@ import { Header } from '~/components/Header';
 import { DocumentIcon } from '~/components/icons/document';
 import { InfoIcon } from '~/components/icons/info';
 import { TabName } from '~/components/TabName';
+import { DeploymentIcon } from '~/components/icons/deployment';
 
 // Local components
 import { TabReadme } from './tab/readme';
@@ -34,28 +34,28 @@ export function DAppDetails({ dapp, readme }: { dapp: Dapp; readme: string | nul
     <>
       <Header withoutNav withSearch />
       <main className="mt-20">
-        <h1 className="text-2xl font-semibold">{dapp.name}</h1>
-        <div className="mt-3 opacity-60">
-          <h2 className="inline text-primary-400">@{dapp.scope?.name ?? ''}</h2>
-          <span> • </span>
-          <span>Published {dapp.publishedDate ? dayjs(new Date(dapp.publishedDate * 1000)).fromNow() : ''}</span>
+        <h1 className="text-3xl font-semibold">{dapp.name}</h1>
+        <div className="mt-2 text-xl">
+          <h2 className="inline text-primary-400">@{dapp.scope}</h2>
+          <span className="text-white/60"> • v{dapp.blueprint.version}</span>
         </div>
+        <p className="text-white/60 mt-6">{dapp.blueprint.description}</p>
 
         <div className="flex mt-14 border-b-[#3E3E3E] border-b gap-6">
           <TabName
-            icon={<InfoIcon width="14" height="14" />}
+            icon={<InfoIcon width="14" height="14" gradient={activeTab === 'readme' ? 'secondary' : undefined} />}
             name="Readme"
             active={activeTab === 'readme'}
             onClick={() => setSearchParams({ activeTab: 'readme' })}
           />
           <TabName
-            icon={<DocumentIcon width="14" height="14" />}
+            icon={<DocumentIcon width="14" height="14" gradient={activeTab === 'blueprint' ? 'secondary' : undefined} />}
             name="Blueprint"
             active={activeTab === 'blueprint'}
             onClick={() => setSearchParams({ activeTab: 'blueprint' })}
           />
           <TabName
-            icon={<DocumentIcon width="14" height="14" />}
+            icon={<DeploymentIcon width="14" height="14" gradient={activeTab === 'deployment' ? 'secondary' : undefined} />}
             name="Deployment"
             active={activeTab === 'deployment'}
             onClick={() => setSearchParams({ activeTab: 'deployment' })}
@@ -65,7 +65,13 @@ export function DAppDetails({ dapp, readme }: { dapp: Dapp; readme: string | nul
         <div className="flex gap-14 mt-14 items-start">
           <div className="w-full">
             {activeTab === 'readme' && <TabReadme readme={readme} />}
-            {activeTab === 'blueprint' && <TabBlueprint />}
+            {activeTab === 'blueprint' && (
+              <TabBlueprint
+                validators={dapp.blueprint.validators}
+                blueprintUrl={dapp.blueprintUrl}
+                schemas={dapp.blueprint.schemas}
+              />
+            )}
             {activeTab === 'deployment' && <TabDeployment />}
           </div>
           <Info dapp={dapp} className="max-w-[460px] sticky top-2" />

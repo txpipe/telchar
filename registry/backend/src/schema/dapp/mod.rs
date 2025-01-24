@@ -1,4 +1,4 @@
-use async_graphql::{ComplexObject, SimpleObject};
+use async_graphql::{ComplexObject, SimpleObject, ID};
 use telchar_codegen::{get_blueprint_from_path, get_validators_from_blueprint, get_schemas_from_blueprint, get_template_from_blueprint};
 use telchar_codegen::blueprint::Blueprint;
 use serde::{Deserialize, Serialize};
@@ -56,6 +56,10 @@ pub struct DAppSchema {
 
 #[ComplexObject]
 impl DApp {
+    async fn id(&self) -> ID {
+        ID::from(format!("{}/{}", self.scope, self.name))
+    }
+
     async fn blueprint(&self) -> DAppBlueprint {
         let blueprint: Blueprint = get_blueprint_from_path(format!("../data/{}_{}.json", self.scope, self.name));
         let mut compiler_name = "".to_string();
