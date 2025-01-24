@@ -23,7 +23,6 @@ pub struct DApp {
 #[derive(SimpleObject, Clone)]
 #[graphql(complex)]
 pub struct DAppBlueprint {
-    id: ID,
     description: String,
     version: String,
     license: String,
@@ -70,7 +69,6 @@ impl DApp {
             compiler_version = compiler.version.unwrap_or("".to_string());
         }
         DAppBlueprint {
-            id: ID::from(format!("{}/{}/blueprint", self.scope, self.name)),
             description: blueprint.preamble.description.clone().unwrap_or("".to_string()),
             version: blueprint.preamble.version.clone(),
             license: blueprint.preamble.license.clone().unwrap_or("".to_string()),

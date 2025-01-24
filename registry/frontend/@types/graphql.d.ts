@@ -26,6 +26,7 @@ interface Dapp {
 }
 
 interface DappBlueprint {
+  codegen: Scalars['String']['output'];
   compilerName: Scalars['String']['output'];
   compilerVersion: Scalars['String']['output'];
   description: Scalars['String']['output'];
