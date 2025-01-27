@@ -5,7 +5,7 @@ import { requestGraphQL } from '~/gql/gql.server';
 // Pages
 import { Home as HomePage } from '~/pages/home';
 
-import type { Route } from './+types/home';
+import type { Route } from './+types/_index';
 
 export function meta({}: Route.MetaArgs) {
   return [

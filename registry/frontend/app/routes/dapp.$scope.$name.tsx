@@ -8,7 +8,7 @@ import { requestGraphQL } from '~/gql/gql.server';
 import { DAppDetails as Page } from '~/pages/dapp/details';
 
 // Local
-import type { Route } from './+types/details';
+import type { Route } from './+types/dapp.$scope.$name';
 
 export function meta({ data }: Route.MetaArgs) {
   let title = 'Telchar';
@@ -28,7 +28,7 @@ export async function loader({ context, params }: Route.LoaderArgs) {
     queryKey: ['dapp', id],
     queryFn: requestGraphQL<{ dapp: Query['dapp']; }, QueryDappArgs>(
       DAPP_QUERY,
-      { scope: params.scope, name: params.dapp },
+      { scope: params.scope, name: params.name },
     ),
   });
 
