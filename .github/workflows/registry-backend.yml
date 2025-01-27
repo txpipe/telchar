@@ -28,7 +28,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: docker/Dockerfile.backend
+          file: docker/Dockerfile.registry-backend
           platforms: linux/amd64
           push: true
           tags: ghcr.io/txpipe/telchar-registry-backend:${{ github.sha }}
