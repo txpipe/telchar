@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 
 // Components
 import { Card } from '~/components/ui/Card';
@@ -6,9 +6,12 @@ import { Button } from '~/components/ui/Button';
 import { ChevronLeftIcon } from '~/components/icons/chevron-left';
 import { ChevronRightIcon } from '~/components/icons/chevron-right';
 
+// GQL
+import { DAPPS_DEFAULT_PAGINATION } from '~/gql/dapps/dapps.query';
+
 interface CatalogueProps {
   className?: string;
-  initialDApps: DappConnection;
+  dapps: DappConnection;
 }
 
 function PackageCard({ dapp }: { dapp: Dapp; }) {
@@ -26,10 +29,14 @@ function PackageCard({ dapp }: { dapp: Dapp; }) {
   );
 }
 
-export function Catalogue({ className, initialDApps }: CatalogueProps) {
-  const startCursor = +(initialDApps.pageInfo.startCursor ?? 0) + 1;
-  const endCursor = +(initialDApps.pageInfo.endCursor ?? 0) + 1;
-  const totalNodes = initialDApps.metadata?.totalNodes ?? 0;
+export function Catalogue({ className, dapps }: CatalogueProps) {
+  const [searchParams, setSearchParams] = useSearchParams({ page: DAPPS_DEFAULT_PAGINATION.page.toString() });
+
+  const page = parseInt(searchParams.get('page') ?? '0', 10) || DAPPS_DEFAULT_PAGINATION.page;
+
+  const startCursor = +(dapps.pageInfo.startCursor ?? 0) + 1;
+  const endCursor = +(dapps.pageInfo.endCursor ?? 0) + 1;
+  const totalNodes = dapps.metadata?.totalNodes ?? 0;
   return (
     <section className={className}>
       <div className="flex justify-between items-center">
@@ -39,7 +46,7 @@ export function Catalogue({ className, initialDApps }: CatalogueProps) {
         </div>
       </div>
       <div className="grid grid-cols-3 gap-6 mt-8">
-        {initialDApps.nodes.map(dapp => (
+        {dapps.nodes.map(dapp => (
           <PackageCard key={`dapp-${dapp.id}`} dapp={dapp} />
         ))}
       </div>
@@ -48,10 +55,28 @@ export function Catalogue({ className, initialDApps }: CatalogueProps) {
           Displaying {startCursor}-{endCursor} of {totalNodes}
         </span>
         <div className="flex gap-3">
-          <Button color="primary" spacing="icon" disabled={!initialDApps.pageInfo.hasPreviousPage}>
+          <Button
+            type="button"
+            color="primary"
+            spacing="icon"
+            disabled={!dapps.pageInfo.hasPreviousPage}
+            onClick={() => {
+              searchParams.set('page', `${Math.max(1, page - 1)}`);
+              setSearchParams(searchParams, { preventScrollReset: true });
+            }}
+          >
             <ChevronLeftIcon />
           </Button>
-          <Button color="primary" spacing="icon" disabled={!initialDApps.pageInfo.hasNextPage}>
+          <Button
+            type="button"
+            color="primary"
+            spacing="icon"
+            disabled={!dapps.pageInfo.hasNextPage}
+            onClick={() => {
+              searchParams.set('page', `${page + 1}`);
+              setSearchParams(searchParams, { preventScrollReset: true });
+            }}
+          >
             <ChevronRightIcon />
           </Button>
         </div>

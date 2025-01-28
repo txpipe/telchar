@@ -79,7 +79,7 @@ impl DAppQuery {
 
                 // Prepare the nodes based on calculated values
                 let has_next_page = if let Some(first) = first {
-                    slice.len() == first as usize && end < dapps.len()
+                    slice.len() == first as usize && start != end && end < dapps.len()
                 } else {
                     end < dapps.len()
                 };

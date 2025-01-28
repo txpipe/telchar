@@ -1,5 +1,10 @@
 // GQL
-import { DAPPS_QUERY } from '~/gql/dapps/dapps.query';
+import {
+  DAPPS_QUERY,
+  dappsQueryKeyGenerator,
+  generateDAppsArgs,
+  DAPPS_DEFAULT_PAGINATION,
+} from '~/gql/dapps/dapps.query';
 import { requestGraphQL } from '~/gql/gql.server';
 
 // Pages
@@ -14,17 +19,31 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export async function loader({ context }: Route.LoaderArgs) {
+export async function loader({ context, ...others }: Route.LoaderArgs) {
+  const url = new URL(others.request.url);
+  const page = parseInt(url.searchParams.get('page') || DAPPS_DEFAULT_PAGINATION.page.toString(), 10)
+    || DAPPS_DEFAULT_PAGINATION.page;
+  let size = parseInt(url.searchParams.get('size') || DAPPS_DEFAULT_PAGINATION.size.toString(), 10)
+    || DAPPS_DEFAULT_PAGINATION.size;
+
+  // Limit the size to 25
+  if (size > 25) {
+    size = 25;
+  }
+
   const result = await context.queryClient.fetchQuery({
-    queryKey: ['dapps'],
-    queryFn: requestGraphQL<{ dapps: Query['dapps']; }>(DAPPS_QUERY),
+    queryKey: dappsQueryKeyGenerator(page, size),
+    queryFn: requestGraphQL<{ dapps: Query['dapps']; }, QueryDappsArgs>(
+      DAPPS_QUERY,
+      generateDAppsArgs(page, size),
+    ),
   });
 
   return {
-    initialDApps: result.dapps,
+    dapps: result.dapps,
   };
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  return <HomePage initialDApps={loaderData.initialDApps} />;
+  return <HomePage dapps={loaderData.dapps} />;
 }

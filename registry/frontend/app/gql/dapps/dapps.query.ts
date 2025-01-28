@@ -1,8 +1,13 @@
 import { gql } from 'graphql-request';
 
+export const DAPPS_DEFAULT_PAGINATION = {
+  size: 15,
+  page: 1,
+};
+
 export const DAPPS_QUERY = gql`
-  query dapps {
-    dapps {
+  query dapps($first: Int, $after: String, $last: Int, $before: String) {
+    dapps(first: $first, last: $last, after: $after, before: $before) {
       nodes {
         id
         name
@@ -24,6 +29,20 @@ export const DAPPS_QUERY = gql`
     }
   }
 `;
+
+export function dappsQueryKeyGenerator(page = DAPPS_DEFAULT_PAGINATION.page, size = DAPPS_DEFAULT_PAGINATION.size) {
+  return ['dapps', `page-${page}`, `size-${size}`];
+}
+
+export function generateDAppsArgs(page = DAPPS_DEFAULT_PAGINATION.page, size = DAPPS_DEFAULT_PAGINATION.size) {
+  const after = ((page - 1) * size) - 1;
+  return {
+    first: size,
+    after: after <= 0 ? null : after.toString(),
+    before: null,
+    last: null,
+  };
+}
 
 export const DAPP_QUERY = gql`
   query dapp($scope: String!, $name: String!) {
@@ -65,3 +84,7 @@ export const DAPP_QUERY = gql`
     }
   }
 `;
+
+export function dappQueryKeyGenerator(id: string) {
+  return ['dapp', id];
+}
