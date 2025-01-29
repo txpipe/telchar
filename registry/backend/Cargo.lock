@@ -1549,7 +1549,17 @@ dependencies = [
 ]
 
 [[package]]
-name = "telchar-backend"
+name = "telchar-codegen"
+version = "0.1.0"
+dependencies = [
+ "handlebars 6.3.0",
+ "heck",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "telchar-registry-backend"
 version = "0.1.0"
 dependencies = [
  "async-graphql",
@@ -1559,16 +1569,6 @@ dependencies = [
  "serde_json",
  "telchar-codegen",
  "uuid",
-]
-
-[[package]]
-name = "telchar-codegen"
-version = "0.1.0"
-dependencies = [
- "handlebars 6.3.0",
- "heck",
- "serde",
- "serde_json",
 ]
 
 [[package]]

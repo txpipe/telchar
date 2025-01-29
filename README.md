@@ -1,4 +1,11 @@
-# Telchar
+<div align="center">
+    <h1>Telchar</h1>
+    <img alt="GitHub" src="https://img.shields.io/github/license/txpipe/telchar" />
+    <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/txpipe/telchar/validate.yml" />
+    <hr/>
+</div>
+
+## Introduction
 
 Telchar will be a toolchain that improves the developer experience of integrating Plutus validators in off-chain processes. We'll leverage the information provided in blueprint files (CIP-57) to improve on two areas: discovery and codegen (code generation).
 
