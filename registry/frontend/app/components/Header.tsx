@@ -24,7 +24,7 @@ export function Header({ className, appName, appLink }: Props) {
       </div>
 
       <nav className="flex items-center gap-8">
-        <NavLink to="/docs">Docs</NavLink>
+        <NavLink to="https://telchar.txpipe.io" target="_blank" rel="noreferrer">Docs</NavLink>
         <NavLink to="/support">Support</NavLink>
         <MenuGridIcon />
       </nav>
