@@ -15,11 +15,11 @@ WORKDIR /app/registry/backend
 RUN cargo build --release
 
 FROM rust:1.83-slim
-COPY --from=build /app/registry/backend/target/release/telchar-backend /app/bin/telchar-backend
+COPY --from=build /app/registry/backend/target/release/telchar-registry-backend /app/bin/telchar-registry-backend
 COPY ./registry/data /app/data
 
 ENV ROCKET_ADDRESS=0.0.0.0
 
 WORKDIR /app/bin
 
-CMD ["./telchar-backend"]
+CMD ["./telchar-registry-backend"]

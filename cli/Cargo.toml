@@ -1,8 +1,11 @@
 [package]
 name = "telchar-cli"
+description = "A toolchain that improves the developer experience of integrating Plutus validators in off-chain processes"
 version = "0.1.0"
 edition = "2021"
 repository = "https://github.com/txpipe/telchar"
+homepage = "https://registry.telchar.txpipe.io"
+documentation = "https://telchar.txpipe.io"
 
 [dependencies]
 clap = { version = "4.5.27", features = ["derive"] }
@@ -15,3 +18,8 @@ dotenv = "0.15"
 
 [build-dependencies]
 cynic-codegen = { version = "3" }
+
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"

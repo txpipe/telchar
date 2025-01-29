@@ -3,6 +3,8 @@ name = "telchar-codegen"
 version = "0.1.0"
 edition = "2021"
 repository = "https://github.com/txpipe/telchar"
+homepage = "https://registry.telchar.txpipe.io"
+documentation = "https://telchar.txpipe.io"
 
 [dependencies]
 handlebars = "6.0.0"

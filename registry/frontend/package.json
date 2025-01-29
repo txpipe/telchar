@@ -1,5 +1,5 @@
 {
-  "name": "telchar",
+  "name": "telchar-registry-frontend",
   "private": true,
   "type": "module",
   "scripts": {

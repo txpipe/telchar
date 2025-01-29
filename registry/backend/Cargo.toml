@@ -1,7 +1,10 @@
 [package]
-name = "telchar-backend"
+name = "telchar-registry-backend"
 version = "0.1.0"
 edition = "2021"
+repository = "https://github.com/txpipe/telchar"
+homepage = "https://registry.telchar.txpipe.io"
+documentation = "https://telchar.txpipe.io"
 
 [dependencies]
 async-graphql = "7.0.13"
