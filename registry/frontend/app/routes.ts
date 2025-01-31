@@ -1,8 +1,6 @@
-import { type RouteConfig, index, prefix, route } from '@react-router/dev/routes';
+import { type RouteConfig } from '@react-router/dev/routes';
+import { flatRoutes } from '@react-router/fs-routes';
 
-export default [
-  index('routes/home.tsx'),
-  ...prefix('dapp', [
-    route(':scope/:dapp', 'routes/dapp/details.tsx'),
-  ]),
-] satisfies RouteConfig;
+const routes: RouteConfig = flatRoutes();
+
+export default routes;

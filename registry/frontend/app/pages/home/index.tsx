@@ -6,7 +6,7 @@ import { Hero } from '~/components/Hero';
 // Local components
 import { Catalogue } from './catalogue';
 
-export function Home({ initialDApps }: { initialDApps: DappConnection; }) {
+export function Home({ dapps }: { dapps: DappConnection; }) {
   const [_search, setSearch] = useState('');
 
   return (
@@ -14,7 +14,7 @@ export function Home({ initialDApps }: { initialDApps: DappConnection; }) {
       <Hero onSearch={setSearch} />
       <Catalogue
         className="mt-20"
-        initialDApps={initialDApps}
+        dapps={dapps}
       />
     </main>
   );

@@ -1,14 +1,14 @@
 import { redirect } from 'react-router';
 
 // GQL
-import { DAPP_QUERY } from '~/gql/dapps/dapps.query';
+import { DAPP_QUERY, dappQueryKeyGenerator } from '~/gql/dapps/dapps.query';
 import { requestGraphQL } from '~/gql/gql.server';
 
 // Pages
 import { DAppDetails as Page } from '~/pages/dapp/details';
 
 // Local
-import type { Route } from './+types/details';
+import type { Route } from './+types/dapp.$scope.$name';
 
 export function meta({ data }: Route.MetaArgs) {
   let title = 'Telchar';
@@ -25,10 +25,10 @@ export function meta({ data }: Route.MetaArgs) {
 export async function loader({ context, params }: Route.LoaderArgs) {
   const id = `${params.dapp}/${params.scope}`;
   const result = await context.queryClient.fetchQuery({
-    queryKey: ['dapp', id],
+    queryKey: dappQueryKeyGenerator(id),
     queryFn: requestGraphQL<{ dapp: Query['dapp']; }, QueryDappArgs>(
       DAPP_QUERY,
-      { scope: params.scope, name: params.dapp },
+      { scope: params.scope, name: params.name },
     ),
   });
 

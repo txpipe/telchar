@@ -69,7 +69,7 @@ interface Props extends ButtonVariants {
 
 export function Button({ type, children, onClick, ...buttonProps }: PropsWithChildren<Props>) {
   return (
-    <button type={type} onClick={onClick} className={button(buttonProps)}>
+    <button type={type} onClick={!buttonProps.disabled ? onClick : undefined} className={button(buttonProps)}>
       {children}
     </button>
   );
