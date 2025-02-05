@@ -1,6 +1,8 @@
 <div align="center">
     <h1>Telchar</h1>
     <img alt="GitHub" src="https://img.shields.io/github/license/txpipe/telchar" />
+    [![Release](https://github.com/txpipe/telchar/actions/workflows/release.yml/badge.svg)](https://github.com/txpipe/telchar/actions/workflows/release.yml)
+    [![Publish](https://github.com/txpipe/telchar/actions/workflows/publish.yml/badge.svg)](https://github.com/txpipe/telchar/actions/workflows/publish.yml)
     <hr/>
 </div>
 
