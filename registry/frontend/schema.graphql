@@ -1,12 +1,13 @@
 
 type Dapp {
+	id: String!
 	name: String!
 	scope: String!
 	repositoryUrl: String!
 	blueprintUrl: String!
 	publishedDate: Int!
 	readme: String!
-	id: ID!
+	version: String!
 	blueprint: DappBlueprint!
 }
 
@@ -100,7 +101,7 @@ type PaginationInfo {
 }
 
 type Query {
-	dapps(after: String, before: String, first: Int, last: Int): DappConnection!
+	dapps(pageSize: Int, offset: Int, search: String): DappConnection!
 	dapp(scope: String!, name: String!): Dapp
 }
 

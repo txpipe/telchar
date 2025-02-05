@@ -6,15 +6,13 @@ export const DAPPS_DEFAULT_PAGINATION = {
 };
 
 export const DAPPS_QUERY = gql`
-  query dapps($first: Int, $after: String, $last: Int, $before: String) {
-    dapps(first: $first, last: $last, after: $after, before: $before) {
+  query dapps($pageSize: Int, $offset: Int, $search: String) {
+    dapps(pageSize: $pageSize, offset: $offset, search: $search) {
       nodes {
         id
         name
         scope
-        blueprint {
-          version
-        }
+        version
       }
       pageInfo {
         hasPreviousPage
@@ -30,17 +28,30 @@ export const DAPPS_QUERY = gql`
   }
 `;
 
-export function dappsQueryKeyGenerator(page = DAPPS_DEFAULT_PAGINATION.page, size = DAPPS_DEFAULT_PAGINATION.size) {
-  return ['dapps', `page-${page}`, `size-${size}`];
+export function dappsQueryKeyGenerator(
+  page = DAPPS_DEFAULT_PAGINATION.page,
+  size = DAPPS_DEFAULT_PAGINATION.size,
+  search = '',
+) {
+  const _search = search.trim().toLowerCase();
+  const output = ['dapps', `page-${page}`, `size-${size}`];
+  if (_search.length > 0) {
+    output.push(`search-${_search}`);
+  }
+  return output;
 }
 
-export function generateDAppsArgs(page = DAPPS_DEFAULT_PAGINATION.page, size = DAPPS_DEFAULT_PAGINATION.size) {
-  const after = ((page - 1) * size) - 1;
+export function generateDAppsArgs(
+  page = DAPPS_DEFAULT_PAGINATION.page,
+  size = DAPPS_DEFAULT_PAGINATION.size,
+  search = '',
+): QueryDappsArgs {
+  const after = ((page - 1) * size);
+  const _search = search.trim().toLowerCase();
   return {
-    first: size,
-    after: after <= 0 ? null : after.toString(),
-    before: null,
-    last: null,
+    pageSize: size,
+    offset: after <= 0 ? null : after,
+    search: _search.length > 0 ? _search : null,
   };
 }
 
