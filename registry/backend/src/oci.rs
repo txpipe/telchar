@@ -161,7 +161,8 @@ pub fn get_blueprint(image: &ImageData) -> Option<blueprint::Blueprint> {
     let blueprint = image.layers.iter().find(|l| l.media_type == "application/vnd.telchar.blueprint.v1+json");
 
     if let Some(blueprint) = blueprint {
-        return serde_json::from_slice(&blueprint.data).ok();
+        let data = String::from_utf8_lossy(&blueprint.data).to_string();
+        return Some(telchar_codegen::get_blueprint_from_json(data));
     }
 
     return None;
