@@ -5,19 +5,23 @@ use serde::{Deserialize, Serialize};
 use serde_json;
 
 mod query;
-mod json;
 
 pub use query::DAppQuery;
 
 #[derive(SimpleObject, Clone)]
 #[graphql(complex)]
 pub struct DApp {
+    id: ID,
     name: String,
     scope: String,
     repository_url: String,
     blueprint_url: String,
     published_date: i64,
     readme: String,
+    version: String,
+
+    #[graphql(skip)]
+    blueprint: Option<Blueprint>,
 }
 
 #[derive(SimpleObject, Clone)]
@@ -56,12 +60,14 @@ pub struct DAppSchema {
 
 #[ComplexObject]
 impl DApp {
-    async fn id(&self) -> ID {
-        ID::from(format!("{}/{}", self.scope, self.name))
-    }
-
     async fn blueprint(&self) -> DAppBlueprint {
-        let blueprint: Blueprint = get_blueprint_from_path(format!("../data/{}_{}.json", self.scope, self.name));
+        let blueprint = if self.blueprint.is_none() {
+            // This should be removed in future. I keep it as fallback
+            get_blueprint_from_path(format!("../data/{}_{}.json", self.scope, self.name))
+        } else {
+            self.blueprint.clone().unwrap()
+        };
+
         let mut compiler_name = "".to_string();
         let mut compiler_version = "".to_string();
         if let Some(compiler) = blueprint.preamble.compiler.clone() {
