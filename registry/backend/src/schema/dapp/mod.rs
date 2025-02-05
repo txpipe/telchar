@@ -102,6 +102,6 @@ impl DAppBlueprint {
     }
 
     async fn codegen(&self) -> String {
-        get_template_from_blueprint(self.blueprint.clone())
+        get_template_from_blueprint(self.blueprint.clone(), "../../codegen/templates".to_string())
     }
 }

@@ -1,10 +1,13 @@
 [package]
 name = "telchar-codegen"
+description = "A toolchain that improves the developer experience of integrating Plutus validators in off-chain processes"
+license = "Apache-2.0"
 version = "0.1.0"
 edition = "2021"
 repository = "https://github.com/txpipe/telchar"
 homepage = "https://registry.telchar.txpipe.io"
 documentation = "https://telchar.txpipe.io"
+readme = "../README.md"
 
 [dependencies]
 handlebars = "6.0.0"
