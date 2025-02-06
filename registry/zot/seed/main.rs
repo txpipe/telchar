@@ -61,8 +61,6 @@ async fn push(metadata: &Metadata, readme: &str, blueprint_string: &str, version
     )
   ];
 
-  println!("blueprint_string: {:?}", blueprint_string);
-
   // Config
   let config = Config {
     data: serde_json::to_vec(&metadata)?,
