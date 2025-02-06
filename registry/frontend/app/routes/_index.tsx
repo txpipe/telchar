@@ -15,7 +15,7 @@ import type { Route } from './+types/_index';
 export function meta({}: Route.MetaArgs) {
   return [
     { title: 'Telchar' },
-    { name: 'description', content: 'Telchar descriptions' },
+    { name: 'description', content: 'Telchar description' },
   ];
 }
 

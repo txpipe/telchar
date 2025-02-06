@@ -1,4 +1,4 @@
-import { redirect } from 'react-router';
+import { redirect, type ShouldRevalidateFunctionArgs } from 'react-router';
 
 // GQL
 import { DAPP_QUERY, dappQueryKeyGenerator } from '~/gql/dapps/dapps.query';
@@ -18,7 +18,7 @@ export function meta({ data }: Route.MetaArgs) {
 
   return [
     { title },
-    { name: 'description', content: 'Telchar descriptions' },
+    { name: 'description', content: 'Telchar description' },
   ];
 }
 
@@ -71,4 +71,11 @@ export default function DAppDetails({ loaderData }: Route.ComponentProps) {
   return (
     <Page dapp={dapp} readme={readme} />
   );
+}
+
+export function shouldRevalidate(
+  arg: ShouldRevalidateFunctionArgs,
+) {
+  // This will prevent to validate when activeTab changes
+  return arg.currentParams.scope !== arg.nextParams.scope || arg.currentParams.name !== arg.nextParams.name;
 }

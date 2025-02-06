@@ -17,12 +17,13 @@ interface Scalars {
 interface Dapp {
   blueprint: DappBlueprint;
   blueprintUrl: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
+  id: Scalars['String']['output'];
   name: Scalars['String']['output'];
   publishedDate: Scalars['Int']['output'];
   readme: Scalars['String']['output'];
   repositoryUrl: Scalars['String']['output'];
   scope: Scalars['String']['output'];
+  version: Scalars['String']['output'];
 }
 
 interface DappBlueprint {
@@ -100,8 +101,7 @@ interface QueryDappArgs {
 }
 
 interface QueryDappsArgs {
-  after: InputMaybe<Scalars['String']['input']>;
-  before: InputMaybe<Scalars['String']['input']>;
-  first: InputMaybe<Scalars['Int']['input']>;
-  last: InputMaybe<Scalars['Int']['input']>;
+  offset: InputMaybe<Scalars['Int']['input']>;
+  pageSize: InputMaybe<Scalars['Int']['input']>;
+  search: InputMaybe<Scalars['String']['input']>;
 }

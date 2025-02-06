@@ -1,8 +1,10 @@
 use async_graphql::http::GraphiQLSource;
 use async_graphql_rocket::{GraphQLRequest, GraphQLResponse};
+use dotenvy::dotenv;
 use rocket::{fairing::{Fairing, Info, Kind}, http::{Header, Method, Status}, response::content::RawHtml, State};
 
 mod schema;
+mod oci;
 
 // MARK: Start Rocket Definition
 #[macro_use]
@@ -48,6 +50,8 @@ async fn graphql() -> RawHtml<String> {
 
 #[launch]
 fn rocket() -> _ {
+    dotenv().expect(".env file not found");
+    
     let schema = schema::build_schema();
 
     rocket::build()

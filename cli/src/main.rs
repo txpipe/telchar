@@ -3,7 +3,8 @@ use cynic;
 use cynic::QueryBuilder;
 use cynic::http::SurfExt;
 use dotenv::dotenv;
-use std::env;
+
+mod command;
 
 #[cynic::schema("telchar")]
 mod schema {}
@@ -44,8 +45,6 @@ async fn run_codegen_query(graphql_url: String, scope: String, name: String) -> 
 async fn main() {
     dotenv().ok();
 
-    let graphql_url = env::var("GRAPHQL_URL").expect("GRAPHQL_URL must be set in the environment");
-
     let cli = Command::new("telchar")
         .about("Telchar CLI")
         .subcommand_required(true)
@@ -54,23 +53,12 @@ async fn main() {
             Command::new("codegen")
                 .about("Generates the code for the selected blueprint")
                 .arg(arg!(<blueprint> "The blueprint reference for code generation"))
-                .arg_required_else_help(true));
+                .arg_required_else_help(true))
+        .subcommand(
+            Command::new("publish")
+                .about("Publish a blueprint to the registry"));
 
-    let matches = cli.get_matches();
+    let matches: clap::ArgMatches = cli.get_matches();
 
-    match matches.subcommand() {
-        Some(("codegen", sub_matches)) => {
-            let blueprint_reference = sub_matches.get_one::<String>("blueprint").expect("required");
-            if let Some((scope, name)) = blueprint_reference.split_once('/') {
-                let codegen = run_codegen_query(graphql_url, scope.to_string(), name.to_string()).await;
-                match codegen {
-                    Some(codegen) => println!("{}", codegen),
-                    None => println!("Blueprint not found")
-                }
-            } else {
-                println!("Invalid blueprint reference provided");
-            }
-        }
-        _ => unreachable!()
-    }
+    command::execute(matches).await;
 }

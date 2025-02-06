@@ -1,106 +1,162 @@
-use std::fs;
-use serde_json;
-use async_graphql::{connection::Edge, types::connection::{query, Connection}, Error, Object};
+use async_graphql::{connection::Edge, types::connection::Connection, Error, Object, ID};
+use urlencoding::encode;
 
-use crate::schema::pagination::AdditionalInfo;
-use super::{json::DataJson, DApp};
+use crate::{oci, schema::pagination::AdditionalInfo};
+use super::DApp;
 
 #[derive(Default)]
 pub struct DAppQuery;
-
-fn get_dapps() -> Vec<DApp> {
-    let json = fs::read_to_string("../data/data.json").expect("Unable to read file");
-    let data: DataJson = serde_json::from_str(&json).expect("Unable to parse");
-    let mut dapps: Vec<DApp> = vec![];
-    for dapp in data.dapps.iter() {
-        dapps.push(DApp {
-            name: dapp.name.clone(),
-            scope: dapp.scope.clone(),
-            repository_url: dapp.repository_url.clone(),
-            blueprint_url: dapp.blueprint_url.clone(),
-            published_date: dapp.published_date.as_i64().unwrap(),
-            readme: dapp.readme.clone(),
-        })
-    }
-    dapps
-}
-
-fn get_dapp(scope: String, name: String) -> Option<DApp> {
-    get_dapps().into_iter().find(|dapp| dapp.scope == scope && dapp.name == name)
-}
 
 #[Object]
 impl DAppQuery {
     async fn dapps(
         &self,
-        after: Option<String>,
-        before: Option<String>,
-        first: Option<i32>,
-        last: Option<i32>,
+        page_size: Option<i32>,
+        offset: Option<i32>,
+        search: Option<String>,
     ) -> Result<Connection<usize, DApp, AdditionalInfo>, Error> {
-        let dapps = get_dapps();
-        query(
-            after,
-            before,
-            first,
-            last,
-            |after, before, first, last| async move {
-                let mut start = 0usize;
-                let mut end = dapps.len();
+        let _offset = offset.unwrap_or(0);
+        let _page_size = page_size.unwrap_or(15).min(30);
+        let registry_api = oci::get_registry_api_url();
+        let query_param = format!(r#"
+query GlobalSearch {{
+    GlobalSearch(requestedPage: {{ limit: {}, offset: {}, sortBy: {} }}, query: "{}") {{
+        Page {{ TotalCount ItemCount }}
+        Repos {{
+            Name
+            NewestImage {{ Tag Vendor Title RepoName }}
+        }}
+    }}
+}}
+        "#, _page_size, _offset, "ALPHABETIC_ASC", search.unwrap_or_default());
 
-                // Get first position of DApps
-                if let Some(after) = after {
-                    if after >= end {
-                        return Ok(Connection::with_additional_fields(false, false, AdditionalInfo::empty()));
-                    }
-                    start = after + 1;
-                }
+        let encode_query = encode(&query_param);
+        let url = format!("{}/_zot/ext/search?query={}", registry_api, encode_query);
+        let response = reqwest::get(&url).await?.json::<oci::ZotResponse>().await?;
 
-                // Get Last position of DApps
-                if let Some(before) = before {
-                    if before == 0 {
-                        return Ok(Connection::with_additional_fields(false, false, AdditionalInfo::empty()));
-                    }
-                    end = before;
-                }
+        if response.error.is_some() {
+            println!("error: {:?}", response.error);
+            return Ok(Connection::with_additional_fields(false, false, AdditionalInfo::empty()));
+        }
 
-                // Get the slice of DApps based on the initial and final positions
-                let mut slice = &dapps[start..end];
-
-                // Get the first N elements
-                if let Some(first) = first {
-                    slice = &slice[..first.min(slice.len())];
-                    end -= first.min(slice.len());
-                // Get the last N elements
-                } else if let Some(last) = last {
-                    slice = &slice[slice.len() - last.min(slice.len())..];
-                    start = end - last.min(slice.len());
-                }
-
-                // Prepare the nodes based on calculated values
-                let has_next_page = if let Some(first) = first {
-                    slice.len() == first as usize && start != end && end < dapps.len()
-                } else {
-                    end < dapps.len()
-                };
-
-                // Prepare the nodes based on calculated values
+        if response.data.is_some() {
+            let data = response.data.unwrap();
+        
+            if data.global_search.is_some() {
+                let info = data.global_search.unwrap();
+                let offset_usize = _offset as usize;
+                let page = info.page.unwrap_or(oci::PageInfo { total_count: 0, item_count: 0 });
                 let mut connection = Connection::with_additional_fields(
-                    start > 0,
-                    has_next_page,
-                    AdditionalInfo::new(dapps.len(), slice.len()),
+                    _offset > 0,
+                    (offset_usize + page.item_count as usize) < page.total_count as usize,
+                    AdditionalInfo::new(page.total_count as usize, page.item_count as usize),
                 );
-                connection.edges.extend(
-                    slice.iter().enumerate().map(|(idx, dapp)| Edge::new(start + idx, (*dapp).clone()))
-                );
-
-                Ok::<_, Error>(connection)
+                
+                if let Some(repos) = info.repos {
+                    connection.edges.extend(
+                        repos.iter().enumerate().map(|(idx, repo)| {
+                            let dapp = DApp {
+                                id: ID::from(repo.name.clone()),
+                                name: repo.newest_image.title.clone().unwrap_or_default(),
+                                scope: repo.newest_image.vendor.clone().unwrap_or_default(),
+                                repository_url: repo.newest_image.source.clone().unwrap_or_default(),
+                                // We can fill this later
+                                blueprint_url: "".to_string(),
+                                published_date: if let Some(published_date) = repo.newest_image.last_updated.clone() {
+                                    chrono::DateTime::parse_from_rfc3339(&published_date)
+                                        .unwrap()
+                                        .timestamp()
+                                } else { 0 },
+                                readme: "".to_string(),
+                                version: repo.newest_image.tag.clone().unwrap_or_default(),
+                                blueprint: None,
+                            };
+                            // This will allow to know offset start - end on `pageInfo`
+                            Edge::new(offset_usize + idx, dapp)
+                        })
+                    );
+                }
+                
+                return Ok::<_, Error>(connection)
             }
-        )
-        .await
+        }
+
+        return Ok(Connection::with_additional_fields(false, false, AdditionalInfo::empty()));
     }
 
     async fn dapp(&self, scope: String, name: String) -> Result<Option<DApp>, Error> {
-        Ok(get_dapp(scope, name))
+        let repo = format!("{}/{}", scope, name);
+
+        let registry_api = oci::get_registry_api_url();
+        let query_param = format!(r#"
+query ExpandedRepoInfo {{
+    ExpandedRepoInfo(repo: "{}") {{
+        Summary {{
+            Name
+            NewestImage {{
+                RepoName
+                Tag
+                Vendor
+                Title
+                LastUpdated
+                Description
+                Source
+                Manifests {{
+                    ConfigDigest
+                    Layers {{
+                        Digest
+                    }}
+                }}
+            }}
+        }}
+    }}
+}}
+        "#, repo);
+
+        let encode_query = encode(&query_param);
+        let url = format!("{}/_zot/ext/search?query={}", registry_api, encode_query);
+        let response = reqwest::get(&url).await?.json::<oci::ZotResponse>().await?;
+
+        if response.error.is_some() {
+            println!("error: {:?}", response.error);
+            return Ok(None);
+        }
+
+        if let Some(data) = response.data {
+            if let Some(info) = data.expanded_repo_info {
+                if let Some(summary) = info.summary {
+                    let image = summary.newest_image;
+
+                    let tag = image.tag.unwrap_or_default();
+
+                    let oci_image = oci::get_oci_image(&repo, &tag).await?;
+
+                    let config = oci::get_config(&oci_image);
+
+                    let dapp = DApp {
+                        id: ID::from(summary.name.clone()),
+                        name: image.title.unwrap_or_default(),
+                        scope: image.vendor.unwrap_or_default(),
+                        repository_url: image.source.unwrap_or_default(),
+                        blueprint_url: if let Some(config) = config {
+                            config.blueprint_url
+                        } else { "".to_string() },
+                        published_date: if let Some(published_date) = image.last_updated {
+                            chrono::DateTime::parse_from_rfc3339(&published_date)
+                                .unwrap()
+                                .timestamp()
+                        } else { 0 },
+                        readme: oci::get_readme(&oci_image),
+                        version: tag,
+                        blueprint: oci::get_blueprint(&oci_image),
+                    };
+
+                    return Ok(Some(dapp));
+                }
+            }
+        }
+        
+        return Ok(None);
+        
     }
 }

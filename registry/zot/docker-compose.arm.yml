@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  zot-registry:
+    image: ghcr.io/project-zot/zot-linux-arm64:latest
+    container_name: zot-registry
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/var/lib/registry
+      - ./config.json:/etc/zot/config.json
+    networks:
+      - zot-network
+
+networks:
+  zot-network:
+    driver: bridge
