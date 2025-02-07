@@ -47,14 +47,34 @@ pub fn get_schemas_from_blueprint(blueprint: blueprint::Blueprint) -> Vec<schema
                         schemas.push(schema::Schema::new_bytes(definition_name.clone(), definition_json.clone()));
                     }
                     blueprint::DataType::List => {
-                        schemas.push(schema::Schema::new_list(
-                            definition_name.clone(),
-                            schema::Reference{
-                                name: None,
-                                schema_name: get_schema_name(definition.1.items.as_ref().unwrap().reference.clone())
-                            },
-                            definition_json.clone()
-                        ));
+                        if definition.1.items.is_some() {
+                            match definition.1.items.as_ref().unwrap() {
+                                blueprint::ReferencesArray::Single(reference) => {
+                                    if reference.reference.is_some() {
+                                        schemas.push(schema::Schema::new_list(
+                                            definition_name.clone(),
+                                            schema::Reference{
+                                                name: None,
+                                                schema_name: get_schema_name(reference.reference.as_ref().unwrap().clone())
+                                            },
+                                            definition_json.clone()
+                                        ));
+                                    }
+                                }
+                                blueprint::ReferencesArray::Array(references) => {
+                                    let mut properties: Vec<schema::Reference> = vec![];
+                                    for reference in references {
+                                        if reference.reference.is_some() {
+                                            properties.push(schema::Reference{
+                                                name: None,
+                                                schema_name: get_schema_name(reference.reference.as_ref().unwrap().clone())
+                                            });
+                                        }
+                                    }
+                                    schemas.push(schema::Schema::new_tuple(definition_name.clone(), properties, definition_json.clone()));
+                                }  
+                            }
+                        }
                     }
                     _ => {}
                 }
@@ -122,28 +142,30 @@ pub fn get_validators_from_blueprint(blueprint: blueprint::Blueprint) -> Vec<sch
     let mut validators: Vec<schema::Validator> = vec![];
     for validator in blueprint.validators.iter() {
         let mut datum: Option<schema::Reference> = None;
-        if let Some(d) = &validator.datum {
+        if validator.datum.is_some() && validator.datum.as_ref().unwrap().schema.reference.is_some() {
             datum = Some(schema::Reference {
-                name: d.title.clone(),
-                schema_name: get_schema_name(d.schema.reference.clone()),
+                name: validator.datum.as_ref().unwrap().title.clone(),
+                schema_name: get_schema_name(validator.datum.as_ref().unwrap().schema.reference.as_ref().unwrap().clone()),
             });
         }
         let mut redeemer: Option<schema::Reference> = None;
-        if let Some(r) = &validator.redeemer {
+        if validator.redeemer.is_some() && validator.redeemer.as_ref().unwrap().schema.reference.is_some() {
             redeemer = Some(schema::Reference {
-                name: r.title.clone(),
-                schema_name: get_schema_name(r.schema.reference.clone()),
+                name: validator.redeemer.as_ref().unwrap().title.clone(),
+                schema_name: get_schema_name(validator.redeemer.as_ref().unwrap().schema.reference.as_ref().unwrap().clone()),
             });
         }
         let mut parameters: Vec<schema::Reference> = vec![];
         if let Some(p) = &validator.parameters {
             for parameter in p {
-                parameters.push(
-                    schema::Reference {
-                        name: parameter.title.clone(),
-                        schema_name: get_schema_name(parameter.schema.reference.clone()),
-                    }
-                )
+                if parameter.schema.reference.is_some() {
+                    parameters.push(
+                        schema::Reference {
+                            name: parameter.title.clone(),
+                            schema_name: get_schema_name(parameter.schema.reference.as_ref().unwrap().clone()),
+                        }
+                    )
+                }
             }
         }
         validators.push(

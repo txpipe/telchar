@@ -65,7 +65,7 @@ pub enum Purpose {
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Reference {
     #[serde(rename = "$ref")]
-    pub reference: String,
+    pub reference: Option<String>,
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
@@ -94,11 +94,18 @@ pub struct Definition {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub any_of: Option<Vec<Schema>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub items: Option<Reference>,
+    pub items: Option<ReferencesArray>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub keys: Option<Reference>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub values: Option<Reference>,
+}
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
+#[serde(untagged)]
+pub enum ReferencesArray {
+    Single(Reference),
+    Array(Vec<Reference>),   
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
