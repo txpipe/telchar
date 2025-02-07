@@ -1,0 +1,109 @@
+---
+title: Schema
+---
+
+## Types
+
+### Dapp
+
+Represents a decentralized application.
+
+-   **id**: `ID!` - Unique identifier.
+-   **name**: `String!` - Name of the Dapp.
+-   **scope**: `String!` - Scope of the Dapp.
+-   **repositoryUrl**: `String!` - URL of the repository.
+-   **blueprintUrl**: `String!` - URL of the blueprint.
+-   **publishedDate**: `Int!` - Date of publication (Unix timestamp).
+-   **readme**: `String!` - Readme content.
+-   **version**: `String!` - Version of the Dapp.
+-   **blueprint**: [`DappBlueprint!`](#dappblueprint) - Blueprint details.
+
+### DappBlueprint
+
+Details of the Dapp's blueprint.
+
+-   **description**: `String!` - Description of the blueprint.
+-   **version**: `String!` - Version of the blueprint.
+-   **license**: `String!` - License information.
+-   **compilerName**: `String!` - Name of the compiler.
+-   **compilerVersion**: `String!` - Version of the compiler.
+-   **plutusVersion**: `String!` - Version of Plutus.
+-   **validators**: [`[DappValidator!]!`](#dappvalidator) - List of validators.
+-   **schemas**: [`[DappSchema!]!`](#dappschema) - List of schemas.
+-   **codegen**: `String!` - Codegen information.
+
+### DappConnection
+
+Connection for paginating Dapps.
+
+-   **pageInfo**: [`PageInfo!`](#pageinfo) - Pagination information.
+-   **edges**: [`[DappEdge!]!`](#dappedge) - List of edges.
+-   **nodes**: [`[Dapp!]!`](#dapp) - List of nodes (Dapps).
+-   **metadata**: [`PaginationInfo`](#paginationinfo) - Additional pagination metadata.
+
+### DappEdge
+
+Edge in the Dapp connection.
+
+-   **node**: [`Dapp!`](#dapp) - The Dapp node.
+-   **cursor**: `String!` - Cursor for pagination.
+
+### DappReference
+
+Reference to a Dapp schema.
+
+-   **name**: `String` - Name.
+-   **schemaName**: `String!` - Name of the schema.
+
+### DappSchema
+
+Schema definition for a Dapp.
+
+-   **name**: `String!` - Name of the schema.
+-   **schema**: `String!` - Schema content.
+
+### DappValidator
+
+Validator information for a Dapp.
+
+-   **name**: `String!` - Name of the validator.
+-   **datum**: [`DappReference`](#dappreference) - Reference to the datum schema.
+-   **redeemer**: [`DappReference`](#dappreference) - Reference to the redeemer schema.
+-   **parameters**: [`[DappReference!]!`](#dappreference) - List of parameter references.
+
+### PageInfo
+
+Information about pagination.
+
+-   **hasPreviousPage**: `Boolean!` - Indicates if there are more items in the previous page.
+-   **hasNextPage**: `Boolean!` - Indicates if there are more items in the next page.
+-   **startCursor**: `String` - Cursor for the start of the page.
+-   **endCursor**: `String` - Cursor for the end of the page.
+
+### PaginationInfo
+
+Additional pagination information.
+
+-   **totalNodes**: `Int!` - Total number of nodes.
+-   **pageSize**: `Int!` - Page size.
+
+## Queries
+
+### dapps
+
+Retrieve a list of Dapps with pagination and/or search.
+
+-   **pageSize**: `Int` - Number of items per page.
+-   **offset**: `Int` - Offset for pagination.
+-   **search**: `String` - Search term.
+
+Returns: [`DappConnection!`](#dappconnection)
+
+### dapp
+
+Retrieve a single Dapp by scope and name.
+
+-   **scope**: `String!` - Scope of the Dapp.
+-   **name**: `String!` - Name of the Dapp.
+
+Returns: [`Dapp`](#dapp)
