@@ -1,0 +1,199 @@
+---
+title: GraphQL Examples
+sidebarTitle: Example
+---
+## dapps
+
+### Query
+```graphql
+query DApps($pageSize: Int, $offset: Int, $search: String) {
+  dapps(pageSize:$pageSize, offset:$offset, search:$search) {
+    nodes {
+      id
+      name
+      scope
+      version
+    }
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      startCursor
+      endCursor
+    }
+    metadata {
+      totalNodes
+      pageSize
+    }
+  }
+}
+```
+
+### Variables
+```graphql
+{
+  "pageSize": 4,
+  "offset": 0,
+}
+```
+
+### Result
+```json
+{
+  "data": {
+    "dapps": {
+      "nodes": [
+        {
+          "id": "txpipe/asteria",
+          "name": "asteria",
+          "scope": "txpipe",
+          "version": "0.0.0"
+        }
+      ],
+      "pageInfo": {
+        "hasPreviousPage": false,
+        "hasNextPage": false,
+        "startCursor": "0",
+        "endCursor": "0"
+      },
+      "metadata": {
+        "totalNodes": 1,
+        "pageSize": 1
+      }
+    }
+  }
+}
+```
+
+## dapp
+### Query
+```graphql
+query dapp($scope: String!, $name: String!) {
+  dapp(scope: $scope, name: $name) {
+    id
+    name
+    scope
+    publishedDate
+    repositoryUrl
+    blueprintUrl
+    readme
+    blueprint {
+      description
+      version
+      license
+      compilerName
+      compilerVersion
+      plutusVersion
+      validators {
+        name
+        datum {
+          name
+          schemaName
+        }
+        redeemer {
+          name
+          schemaName
+        }
+        parameters {
+          name
+          schemaName
+        }
+      }
+      schemas {
+        name
+        schema
+      }
+    }
+  }
+}
+```
+
+### Variables
+```graphql
+{
+  "scope": "txpipe",
+  "name": "asteria"
+}
+```
+
+### Result
+```json
+{
+  "data": {
+    "dapp": {
+      "id": "txpipe/asteria",
+      "name": "asteria",
+      "scope": "txpipe",
+      "publishedDate": 1738871210,
+      "repositoryUrl": "https://github.com/txpipe/asteria",
+      "blueprintUrl": "https://github.com/txpipe/asteria/blob/main/onchain/src/plutus.json",
+      "readme": "# Asteria\n\nA Cardano bot challenge to showcase the capabilities of [...]",
+      "blueprint": {
+        "description": "Aiken contracts for project 'txpipe/asteria'",
+        "version": "0.0.0",
+        "license": "Apache-2.0",
+        "compilerName": "Aiken",
+        "compilerVersion": "v1.1.3+3d77b5c",
+        "plutusVersion": "v3",
+        "validators": [
+          {
+            "name": "asteria.asteria.spend",
+            "datum": {
+              "name": "datum",
+              "schemaName": "AsteriaTypesAsteriaDatum"
+            },
+            "redeemer": {
+              "name": "redeemer",
+              "schemaName": "AsteriaTypesAsteriaRedeemer"
+            },
+            "parameters": [
+              {
+                "name": "admin_token",
+                "schemaName": "AsteriaTypesAssetClass"
+              },
+              {
+                "name": "ship_mint_lovelace_fee",
+                "schemaName": "Int"
+              },
+              {
+                "name": "max_asteria_mining",
+                "schemaName": "Int"
+              }
+            ]
+          },
+          {
+            "name": "asteria.asteria.else",
+            "datum": null,
+            "redeemer": null,
+            "parameters": [
+              {
+                "name": "admin_token",
+                "schemaName": "AsteriaTypesAssetClass"
+              },
+              {
+                "name": "ship_mint_lovelace_fee",
+                "schemaName": "Int"
+              },
+              {
+                "name": "max_asteria_mining",
+                "schemaName": "Int"
+              }
+            ]
+          },
+          [...]
+        ],
+        "schemas": [
+          {
+            "name": "AssetName",
+            "schema": "{\"title\":\"AssetName\",\"dataType\":\"bytes\"}"
+          },
+          {
+            "name": "Int",
+            "schema": "{\"dataType\":\"integer\"}"
+          },
+          [...]
+        ]
+      }
+    }
+  }
+}
+```
