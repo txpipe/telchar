@@ -1,10 +1,14 @@
 import clsx from 'clsx';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 
 // Components
 import { SearchIcon } from '~/components/icons/search';
 import { TimesIcon } from '~/components/icons/times';
+
+// Hooks
+import { useDebounce } from '~/hooks/useDebounce';
+import { useFetcherWithReset } from '~/hooks/useFetcherWithReset';
 
 interface Props {
   className?: string;
@@ -12,24 +16,45 @@ interface Props {
   showViewAll?: boolean;
 }
 
-function SearchResult({ dapp }: { dapp: Dapp; }) {
+function SearchResult({ dapp, onResultClick }: { dapp: Dapp; onResultClick?: () => void; }) {
   return (
-    <Link to={`/dapp/${dapp.scope}/${dapp.name}`} className="text-black/90 hover:bg-primary-400/10 rounded-xl py-1.5 px-4 block">
+    <Link
+      to={`/dapp/${dapp.scope}/${dapp.name}`}
+      className="text-black/90 hover:bg-primary-400/10 rounded-xl py-1.5 px-4 block"
+      onClick={onResultClick}
+    >
       <div className="text-lg font-semibold">{dapp.name}</div>
       <div>
         <span className="text-primary-400">@{dapp.scope}</span>
         <span> • </span>
-        <span>v{dapp.blueprint.version}</span>
+        <span>v{dapp.version}</span>
       </div>
     </Link>
   );
 }
 
-const dapps: Dapp[] = [];
-
 export function SearchBar({ className, showViewAll }: Props) {
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 300);
   const searchRef = useRef<HTMLInputElement>(null);
+  const fetcher = useFetcherWithReset<{ dapps: DappConnection; }>({ key: 'search-fetcher' });
+
+  useEffect(() => {
+    if (debouncedSearch) {
+      fetcher.load(`/api/search?q=${encodeURIComponent(debouncedSearch)}`);
+    } else {
+      fetcher.reset();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch]);
+
+  const resetInput = () => {
+    setSearch('');
+    searchRef.current?.focus();
+    fetcher.reset();
+  };
+
+  const { nodes } = fetcher.data?.dapps || { nodes: [] };
 
   return (
     <div className="flex items-center gap-14">
@@ -55,17 +80,16 @@ export function SearchBar({ className, showViewAll }: Props) {
           onClick={e => {
             e.preventDefault();
             e.stopPropagation();
-            setSearch('');
-            searchRef.current?.focus();
+            resetInput();
           }}
         />
-        {dapps.length > 0 && (
+        {nodes.length > 0 && (
           <div className="absolute left-0 right-0 -bottom-4 bg-white rounded-xl px-8 py-6 translate-y-full z-10">
             <span className="text-black/50">Top results</span>
             <ul className="max-h-64 overflow-y-auto mt-4">
-              {dapps.map(dapp => (
+              {nodes.map(dapp => (
                 <li key={dapp.id}>
-                  <SearchResult dapp={dapp} />
+                  <SearchResult dapp={dapp} onResultClick={resetInput} />
                 </li>
               ))}
             </ul>
