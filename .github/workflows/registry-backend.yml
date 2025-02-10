@@ -2,13 +2,6 @@ name: Registry Backend
 
 on:
   workflow_dispatch: {}
-  push:
-    branches:
-      - "main"
-    paths:
-      - ".github/workflows/registry-backend.yml"
-      - "registry/backend/*"
-      - "registry/data/*"
 
 jobs:
   build:

@@ -14,11 +14,11 @@ serde_json = "1.0"
 cynic = { version = "3", features = ["http-surf"] }
 surf = "2"
 tokio = { version = "1.43.0", features = ["full"] }
-dotenv = "0.15"
 dialoguer = "0.11.0"
 console = "0.15.10"
 oci-client = "0.14.0"
 chrono = "0.4.39"
+dotenv_codegen = "0.15.0"
 
 [build-dependencies]
 cynic-codegen = { version = "3" }

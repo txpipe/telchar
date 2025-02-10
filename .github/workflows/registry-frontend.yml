@@ -2,12 +2,6 @@ name: Registry Frontend
 
 on:
   workflow_dispatch: {}
-  push:
-    branches:
-      - "main"
-    paths:
-      - ".github/workflows/registry-frontend.yml"
-      - "registry/frontend/*"
 
 jobs:
   build:
