@@ -43,7 +43,7 @@ resource "kubernetes_deployment" "this" {
             effect   = toleration.value.effect
             key      = toleration.value.key
             operator = toleration.value.operator
-            value    = optional(toleration.value.value)
+            value    = toleration.value.value
           }
         }
       }

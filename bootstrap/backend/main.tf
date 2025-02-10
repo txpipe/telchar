@@ -40,7 +40,7 @@ variable "ingress_class" {
 }
 
 variable "hostname" {
-  type    = string
+  type = string
 }
 
 variable "resources" {

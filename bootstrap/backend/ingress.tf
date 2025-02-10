@@ -1,4 +1,4 @@
-resource "kubernetes_ingress" "this" {
+resource "kubernetes_ingress_v1" "this" {
   metadata {
     name      = local.name
     namespace = var.namespace
@@ -16,8 +16,12 @@ resource "kubernetes_ingress" "this" {
         path {
           path = "/"
           backend {
-            service_name = local.name
-            service_port = local.port
+            service {
+              name = local.name
+              port {
+                number = local.port
+              }
+            }
           }
         }
       }
