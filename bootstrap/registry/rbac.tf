@@ -12,8 +12,8 @@ resource "aws_iam_policy" "telchar_registry_policy" {
       {
         Effect = "Allow",
         Action = [
-          "s3:ListBucket",
           "s3:GetBucketLocation",
+          "s3:ListBucket",
           "s3:ListBucketMultipartUploads"
         ],
         Resource = [
@@ -23,11 +23,11 @@ resource "aws_iam_policy" "telchar_registry_policy" {
       {
         Effect = "Allow",
         Action = [
-          "s3:PutObject",
-          "s3:GetObject",
+          "s3:AbortMultipartUpload",
           "s3:DeleteObject",
+          "s3:GetObject",
           "s3:ListMultipartUploadParts",
-          "s3:AbortMultipartUpload"
+          "s3:PutObject"
         ],
         Resource = [
           "${aws_s3_bucket.this.arn}/*",
@@ -36,14 +36,14 @@ resource "aws_iam_policy" "telchar_registry_policy" {
       {
         Effect = "Allow"
         Action = [
+          "dynamodb:BatchGetItem",
+          "dynamodb:BatchWriteItem",
           "dynamodb:CreateTable",
           "dynamodb:DeleteItem",
           "dynamodb:DescribeTable",
           "dynamodb:GetItem",
-          "dynamodb:UpdateItem",
           "dynamodb:Scan",
-          "dynamodb:BatchGetItem",
-          "dynamodb:BatchWriteItem"
+          "dynamodb:UpdateItem"
         ]
         Resource : "*"
       }
