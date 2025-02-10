@@ -42,6 +42,8 @@ resource "aws_iam_policy" "telchar_registry_policy" {
           "dynamodb:GetItem",
           "dynamodb:UpdateItem",
           "dynamodb:Scan",
+          "dynamodb:BatchGetItem",
+          "dynamodb:BatchWriteItem"
         ]
         Resource : "*"
       }
