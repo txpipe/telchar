@@ -16,7 +16,7 @@ resource "kubernetes_manifest" "certificate_cluster_wildcard_tls" {
 
       "issuerRef" = {
         "kind" = "ClusterIssuer"
-        "name" = "letsencrypt-http01"
+        "name" = var.cert_issuer
       }
       "secretName" = local.cert_name
     }

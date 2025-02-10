@@ -47,13 +47,23 @@ resource "kubernetes_deployment_v1" "telchar_registry" {
           }
 
           env {
-            name  = "AWS_ACCESS_KEY_ID"
-            value = aws_iam_access_key.telchar_registry.id
+            name = "AWS_ACCESS_KEY_ID"
+            value_from {
+              secret_key_ref {
+                key  = "aws_access_key_id"
+                name = local.api_keys_secret
+              }
+            }
           }
 
           env {
-            name  = "AWS_SECRET_ACCESS_KEY"
-            value = aws_iam_access_key.telchar_registry.secret
+            name = "AWS_SECRET_ACCESS_KEY"
+            value_from {
+              secret_key_ref {
+                key  = "aws_secret_access_key"
+                name = local.api_keys_secret
+              }
+            }
           }
 
           volume_mount {
