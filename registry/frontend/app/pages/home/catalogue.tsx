@@ -22,7 +22,7 @@ function PackageCard({ dapp }: { dapp: Dapp; }) {
         <div>
           <span className="text-primary-400">@{dapp.scope ?? ''}</span>
           <span> • </span>
-          <span>v{dapp.blueprint.version}</span>
+          <span>v{dapp.version}</span>
         </div>
       </Card>
     </Link>

@@ -13,7 +13,7 @@ export function TabReadme({ readme }: Props) {
       </div>
 
       <Markdown
-        className="mt-8 prose prose-invert max-w-none prose-headings:border-b prose-headings:border-b-white/20 prose-headings:pb-1.5"
+        className="mt-8 prose prose-invert max-w-none prose-headings:border-b prose-headings:border-b-white/20 prose-headings:pb-1.5 prose-pre:whitespace-pre-wrap prose-pre:break-words prose-pre:font-roboto"
         remarkPlugins={[remarkGfm]}
         components={{
           h1: 'h2',

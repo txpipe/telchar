@@ -1,2 +1,5 @@
 target
 schema.graphql
+
+.env*
+!.env.example
