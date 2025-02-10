@@ -50,7 +50,7 @@ async fn graphql() -> RawHtml<String> {
 
 #[launch]
 fn rocket() -> _ {
-    dotenv().expect(".env file not found");
+    let _ = dotenv();
     
     let schema = schema::build_schema();
 
