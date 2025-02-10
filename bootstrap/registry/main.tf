@@ -7,6 +7,7 @@ locals {
   api_port         = 5000
   cert_name        = "telchar-registry"
   certs_mount_path = "/etc/certs"
+  api_keys_secret  = "aws-keys"
 }
 
 provider "aws" {
@@ -95,4 +96,9 @@ variable "tolerations" {
 
 variable "hostname" {
   type = string
+}
+
+variable "cert_issuer" {
+  type    = string
+  default = "letsencrypt-dns01-cloudflare"
 }
