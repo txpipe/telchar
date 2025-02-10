@@ -2,9 +2,11 @@ use clap::{Command, arg};
 use cynic;
 use cynic::QueryBuilder;
 use cynic::http::SurfExt;
-use dotenv::dotenv;
 
 mod command;
+
+#[macro_use]
+extern crate dotenv_codegen;
 
 #[cynic::schema("telchar")]
 mod schema {}
@@ -43,8 +45,6 @@ async fn run_codegen_query(graphql_url: String, scope: String, name: String) -> 
 
 #[tokio::main]
 async fn main() {
-    dotenv().ok();
-
     let cli = Command::new("telchar")
         .about("Telchar CLI")
         .subcommand_required(true)

@@ -39,7 +39,7 @@ async fn get_raw(url: &str) -> String {
 }
 
 fn get_client() -> Client {
-    let registry_protocol = std::env::var("REGISTRY_PROTOCOL").unwrap_or_default();
+    let registry_protocol = dotenv!("REGISTRY_PROTOCOL");
 
     let client_config = oci_client::client::ClientConfig {
         protocol: if registry_protocol == "http" {
@@ -128,7 +128,7 @@ async fn push(
         ])),
     );
 
-    let registry_host = std::env::var("REGISTRY_HOST").unwrap_or_default();
+    let registry_host = dotenv!("REGISTRY_HOST");
 
     // Define reference of the project
     let reference = Reference::try_from(format!(
