@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@theguild/remark-mermaid": "^0.2.0",
     "next": "^15.1.6",
     "nextra": "^4.1.0",
     "nextra-theme-docs": "^4.1.0",
