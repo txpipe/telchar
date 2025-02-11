@@ -1,3 +1,6 @@
+//! This module provides functions to work with blueprints and schemas, including
+//! parsing JSON, reading from files, and generating templates using Handlebars.
+
 use std::fs;
 use std::str::FromStr;
 use serde_json;
@@ -23,15 +26,42 @@ fn helper_is_type(type_name_str: String, type_name: schema::TypeName) -> bool {
     schema::TypeName::from_str(&type_name_str).unwrap().eq(&type_name)
 }
 
+/// Parses a JSON string into a `Blueprint`.
+///
+/// # Arguments
+///
+/// * `json` - A string containing the JSON representation of the blueprint.
+///
+/// # Returns
+///
+/// A `Blueprint` parsed from the JSON string.
 pub fn get_blueprint_from_json(json: String) -> blueprint::Blueprint {
     serde_json::from_str(&json).expect("Unable to parse")
 }
 
+/// Reads a JSON file from a specified path and parses it into a `Blueprint`.
+///
+/// # Arguments
+///
+/// * `path` - A string representing the file path.
+///
+/// # Returns
+///
+/// A `Blueprint` parsed from the JSON file.
 pub fn get_blueprint_from_path(path: String) -> blueprint::Blueprint {
     let json = fs::read_to_string(path).expect("Unable to read file");
     get_blueprint_from_json(json)
 }
 
+/// Extracts schemas from a given `Blueprint`.
+///
+/// # Arguments
+///
+/// * `blueprint` - A `Blueprint` from which to extract schemas.
+///
+/// # Returns
+///
+/// A vector of `Schema` extracted from the blueprint.
 pub fn get_schemas_from_blueprint(blueprint: blueprint::Blueprint) -> Vec<schema::Schema> {
     let mut schemas: Vec<schema::Schema> = vec![];
     if blueprint.definitions.is_some() {
@@ -138,6 +168,15 @@ pub fn get_schemas_from_blueprint(blueprint: blueprint::Blueprint) -> Vec<schema
     schemas
 }
 
+/// Extracts validators from a given `Blueprint`.
+///
+/// # Arguments
+///
+/// * `blueprint` - A `Blueprint` from which to extract validators.
+///
+/// # Returns
+///
+/// A vector of `Validator` extracted from the blueprint.
 pub fn get_validators_from_blueprint(blueprint: blueprint::Blueprint) -> Vec<schema::Validator> {
     let mut validators: Vec<schema::Validator> = vec![];
     for validator in blueprint.validators.iter() {
@@ -180,6 +219,16 @@ pub fn get_validators_from_blueprint(blueprint: blueprint::Blueprint) -> Vec<sch
     validators
 }
 
+/// Generates a template from a given `Blueprint`.
+///
+/// # Arguments
+///
+/// * `blueprint` - A `Blueprint` from which to generate the template.
+/// * `tpl_folder` - A string representing the folder containing the templates.
+///
+/// # Returns
+///
+/// A string containing the rendered template.
 pub fn get_template_from_blueprint(blueprint: blueprint::Blueprint, tpl_folder: String) -> String {
     let schemas = get_schemas_from_blueprint(blueprint);
 
