@@ -7,3 +7,6 @@
 # Ignore all .env files except .env.example
 .env*
 !.env.example
+
+# Ignore search index data
+public/_pagefind

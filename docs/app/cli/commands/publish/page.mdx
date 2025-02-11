@@ -1,0 +1,21 @@
+---
+title: CLI Publish
+sidebarTitle: Publish
+---
+
+# Publish
+This command will allow you to publish your dapp to the registry. It will take the plutus.json file and README.md file and prepare an OCI image with all the information.
+
+## Usage
+```sh
+telchar publish
+```
+
+The CLI will ask you for the following information:
+- **Name**: The name of the dapp.
+- **Scope**: The scope of the dapp.
+- **Repository URL**: The URL of the repository.
+- **Readme URL**: The URL of the README file.
+- **Blueprint URL (plutus.json)**: The URL of the plutus.json file.
+
+Once this data is confirmed, the CLI will pull the information from the URLs and create the OCI image. The image will be pushed to the registry and will be available throw [Telchar Registry](https://registry.telchar.sh).
