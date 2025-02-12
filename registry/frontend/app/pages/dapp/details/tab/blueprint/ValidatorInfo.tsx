@@ -37,10 +37,10 @@ export function ValidatorInfo({ validator }: ValidatorInfoProps) {
   return (
     <div className="grid grid-cols-[auto_auto_1fr] gap-x-2.5 gap-y-2 mt-6">
       {validator.datum && (
-        <InfoRow title={validator.datum.name ?? 'datum'} value={validator.datum.schemaName} />
+        <InfoRow title="datum" value={validator.datum.schemaName} />
       )}
       {validator.redeemer && (
-        <InfoRow title={validator.redeemer.name ?? 'reedemer'} value={validator.redeemer.schemaName} />
+        <InfoRow title="reedemer" value={validator.redeemer.schemaName} />
       )}
       {(validator.datum || validator.redeemer) && (
         <div className="col-span-3 h-4" />

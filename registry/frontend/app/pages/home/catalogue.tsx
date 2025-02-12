@@ -41,9 +41,9 @@ export function Catalogue({ className, dapps }: CatalogueProps) {
     <section className={className}>
       <div className="flex justify-between items-center">
         <h2 className="text-3xl font-semibold">dApps</h2>
-        <div>
+        {/* <div>
           Filter by: Newest
-        </div>
+        </div> */}
       </div>
       <div className="grid grid-cols-3 gap-6 mt-8">
         {dapps.nodes.map(dapp => (

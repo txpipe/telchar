@@ -2,7 +2,7 @@ import { Link, NavLink } from 'react-router';
 import clsx from 'clsx';
 
 // Components
-import { MenuGridIcon } from '~/components/icons/menu-grid';
+// import { MenuGridIcon } from '~/components/icons/menu-grid';
 
 interface Props {
   appName?: string;
@@ -24,9 +24,9 @@ export function Header({ className, appName, appLink }: Props) {
       </div>
 
       <nav className="flex items-center gap-8">
-        <NavLink to="https://telchar.txpipe.io" target="_blank" rel="noreferrer">Docs</NavLink>
-        <NavLink to="/support">Support</NavLink>
-        <MenuGridIcon />
+        <NavLink to="https://telchar.sh" target="_blank" rel="noreferrer">Docs</NavLink>
+        {/* <NavLink to="/support">Support</NavLink> */}
+        {/* <MenuGridIcon /> */}
       </nav>
     </header>
   );
