@@ -1,7 +1,10 @@
+//! This module defines the structures for a Blueprint, including its preamble, validators, and definitions.
+
 use serde::{Deserialize, Serialize};
 use serde_json::Number;
 use std::collections::BTreeMap;
 
+/// Represents a blueprint containing preamble, validators, and optional definitions.
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Blueprint {
     pub preamble: Preamble,
@@ -9,6 +12,7 @@ pub struct Blueprint {
     pub definitions: Option<Definitions>,
 }
 
+/// Represents the preamble of a blueprint, including metadata such as title, description, version, and compiler information.
 #[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Preamble {
@@ -20,12 +24,14 @@ pub struct Preamble {
     pub license: Option<String>,
 }
 
+/// Represents the compiler information in the preamble.
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Compiler {
     pub name: String,
     pub version: Option<String>,
 }
 
+/// Represents a validator in the blueprint, including its title, description, compiled code, hash, datum, redeemer, and parameters.
 #[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Validator {
@@ -38,6 +44,7 @@ pub struct Validator {
     pub parameters: Option<Vec<Parameter>>,
 }
 
+/// Represents an argument in a validator, including its title, description, purpose, and schema reference.
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Argument {
     pub title: Option<String>,
@@ -46,6 +53,7 @@ pub struct Argument {
     pub schema: Reference,
 }
 
+/// Represents a purpose array which can be either a single purpose or an array of purposes.
 #[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(untagged)]
 pub enum PurposeArray {
@@ -53,6 +61,7 @@ pub enum PurposeArray {
     Array(Vec<Purpose>),   
 }
 
+/// Represents the purpose of an argument, which can be spend, mint, withdraw, or publish.
 #[derive(Debug, Deserialize, Serialize, Clone, Copy, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub enum Purpose {
@@ -62,12 +71,14 @@ pub enum Purpose {
     Publish,
 }
 
+/// Represents a reference to a schema.
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Reference {
     #[serde(rename = "$ref")]
     pub reference: Option<String>,
 }
 
+/// Represents a parameter in a validator, including its title, description, purpose, and schema reference.
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Parameter {
     pub title: Option<String>,
@@ -76,12 +87,14 @@ pub struct Parameter {
     pub schema: Reference,
 }
 
+/// Represents the definitions in a blueprint, which is a map of definition names to their corresponding definitions.
 #[derive(Debug, Default, Deserialize, Serialize, Clone)]
 pub struct Definitions {
     #[serde(flatten, default)]
     pub inner: BTreeMap<String, Definition>,
 }
 
+/// Represents a definition in the blueprint, including its title, description, data type, any_of schemas, items, keys, and values.
 #[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Definition {
@@ -101,6 +114,7 @@ pub struct Definition {
     pub values: Option<Reference>,
 }
 
+/// Represents an array of references which can be either a single reference or an array of references.
 #[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(untagged)]
 pub enum ReferencesArray {
@@ -108,6 +122,7 @@ pub enum ReferencesArray {
     Array(Vec<Reference>),   
 }
 
+/// Represents a schema in a definition, including its title, description, data type, index, and fields.
 #[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Schema {
@@ -120,6 +135,7 @@ pub struct Schema {
     pub fields: Vec<Field>,
 }
 
+/// Represents the data type of a schema, which can be integer, bytes, list, map, or constructor.
 #[derive(Debug, Deserialize, Serialize, Clone, Copy, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub enum DataType {
@@ -130,6 +146,7 @@ pub enum DataType {
     Constructor,
 }
 
+/// Represents a field in a schema, including its title and reference.
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Field {
     #[serde(skip_serializing_if = "Option::is_none")]
