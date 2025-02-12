@@ -1,4 +1,1 @@
 /target
-
-.env*
-!.env.example

@@ -1,5 +1,5 @@
 [package]
-name = "telchar-cli"
+name = "telchar"
 description = "A toolchain that improves the developer experience of integrating Plutus validators in off-chain processes"
 version = "0.1.0"
 edition = "2021"
