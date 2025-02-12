@@ -15,7 +15,7 @@ For simplicity, we also provide diferent installers for supported platform to au
 You can run the following command line script to install Telchar on supported systems (Mac / Linux)
 
 ```sh
-curl --proto '=https' --tlsv1.2 -LsSf https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-cli-installer.sh | sh
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-installer.sh | sh
 ```
 
 ## Install via powershell script
@@ -23,7 +23,7 @@ curl --proto '=https' --tlsv1.2 -LsSf https://github.com/txpipe/telchar/releases
 You can use Powershell to install Telchar on Windows systems.
 
 ```sh
-powershell -ExecutionPolicy Bypass -c "irm https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-cli-installer.ps1 | iex"
+powershell -ExecutionPolicy Bypass -c "irm https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-installer.ps1 | iex"
 ```
 
 ## Install via Homebrew
@@ -31,23 +31,15 @@ powershell -ExecutionPolicy Bypass -c "irm https://github.com/txpipe/telchar/rel
 You can use Homebrew to install the latest version of Telchar in supported systems (Mac / Linux)
 
 ```sh
-brew install txpipe/tap/telchar-cli
-```
-
-## Install via NPM
-
-You can use NPM to install the latest version of Telchar in supported systems (Mac / Linux)
-
-```sh
-npm install @txpipe/telchar-cli@0.1.0
+brew install txpipe/tap/telchar
 ```
 
 ## Download Binaries
 
 |  File  | Platform | Checksum |
 |--------|----------|----------|
-| [telchar-cli-aarch64-apple-darwin.tar.xz](https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-cli-aarch64-apple-darwin.tar.xz) | Apple Silicon macOS | [checksum](https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-cli-aarch64-apple-darwin.tar.xz.sha256) |
-| [telchar-cli-x86_64-apple-darwin.tar.xz](https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-cli-x86_64-apple-darwin.tar.xz) | Intel macOS | [checksum](https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-cli-x86_64-apple-darwin.tar.xz.sha256) |
-| [telchar-cli-aarch64-pc-windows-msvc.zip](https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-cli-aarch64-pc-windows-msvc.zip) | ARM64 Windows | [checksum](https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-cli-aarch64-pc-windows-msvc.zip.sha256) |
-| [telchar-cli-x86_64-pc-windows-msvc.zip](https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-cli-x86_64-pc-windows-msvc.zip) | x64 Windows | [checksum](https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-cli-x86_64-pc-windows-msvc.zip.sha256) |
-| [telchar-cli-x86_64-unknown-linux-gnu.tar.xz](https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-cli-x86_64-unknown-linux-gnu.tar.xz) | x64 Linux | [checksum](https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-cli-x86_64-unknown-linux-gnu.tar.xz.sha256) |
+| [telchar-aarch64-apple-darwin.tar.xz](https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-aarch64-apple-darwin.tar.xz) | Apple Silicon macOS | [checksum](https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-aarch64-apple-darwin.tar.xz.sha256) |
+| [telchar-x86_64-apple-darwin.tar.xz](https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-x86_64-apple-darwin.tar.xz) | Intel macOS | [checksum](https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-x86_64-apple-darwin.tar.xz.sha256) |
+| [telchar-aarch64-pc-windows-msvc.zip](https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-aarch64-pc-windows-msvc.zip) | ARM64 Windows | [checksum](https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-aarch64-pc-windows-msvc.zip.sha256) |
+| [telchar-x86_64-pc-windows-msvc.zip](https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-x86_64-pc-windows-msvc.zip) | x64 Windows | [checksum](https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-x86_64-pc-windows-msvc.zip.sha256) |
+| [telchar-x86_64-unknown-linux-gnu.tar.xz](https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-x86_64-unknown-linux-gnu.tar.xz) | x64 Linux | [checksum](https://github.com/txpipe/telchar/releases/download/v0.1.0/telchar-x86_64-unknown-linux-gnu.tar.xz.sha256) |
