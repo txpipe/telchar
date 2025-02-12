@@ -41,7 +41,9 @@ export function Info({ dapp, className }: Props) {
         <p className="text-white/50">Codegen</p>
         <p className="w-fit mt-4 px-8 py-4 flex items-center gap-3 font-roboto bg-gradient-to-b from-[#434343]/[0.35] to-transparent rounded-lg backdrop-blur-[14.605px]">
           <span>telchar codegen {dapp.scope}/{dapp.name}</span>
-          <CopyIcon />
+          <button type="button" onClick={() => navigator.clipboard.writeText(`telchar codegen ${dapp.scope}/${dapp.name}`)}>
+            <CopyIcon />
+          </button>
         </p>
       </div>
 

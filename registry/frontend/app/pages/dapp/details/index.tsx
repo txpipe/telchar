@@ -2,7 +2,7 @@ import { useSearchParams } from 'react-router';
 
 // Components
 import { DocumentIcon } from '~/components/icons/document';
-import { DeploymentIcon } from '~/components/icons/deployment';
+// import { DeploymentIcon } from '~/components/icons/deployment';
 import { InfoIcon } from '~/components/icons/info';
 import { TabName } from '~/components/TabName';
 import { SearchBar } from '~/components/SearchBar';
@@ -11,7 +11,7 @@ import { ToTopButton } from '~/components/ToTopButton';
 // Local components
 import { TabReadme } from './tab/readme';
 import { TabBlueprint } from './tab/blueprint';
-import { TabDeployment } from './tab/deployment';
+// import { TabDeployment } from './tab/deployment';
 import { Info } from './info';
 
 // Types
@@ -55,12 +55,12 @@ export function DAppDetails({ dapp, readme }: { dapp: Dapp; readme: string | nul
           active={activeTab === 'blueprint'}
           onClick={() => setSearchParams({ activeTab: 'blueprint' })}
         />
-        <TabName
+        {/* <TabName
           icon={<DeploymentIcon width="14" height="14" gradient={activeTab === 'deployment' ? 'secondary' : undefined} />}
           name="Deployment"
           active={activeTab === 'deployment'}
           onClick={() => setSearchParams({ activeTab: 'deployment' })}
-        />
+        /> */}
       </div>
 
       <div className="flex gap-14 mt-8 items-start">
@@ -73,9 +73,9 @@ export function DAppDetails({ dapp, readme }: { dapp: Dapp; readme: string | nul
               schemas={dapp.blueprint.schemas}
             />
           )}
-          {activeTab === 'deployment' && <TabDeployment />}
+          {/* {activeTab === 'deployment' && <TabDeployment />} */}
         </div>
-        <Info dapp={dapp} className="max-w-[460px] sticky top-2" />
+        <Info dapp={dapp} className="max-w-[460px] sticky top-8" />
       </div>
       <ToTopButton />
     </main>

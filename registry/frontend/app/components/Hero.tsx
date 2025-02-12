@@ -2,7 +2,6 @@ import clsx from 'clsx';
 
 // Components
 import { CopyIcon } from '~/components/icons/copy';
-import { MacIcon } from '~/components/icons/mac';
 import { ArrowRightIcon } from '~/components/icons/arrow-right';
 import { SearchBar } from '~/components/SearchBar';
 
@@ -22,23 +21,26 @@ export function Hero({ className, onSearch }: Props) {
       <div className="flex flex-col items-center mt-20 p-8 bg-gradient-to-b from-[#434343]/[0.35] to-transparent rounded-t-xl backdrop-blur-[14.605px]">
         <h2 className="text-2xl font-semibold text-primary-400">Getting started</h2>
         <p className="mt-6 max-w-[800px] text-center">
-          Lorem ipsum dolor sit amet consectetur. Nec diam lacus auctor pretium lorem in montes suspendisse.
-          Nunc magna habitant cras curabitur mattis. Tristique felis penatibus turpis non mollis sed. Ultricies augue.
+          Download and run Telchar effortlessly with our standalone binaries or installers for various systems and
+          architectures. Choose the option that best fits your needs and get started in seconds.
         </p>
         <div className="flex gap-6 mt-8 items-center">
           <p className="px-8 py-3.5 border border-white/30 rounded-full flex items-center gap-3 font-roboto text-lg">
-            brew install gh
-            <CopyIcon />
+            brew install txpipe/tap/telchar
+            <button type="button" onClick={() => navigator.clipboard.writeText('brew install txpipe/tap/telchar')}>
+              <CopyIcon />
+            </button>
           </p>
           <span className="text-white/50">or</span>
-          <p className="px-8 py-3.5 border border-white/30 rounded-full flex items-center gap-3 text-lg">
-            Download for Mac
-            <MacIcon />
-          </p>
-          <p className="flex items-center gap-3">
+          <a
+            href="https://telchar.sh/cli/installation"
+            className="flex items-center gap-3"
+            target="_blank"
+            rel="noreferrer"
+          >
             View instalation instructions
             <ArrowRightIcon className="inline-block" />
-          </p>
+          </a>
         </div>
       </div>
     </section>
