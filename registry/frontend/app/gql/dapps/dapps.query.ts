@@ -63,7 +63,6 @@ export const DAPP_QUERY = gql`
       scope
       publishedDate
       repositoryUrl
-      blueprintUrl
       readme
       blueprint {
         description
@@ -92,6 +91,15 @@ export const DAPP_QUERY = gql`
           schema
         }
       }
+    }
+  }
+`;
+
+export const SMALL_DAPP_QUERY = gql`
+  query dapp($scope: String!, $name: String!) {
+    dapp(scope: $scope, name: $name) {
+      id
+      blueprintUrl
     }
   }
 `;

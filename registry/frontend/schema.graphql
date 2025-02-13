@@ -1,6 +1,6 @@
 
 type Dapp {
-	id: String!
+	id: ID!
 	name: String!
 	scope: String!
 	repositoryUrl: String!

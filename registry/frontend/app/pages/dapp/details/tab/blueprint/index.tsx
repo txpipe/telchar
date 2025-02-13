@@ -11,35 +11,29 @@ import { SchemaInfo } from './SchemaInfo';
 interface Props {
   validators: DappValidator[];
   schemas: DappSchema[];
-  blueprintUrl: string;
+  repo: string;
 }
 
-export function TabBlueprint({ validators, blueprintUrl, schemas }: Props) {
+export function TabBlueprint({ validators, schemas, repo }: Props) {
+  const blueprintUrl = `${import.meta.env.VITE_MAIN_URL}/dapp/${repo}/raw/plutus.json`;
+
   const downloadBlueprint = async () => {
-    if (blueprintUrl) {
-      const rawUrl = blueprintUrl
-        .replace('github.com', 'raw.githubusercontent.com')
-        .replace('/blob', '');
+    try {
+      const result = await fetch(blueprintUrl);
+      if (!result.ok) {
+        throw new Error('Failed to download blueprint');
+      }
+      const blobFile = await result.blob();
+      const blobUrl = window.URL.createObjectURL(blobFile);
 
-      const filename = blueprintUrl.split('/').pop() ?? 'plutus.json';
-
-      try {
-        const result = await fetch(rawUrl);
-        if (!result.ok) {
-          throw new Error('Failed to download blueprint');
-        }
-        const blobFile = await result.blob();
-        const blobUrl = window.URL.createObjectURL(blobFile);
-
-        const tmpLink = document.createElement('a');
-        tmpLink.href = blobUrl;
-        tmpLink.download = filename;
-        document.body.appendChild(tmpLink);
-        tmpLink.click();
-        document.body.removeChild(tmpLink);
-        window.URL.revokeObjectURL(blobUrl);
-      } catch {}
-    }
+      const tmpLink = document.createElement('a');
+      tmpLink.href = blobUrl;
+      tmpLink.download = 'plutus.json';
+      document.body.appendChild(tmpLink);
+      tmpLink.click();
+      document.body.removeChild(tmpLink);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch {}
   };
 
   return (
@@ -48,7 +42,7 @@ export function TabBlueprint({ validators, blueprintUrl, schemas }: Props) {
       <div className="flex flex-row justify-between items-center mt-4">
         <a href={blueprintUrl} className="w-fit text-white flex items-center gap-2.5" target="_blank" rel="noreferrer">
           <GitIcon width="15" height="15" />
-          <span className="underline">{(blueprintUrl ?? '').replace(/http(s)?:\/\//, '')}</span>
+          <span className="underline">{blueprintUrl.replace(/^http(s)?:\/\//, '')}</span>
         </a>
         <Button spacing="compact" text="large" weight="normal" outlined color="white" onClick={downloadBlueprint}>
           Download

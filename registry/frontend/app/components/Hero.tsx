@@ -33,7 +33,7 @@ export function Hero({ className, onSearch }: Props) {
           </p>
           <span className="text-white/50">or</span>
           <a
-            href="https://telchar.sh/cli/installation"
+            href={`${import.meta.env.VITE_DOCS_URL}/cli/installation`}
             className="flex items-center gap-3"
             target="_blank"
             rel="noreferrer"

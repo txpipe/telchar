@@ -100,8 +100,8 @@ pub struct RepoInfo {
 pub struct DAppJson {
     pub name: String,
     pub scope: String,
-    pub repository_url: String,
-    pub blueprint_url: String,
+    pub repository_url: Option<String>,
+    pub blueprint_url: Option<String>,
     pub published_date: Number,
 }
 
@@ -170,4 +170,23 @@ pub fn get_blueprint(image: &ImageData) -> Option<blueprint::Blueprint> {
 
 pub fn get_config(image: &ImageData) -> Option<DAppJson> {
     return serde_json::from_slice(&image.config.data).ok();
+}
+
+pub async fn get_config_from_digest(repo: &str, digest: Option<String>) -> Option<DAppJson> {
+    if let Some(digest) = digest {
+
+        let registry_api = get_registry_api_url();
+    
+        let url = if digest.starts_with("sha256:") {
+            format!("{}/{}/blobs/{}", registry_api, repo, digest)
+        } else {
+            format!("{}/{}/blobs/sha256:{}", registry_api, repo, digest)
+        };
+        
+        let response = reqwest::get(&url).await.unwrap().json::<DAppJson>().await.unwrap();
+    
+        return Some(response);
+    }
+    
+    return None;
 }
