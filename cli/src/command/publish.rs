@@ -75,13 +75,13 @@ async fn push(
     let registry_host = dotenv!("REGISTRY_HOST");
     let registry_protocol = dotenv!("REGISTRY_PROTOCOL");
 
-    let blueprint_url = format!("{}://{}/{}/{}/blobs/sha256:{}", registry_protocol, registry_host, metadata.scope, metadata.name, layers[0].sha256_digest());
+    let blueprint_url = format!("{}://{}/v2/{}/{}/blobs/{}", registry_protocol, registry_host, metadata.scope, metadata.name, layers[0].sha256_digest());
 
 
     // Config
     let config = Config {
         data: serde_json::to_vec(&Metadata {
-            blueprint_url: Some(blueprint_url.clone()),
+            blueprint_url: Some(blueprint_url),
             ..metadata.clone()
         })?,
         media_type: "application/vnd.telchar.metadata.v1+json".to_string(),
@@ -122,14 +122,12 @@ async fn push(
                 "org.opencontainers.image.description".to_string(),
                 description.to_string(),
             ),
-            (
-                "org.opencontainers.image.url".to_string(),
-                blueprint_url,
-            ),
         ])),
     );
 
     // Define reference of the project
+    let registry_host = dotenv!("REGISTRY_HOST");
+
     let reference = Reference::try_from(format!(
         "{}/{}/{}:{}",
         registry_host, metadata.scope, metadata.name, version

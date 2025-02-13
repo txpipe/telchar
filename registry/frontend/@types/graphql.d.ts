@@ -17,7 +17,7 @@ interface Scalars {
 interface Dapp {
   blueprint: DappBlueprint;
   blueprintUrl: Scalars['String']['output'];
-  id: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   publishedDate: Scalars['Int']['output'];
   readme: Scalars['String']['output'];
