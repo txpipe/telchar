@@ -1,4 +1,5 @@
-use async_graphql::{connection::Edge, types::connection::Connection, Error, Object, ID};
+use async_graphql::{connection::Edge, types::connection::Connection, Context, Error, Object, ID};
+use oci_client::client::ImageData;
 use urlencoding::encode;
 
 use crate::{oci, schema::pagination::AdditionalInfo};
@@ -84,7 +85,7 @@ query GlobalSearch {{
         return Ok(Connection::with_additional_fields(false, false, AdditionalInfo::empty()));
     }
 
-    async fn dapp(&self, scope: String, name: String) -> Result<Option<DApp>, Error> {
+    async fn dapp(&self, ctx: &Context<'_>, scope: String, name: String) -> Result<Option<DApp>, Error> {
         let repo = format!("{}/{}", scope, name);
 
         let registry_api = oci::get_registry_api_url();
@@ -129,9 +130,23 @@ query ExpandedRepoInfo {{
 
                     let tag = image.tag.unwrap_or_default();
 
-                    let oci_image = oci::get_oci_image(&repo, &tag).await?;
+                    let mut oci_image: Option<ImageData> = None;
 
-                    let config = oci::get_config(&oci_image);
+                    let mut config: Option<oci::DAppJson> = None;
+
+                    // If we request blueprint or readme, then we need to get the OCI image
+                    if ctx.look_ahead().field("blueprint").exists() || ctx.look_ahead().field("readme").exists() {
+                        oci_image = Some(oci::get_oci_image(&repo, &tag).await?);
+                        if let Some(img) = &oci_image {
+                            config = oci::get_config(img);
+                        }
+                    // Else we only need to get the config
+                    } else if let Some(manifest) = image.manifests.as_ref().and_then(|m| m.first()) {
+                        if let Some(config_digest) = &manifest.config_digest {
+                            config = oci::get_config_from_digest(&repo, Some(config_digest.clone())).await;
+                        }
+                    }
+
 
                     let dapp = DApp {
                         id: ID::from(summary.name.clone()),
@@ -139,16 +154,24 @@ query ExpandedRepoInfo {{
                         scope: image.vendor.unwrap_or_default(),
                         repository_url: image.source.unwrap_or_default(),
                         blueprint_url: if let Some(config) = config {
-                            config.blueprint_url
+                            config.blueprint_url.unwrap_or("".to_string())
                         } else { "".to_string() },
                         published_date: if let Some(published_date) = image.last_updated {
                             chrono::DateTime::parse_from_rfc3339(&published_date)
                                 .unwrap()
                                 .timestamp()
                         } else { 0 },
-                        readme: oci::get_readme(&oci_image),
+                        readme: if let Some(img) = &oci_image {
+                            oci::get_readme(img)
+                        } else {
+                            "".to_string()
+                        },
                         version: tag,
-                        blueprint: oci::get_blueprint(&oci_image),
+                        blueprint: if let Some(img) = &oci_image {
+                            oci::get_blueprint(img)
+                        } else {
+                            None
+                        },
                     };
 
                     return Ok(Some(dapp));
