@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@graphql-codegen/cli": "^5.0.3",
+    "@headlessui/react": "^2.2.0",
     "@react-router/express": "^7.1.5",
     "@react-router/fs-routes": "^7.1.5",
     "@react-router/node": "^7.1.5",

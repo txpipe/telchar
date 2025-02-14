@@ -63,6 +63,17 @@ type DappSchema {
 	schema: String!
 }
 
+"""
+One of the films in the Star Wars Trilogy
+"""
+enum DappSort {
+	ALPHABETIC_ASC
+	ALPHABETIC_DSC
+	UPDATE_TIME
+	RELEVANCE
+	DOWNLOADS
+}
+
 type DappValidator {
 	name: String!
 	datum: DappReference
@@ -101,7 +112,7 @@ type PaginationInfo {
 }
 
 type Query {
-	dapps(pageSize: Int, offset: Int, search: String): DappConnection!
+	dapps(pageSize: Int, offset: Int, search: String, sortBy: DappSort): DappConnection!
 	dapp(scope: String!, name: String!): Dapp
 }
 
