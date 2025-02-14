@@ -1,24 +1,110 @@
 ---
-title: CLI Commands
-sidebarTitle: Commands
+title: Commands
 asIndexPage: true
 ---
 
-import { Cards } from 'nextra/components'
-import { FileIcon, FolderIcon, MdxIcon } from 'nextra/icons'
-import { MDXRemote } from 'nextra/mdx-remote'
-import { createIndexPage, getPageMap } from 'nextra/page-map'
+# Commands
 
-# CLI Commands
+## Codegen
 
-<MDXRemote
-  compiledSource={await createIndexPage(
-    await getPageMap('/cli/commands')
-  )}
-  components={{
-    Cards,
-    FileIcon,
-    FolderIcon,
-    MdxIcon
-  }}
-/>
+This command allows you to obtain the boilerplate code to comunicate with a published DApp
+
+### Usage
+
+```sh
+telchar codegen <scope>/<name> <template>
+```
+
+#### Example
+
+```sh
+telchar codegen txpipe/asteria blaze
+```
+
+Returns
+```ts
+const AssetName = Data.Bytes();
+
+const Int = Data.Integer();
+
+const PolicyId = Data.Bytes();
+
+const PosixTime = Data.Integer();
+
+const ScriptAddress = Data.Bytes();
+
+const AsteriaTypesAssetClass = Data.Object({
+  policy: PolicyId,
+  name: AssetName,
+});
+
+const AsteriaTypesAsteriaDatum = Data.Object({
+  ship_counter: Int,
+  shipyard_policy: PolicyId,
+});
+
+const AsteriaTypesAsteriaRedeemer = Data.Enum([
+  AsteriaTypesAsteriaRedeemerAddNewShip,
+  AsteriaTypesAsteriaRedeemerMine,
+  AsteriaTypesAsteriaRedeemerConsumeAsteria,
+]);
+
+const AsteriaTypesAsteriaRedeemerAddNewShip = Data.Literal("AddNewShip");
+
+const AsteriaTypesAsteriaRedeemerMine = Data.Literal("Mine");
+
+const AsteriaTypesAsteriaRedeemerConsumeAsteria = Data.Literal("ConsumeAsteria");
+
+const AsteriaTypesFuelRedeemer = Data.Enum([
+  AsteriaTypesFuelRedeemerMintFuel,
+  AsteriaTypesFuelRedeemerBurnFuel,
+]);
+
+const AsteriaTypesFuelRedeemerMintFuel = Data.Literal("MintFuel");
+
+const AsteriaTypesFuelRedeemerBurnFuel = Data.Literal("BurnFuel");
+
+const AsteriaTypesPelletDatum = Data.Object({
+  pos_x: Int,
+  pos_y: Int,
+  shipyard_policy: PolicyId,
+});
+
+...
+```
+
+## Codegen Local
+
+This command allows you to obtain the boilerplate code to comunicate with a DApp from a local blueprint file
+
+### Usage
+
+```sh
+telchar codegen-local <blueprint_path> <template>
+```
+
+#### Example
+
+```sh
+telchar codegen-local ./plutus.json blaze
+```
+
+## Publish
+
+This command allows you to publish your DApp to the registry.<br/>
+It will take the `plutus.json` file and `README.md` file and prepare an OCI image with all the information.
+
+### Usage
+```sh
+telchar publish
+```
+
+The CLI will ask you for the following information:
+- **Name**: The name of the DApp.
+- **Scope**: The scope of the DApp.
+- **Repository URL**: The URL of the repository.
+- **Readme URL**: The URL of the README file.
+- **Blueprint URL (plutus.json)**: The URL of the `plutus.json` file.
+
+Once this data is confirmed, the CLI will pull the information from the URLs and create the OCI image.<br/>
+The image will be pushed to the registry and will be available throw [Telchar Registry](https://registry.telchar.sh).

@@ -1,0 +1,148 @@
+---
+title: Usage
+---
+
+# Usage
+
+#### Get a `Blueprint` instance from a `plutus.json` file
+
+```rust
+use telchar_codegen::{blueprint::Blueprint, get_blueprint_from_path};
+
+fn main() {
+    let blueprint: Blueprint = get_blueprint_from_path("plutus.json".to_string());
+}
+```
+
+##### Blueprint instance structs
+
+```rust
+pub struct Blueprint {
+    pub preamble: Preamble,
+    pub validators: Vec<Validator>,
+    pub definitions: Option<Definitions>,
+}
+
+pub struct Preamble {
+    pub title: String,
+    pub description: Option<String>,
+    pub version: String,
+    pub plutus_version: String,
+    pub compiler: Option<Compiler>,
+    pub license: Option<String>,
+}
+
+pub struct Validator {
+    pub title: String,
+    pub description: Option<String>,
+    pub compiled_code: Option<String>,
+    pub hash: Option<String>,
+    pub datum: Option<Argument>,
+    pub redeemer: Option<Argument>,
+    pub parameters: Option<Vec<Parameter>>,
+}
+
+...
+```
+
+#### Get a validators list from a `Blueprint`
+
+```rust
+use telchar_codegen::{
+    blueprint::Blueprint,
+    schema::Validator,
+    get_blueprint_from_path,
+    get_validators_from_blueprint
+};
+
+fn main() {
+    let blueprint: Blueprint = get_blueprint_from_path("plutus.json".to_string());
+    let validators: Vec<Validator> = get_validators_from_blueprint(blueprint);
+}
+```
+
+##### Validator instance structs
+
+```rust
+pub struct Validator {
+    pub name: String,
+    pub datum: Option<Reference>,
+    pub redeemer: Option<Reference>,
+    pub parameters: Vec<Reference>,
+}
+
+pub struct Reference {
+    pub name: Option<String>,
+    pub schema_name: String,
+}
+```
+
+#### Get a schemas list from a `Blueprint`
+
+```rust
+use telchar_codegen::{
+    blueprint::Blueprint,
+    schema::Schema,
+    get_blueprint_from_path,
+    get_schemas_from_blueprint
+};
+
+fn main() {
+    let blueprint: Blueprint = get_blueprint_from_path("plutus.json".to_string());
+    let schemas: Vec<Schema> = get_schemas_from_blueprint(blueprint);
+}
+```
+
+##### Schema instance structs
+
+```rust
+pub struct Schema {
+    pub name: String,
+    pub type_name: TypeName,
+    pub properties: Option<Vec<Reference>>,
+    pub json: String,
+}
+
+pub struct Reference {
+    pub name: Option<String>,
+    pub schema_name: String,
+}
+```
+
+#### Create codegen from a `Blueprint`
+
+```rust
+use telchar_codegen::{
+    template::Template,
+    blueprint::Blueprint,
+    get_blueprint_from_path,
+    get_template_from_blueprint,
+};
+
+fn main() {
+    let blueprint: Blueprint = get_blueprint_from_path("plutus.json".to_string());
+    let template: String = get_template_from_blueprint(blueprint, Template::Blaze);
+}
+```
+
+##### Codegen example (Blaze)
+
+```ts
+const ByteArray = Data.Bytes();
+
+const ListByteArray = Data.Array(ByteArray);
+
+const TipjarDatum = Data.Object({
+  owner: ByteArray,
+  messages: ListByteArray,
+});
+
+const TipjarRedeemer = Data.Enum([
+  TipjarRedeemerClaim,
+  TipjarRedeemerAddTip,
+]);
+
+const TipjarRedeemerClaim = Data.Literal("Claim");
+
+const TipjarRedeemerAddTip = Data.Literal("AddTip");
+```

@@ -1,3 +1,6 @@
+
+pub fn get_template() -> String {
+    r#"
 {{#each this}}
 
   {{~ #if (is_integer type_name) ~}}
@@ -45,3 +48,5 @@ const {{name}} = Data.Array({{properties.[0].schema_name}});
   {{/if}}
 
 {{/each}}
+    "#.to_string()
+}
