@@ -1,8 +1,10 @@
 use async_graphql::{ComplexObject, SimpleObject, ID};
 use telchar_codegen::{get_blueprint_from_path, get_validators_from_blueprint, get_schemas_from_blueprint, get_template_from_blueprint};
 use telchar_codegen::blueprint::Blueprint;
+use telchar_codegen::template::Template;
 use serde::{Deserialize, Serialize};
 use serde_json;
+use std::str::FromStr;
 
 mod query;
 
@@ -107,7 +109,8 @@ impl DAppBlueprint {
         schemas
     }
 
-    async fn codegen(&self) -> String {
-        get_template_from_blueprint(self.blueprint.clone(), "../../codegen/templates".to_string())
+    async fn codegen(&self, template: String) -> String {
+        let template = Template::from_str(template.as_str()).unwrap();
+        get_template_from_blueprint(self.blueprint.clone(), template)
     }
 }
