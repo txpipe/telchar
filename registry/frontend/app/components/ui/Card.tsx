@@ -2,18 +2,19 @@ import type { PropsWithChildren } from 'react';
 import { tv, type VariantProps } from 'tailwind-variants';
 
 const card = tv({
-  base: 'z-0 relative rounded-[10px] card py-6 px-8',
+  base: 'z-0 relative rounded-[10px] py-6 px-8',
   variants: {
     color: {
-      primary: 'bg-gradient-to-b from-[#FF02E6]/[0.12] to-white/0',
+      'primary-gradient': 'bg-gradient-to-b from-[#FF02E6]/[0.12] to-white/0',
+      white: 'bg-white/[0.02]',
     },
     borderColor: {
-      white: 'after:bg-gradient-to-b after:from-white/60 after:via-transparent after:to-white/60 after:bg-origin-border',
+      white: 'border border-white/10',
     },
   },
 
   defaultVariants: {
-    color: 'primary',
+    color: 'white',
     borderColor: 'white',
   },
 });
