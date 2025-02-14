@@ -1,0 +1,48 @@
+{
+  "name": "telchar-landing",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "cross-env NODE_ENV=production react-router build",
+    "dev": "cross-env NODE_ENV=development react-router dev",
+    "lint:fix": "eslint . --fix",
+    "lint:staged": "lint-staged",
+    "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
+    "postinstall": "pnpm run typegen",
+    "start": "cross-env NODE_ENV=production react-router-serve ./build/server/index.js",
+    "typecheck": "react-router typegen && tsc",
+    "typegen": "react-router typegen"
+  },
+  "dependencies": {
+    "@react-router/fs-routes": "^7.1.5",
+    "@react-router/node": "^7.1.5",
+    "@react-router/serve": "^7.1.5",
+    "clsx": "^2.1.1",
+    "isbot": "^5.1.17",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router": "^7.1.5",
+    "react-router-typesafe-routes": "^2.0.0"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.2.6",
+    "@react-router/dev": "^7.1.5",
+    "@stylistic/eslint-plugin": "^3.1.0",
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/node": "^20.17.19",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.1",
+    "@typescript-eslint/eslint-plugin": "^8.24.0",
+    "@typescript-eslint/parser": "^8.24.0",
+    "cross-env": "^7.0.3",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "globals": "^15.15.0",
+    "lint-staged": "^15.4.3",
+    "react-router-devtools": "^1.1.4",
+    "tailwindcss": "^4.0.6",
+    "typescript": "^5.7.2",
+    "vite": "^6.1.0",
+    "vite-tsconfig-paths": "^5.1.4"
+  }
+}
