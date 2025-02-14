@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
+import { twMerge } from 'tailwind-merge';
 
 // Components
 import { SearchIcon } from '~/components/icons/search';
@@ -13,7 +14,7 @@ import { useFetcherWithReset } from '~/hooks/useFetcherWithReset';
 interface Props {
   className?: string;
   onSearch?: (search: string) => void;
-  showViewAll?: boolean;
+  dark?: boolean;
 }
 
 function SearchResult({ dapp, onResultClick }: { dapp: Dapp; onResultClick?: () => void; }) {
@@ -33,7 +34,7 @@ function SearchResult({ dapp, onResultClick }: { dapp: Dapp; onResultClick?: () 
   );
 }
 
-export function SearchBar({ className, showViewAll }: Props) {
+export function SearchBar({ className, dark }: Props) {
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 300);
   const searchRef = useRef<HTMLInputElement>(null);
@@ -58,20 +59,20 @@ export function SearchBar({ className, showViewAll }: Props) {
 
   return (
     <div className="flex items-center gap-14">
-      <search className={clsx('flex relative gap-8 w-full items-center', className)}>
-        <SearchIcon className="absolute text-black left-6 pointer-events-none" width="26" height="26" />
+      <search className={twMerge('flex relative gap-8 w-full items-center text-black', className, dark && 'text-white/90')}>
+        <SearchIcon className="absolute left-6 pointer-events-none" width="26" height="26" />
         <input
           ref={searchRef}
           type="text"
           placeholder="Search dApps..."
           onChange={e => setSearch(e.target.value)}
           value={search}
-          className="w-full rounded-full py-3.5 px-[68px] placeholder:text-black/50 placeholder:text-lg text-black"
+          className={twMerge('w-full rounded-full py-3.5 px-[68px] placeholder:text-black/50 placeholder:text-lg', dark && 'border border-white/50 bg-white/[0.02] placeholder:text-white/50')}
         />
         <TimesIcon
           className={
             clsx(
-              'absolute right-6 cursor-pointer text-black transition-opacity duration-200',
+              'absolute right-6 cursor-pointer transition-opacity duration-200',
               search ? 'opacity-100' : 'opacity-0 pointer-events-none',
             )
           }
@@ -96,11 +97,6 @@ export function SearchBar({ className, showViewAll }: Props) {
           </div>
         )}
       </search>
-      {showViewAll && (
-        <Link to="/" className="text-white/95 underline underline-offset-[3px]">
-          View all dApps
-        </Link>
-      )}
     </div>
   );
 }

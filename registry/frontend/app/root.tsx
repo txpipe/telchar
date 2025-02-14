@@ -11,7 +11,6 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
 
 // Components
-import { Header } from '~/components/Header';
 import { Footer } from '~/components/Footer';
 
 import type { Route } from './+types/root';
@@ -55,7 +54,6 @@ export function Layout({ children }: { children: React.ReactNode; }) {
 export default function App() {
   return (
     <>
-      <Header appName="Registry" />
       <Outlet />
       <Footer className="mt-20" />
     </>
