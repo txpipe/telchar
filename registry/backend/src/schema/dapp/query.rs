@@ -3,7 +3,7 @@ use oci_client::client::ImageData;
 use urlencoding::encode;
 
 use crate::{oci, schema::pagination::AdditionalInfo};
-use super::DApp;
+use super::{DApp, DAppSort};
 
 #[derive(Default)]
 pub struct DAppQuery;
@@ -15,6 +15,7 @@ impl DAppQuery {
         page_size: Option<i32>,
         offset: Option<i32>,
         search: Option<String>,
+        sort_by: Option<DAppSort>,
     ) -> Result<Connection<usize, DApp, AdditionalInfo>, Error> {
         let _offset = offset.unwrap_or(0);
         let _page_size = page_size.unwrap_or(15).min(30);
@@ -29,7 +30,8 @@ query GlobalSearch {{
         }}
     }}
 }}
-        "#, _page_size, _offset, "ALPHABETIC_ASC", search.unwrap_or_default());
+        "#, _page_size, _offset, sort_by.unwrap_or(DAppSort::AlphabeticAsc), search.unwrap_or_default());
+        
 
         let encode_query = encode(&query_param);
         let url = format!("{}/_zot/ext/search?query={}", registry_api, encode_query);

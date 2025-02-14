@@ -4,6 +4,7 @@ import {
   dappsQueryKeyGenerator,
   generateDAppsArgs,
   DAPPS_DEFAULT_PAGINATION,
+  DAPPS_DEFAULT_SORT,
 } from '~/gql/dapps/dapps.query';
 import { requestGraphQL } from '~/gql/gql.server';
 
@@ -25,6 +26,7 @@ export async function loader({ context, ...others }: Route.LoaderArgs) {
     || DAPPS_DEFAULT_PAGINATION.page;
   let size = parseInt(url.searchParams.get('size') || DAPPS_DEFAULT_PAGINATION.size.toString(), 10)
     || DAPPS_DEFAULT_PAGINATION.size;
+  const sortBy = url.searchParams.get('sort') || DAPPS_DEFAULT_SORT;
 
   // Limit the size to 25
   if (size > 25) {
@@ -35,7 +37,7 @@ export async function loader({ context, ...others }: Route.LoaderArgs) {
     queryKey: dappsQueryKeyGenerator(page, size),
     queryFn: requestGraphQL<{ dapps: Query['dapps']; }, QueryDappsArgs>(
       DAPPS_QUERY,
-      generateDAppsArgs(page, size),
+      generateDAppsArgs(page, size, undefined, sortBy),
     ),
   });
 
