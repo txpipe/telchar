@@ -19,10 +19,9 @@ function PackageCard({ dapp }: { dapp: Dapp; }) {
     <Link to={`/dapp/${dapp.scope}/${dapp.name}`}>
       <Card>
         <h3 className="text-lg font-semibold">{dapp.name}</h3>
-        <div>
+        <div className="mt-2">
           <span className="text-primary-400">@{dapp.scope ?? ''}</span>
-          <span> • </span>
-          <span>v{dapp.version}</span>
+          <span className="text-white/50"> • v{dapp.version}</span>
         </div>
       </Card>
     </Link>

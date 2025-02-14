@@ -50,11 +50,11 @@ export function DeploymentIcon(
           <stop stopColor="#3BE0FE" />
           <stop offset="1" stopColor="#0094AE" />
         </linearGradient>
-        <linearGradient id="secondary04" x1="nan" x2="nan" y1="nan" y2="nan" gradientUnits="userSpaceOnUse">
+        <linearGradient id="secondary04" gradientUnits="userSpaceOnUse">
           <stop stopColor="#3BE0FE" />
           <stop offset="1" stopColor="#0094AE" />
         </linearGradient>
-        <linearGradient id="secondary05" x1="nan" x2="nan" y1="nan" y2="nan" gradientUnits="userSpaceOnUse">
+        <linearGradient id="secondary05" gradientUnits="userSpaceOnUse">
           <stop stopColor="#3BE0FE" />
           <stop offset="1" stopColor="#0094AE" />
         </linearGradient>
