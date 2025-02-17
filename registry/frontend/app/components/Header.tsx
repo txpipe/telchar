@@ -24,7 +24,7 @@ export function Header({ className, appName, appLink }: Props) {
       </div>
 
       <nav className="flex items-center gap-8">
-        <NavLink to="https://telchar.sh" target="_blank" rel="noreferrer">Docs</NavLink>
+        <NavLink to={import.meta.env.VITE_DOCS_URL} target="_blank" rel="noreferrer">Docs</NavLink>
         {/* <NavLink to="/support">Support</NavLink> */}
         {/* <MenuGridIcon /> */}
       </nav>

@@ -1,5 +1,4 @@
-use console::Term;
-use dialoguer::{Confirm, Input};
+use inquire::{Confirm, Text};
 
 use oci_client::{
     client::{Config, ImageLayer},
@@ -8,34 +7,20 @@ use oci_client::{
     Client, Reference,
 };
 
+use telchar_codegen::get_blueprint_from_json;
+use telchar_codegen::blueprint::Blueprint;
+
 use serde::{Deserialize, Serialize};
+use std::{fs, path::PathBuf};
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub struct Metadata {
-    pub repository_url: String,
-    pub blueprint_url: String,
+    pub repository_url: Option<String>,
+    pub blueprint_url: Option<String>,
     pub name: String,
     pub scope: String,
     pub published_date: i64,
-}
-
-async fn get_raw(url: &str) -> String {
-    // TODO: Handle other sources
-    if !url.contains("github.com") {
-        return "".to_string();
-    }
-
-    let raw_url = url
-        .replace("github.com", "raw.githubusercontent.com")
-        .replace("/blob/", "/");
-
-    surf::get(raw_url)
-        .await
-        .unwrap()
-        .body_string()
-        .await
-        .unwrap()
 }
 
 fn get_client() -> Client {
@@ -55,21 +40,13 @@ fn get_client() -> Client {
 
 async fn push(
     metadata: &Metadata,
-    readme: &str,
+    readme: Option<String>,
     blueprint_string: &str,
     version: &str,
     description: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
     // Layers
-    let layers = vec![
-        ImageLayer::new(
-            readme.as_bytes().to_vec(),
-            "application/vnd.telchar.readme.v1".to_string(),
-            Some(std::collections::BTreeMap::from([(
-                "org.opencontainers.image.title".to_string(),
-                "README.md".to_string(),
-            )])),
-        ),
+    let mut layers= vec![
         ImageLayer::new(
             blueprint_string.as_bytes().to_vec(),
             "application/vnd.telchar.blueprint.v1+json".to_string(),
@@ -77,12 +54,36 @@ async fn push(
                 "org.opencontainers.image.title".to_string(),
                 "plutus.json".to_string(),
             )])),
-        ),
+        )
     ];
+
+    if let Some(_readme) = readme {
+        let readme_layer = ImageLayer::new(
+            _readme.as_bytes().to_vec(),
+            "application/vnd.telchar.readme.v1".to_string(),
+            Some(std::collections::BTreeMap::from([(
+                "org.opencontainers.image.title".to_string(),
+                "README.md".to_string(),
+            )])),
+        );
+
+        layers.push(readme_layer);
+    }
+
+
+    // Make blueprint_url 
+    let registry_host = dotenv!("REGISTRY_HOST");
+    let registry_protocol = dotenv!("REGISTRY_PROTOCOL");
+
+    let blueprint_url = format!("{}://{}/v2/{}/{}/blobs/{}", registry_protocol, registry_host, metadata.scope, metadata.name, layers[0].sha256_digest());
+
 
     // Config
     let config = Config {
-        data: serde_json::to_vec(&metadata)?,
+        data: serde_json::to_vec(&Metadata {
+            blueprint_url: Some(blueprint_url),
+            ..metadata.clone()
+        })?,
         media_type: "application/vnd.telchar.metadata.v1+json".to_string(),
         annotations: Some(std::collections::BTreeMap::from([(
             "org.opencontainers.image.title".to_string(),
@@ -97,7 +98,7 @@ async fn push(
         Some(std::collections::BTreeMap::from([
             (
                 "org.opencontainers.image.source".to_string(),
-                metadata.repository_url.to_string(),
+                metadata.repository_url.clone().unwrap_or_default(),
             ),
             (
                 "org.opencontainers.image.created".to_string(),
@@ -121,16 +122,12 @@ async fn push(
                 "org.opencontainers.image.description".to_string(),
                 description.to_string(),
             ),
-            (
-                "org.opencontainers.image.url".to_string(),
-                metadata.blueprint_url.to_string(),
-            ),
         ])),
     );
 
+    // Define reference of the project
     let registry_host = dotenv!("REGISTRY_HOST");
 
-    // Define reference of the project
     let reference = Reference::try_from(format!(
         "{}/{}/{}:{}",
         registry_host, metadata.scope, metadata.name, version
@@ -149,47 +146,126 @@ async fn push(
     Ok(())
 }
 
+fn get_blueprint_file(path: String) -> (Blueprint, String) {
+    let mut path_buf = PathBuf::from(path);
+    if path_buf.is_dir() {
+        path_buf.push("plutus.json");
+    }
+    let plutus_exists = fs::exists(&path_buf).unwrap_or(false);
+
+    if plutus_exists {
+        println!("Found blueprint file at: {:?}", path_buf.display());
+        println!("Processing...");
+        let output_string = fs::read_to_string(path_buf).expect("Unable to read file");
+        let output = get_blueprint_from_json(output_string.clone());
+        println!("Blueprint processed successfully!");
+        return (output, output_string);
+    }
+
+    clearscreen::clear().unwrap();
+    println!("Blueprint file not found!");
+    let new_path = loop {
+
+        let path = Text::new("Enter the path to the plutus.json file: ")
+            .prompt();
+
+        match path {
+            Ok(path) => {
+                if !path.is_empty() {
+                    break path;
+                }
+            }
+            Err(_) => {
+                std::process::exit(1);
+            }
+        }
+    };
+    
+    return get_blueprint_file(new_path);
+}
+
+fn get_readme_file(path: Option<String>) -> Option<String> {
+    if path.is_none() {
+        return None;
+    }
+
+    let mut path_buf = PathBuf::from(path.unwrap());
+    if path_buf.is_dir() {
+        path_buf.push("README.md");
+    }
+    let plutus_exists = fs::exists(&path_buf).unwrap_or(false);
+
+    if plutus_exists {
+        println!("Found README.md file at: {:?}", path_buf.display());
+        println!("Reading...");
+        let output = fs::read_to_string(path_buf).unwrap();
+        println!("README.md read successfully!");
+        return Some(output);
+    }
+
+    clearscreen::clear().unwrap();
+    println!("README.md not found. If you don't have one, you can skip this option");
+    let new_path = loop {
+
+        let path = Text::new("Enter the path to the README.md file: ")
+            .prompt_skippable();
+
+        match path {
+            Ok(path) => {
+                if path.as_ref().is_some_and(|x| x.is_empty()) {
+                    break None;
+                }
+
+                break path;
+            }
+            Err(_) => {
+                std::process::exit(1);
+            }
+        }
+    };
+    
+    return get_readme_file(new_path);
+}
+
 pub async fn run() {
-    let term = Term::stdout();
-    term.clear_screen().unwrap();
+    clearscreen::clear().unwrap();
 
-    println!("Publish a new DApp\n");
-    let name = Input::<String>::new()
-        .with_prompt("DApp name")
-        .interact_text()
+    let (blueprint, blueprint_json) = get_blueprint_file(".".to_string());
+
+    let readme = get_readme_file(Some(".".to_string()));
+    
+    clearscreen::clear().unwrap();
+
+    println!("Now, we need to confirm some details");
+
+    let parts: Vec<&str> = blueprint.preamble.title.split("/").collect();
+    let mut scope = parts.get(0).unwrap_or(&"").to_string();
+    let mut name = parts.get(1).unwrap_or(&"").to_string();
+
+    scope = Text::new("Scope")
+        .with_default(scope.as_str())
+        .prompt()
+        .unwrap_or_default();
+
+    name = Text::new("Name")
+        .with_default(name.as_str())
+        .prompt()
+        .unwrap_or_default();
+
+    let repository_url = Text::new("Repository URL")
+        .prompt_skippable()
         .unwrap();
 
-    let scope = Input::<String>::new()
-        .with_prompt("Scope")
-        .interact_text()
+    clearscreen::clear().unwrap();
+
+    println!("DApp details\n\nName: {}\nScope: {}\nRepository URL: {}\n\n", name, scope, repository_url.clone().unwrap_or("".to_string()));
+
+    let confirm = Confirm::new("Are the details correct?")
+        .with_default(true)
+        .prompt()
         .unwrap();
 
-    let repository_url = Input::<String>::new()
-        .with_prompt("Repository URL")
-        .interact_text()
-        .unwrap();
-
-    let readme_url = Input::<String>::new()
-        .with_prompt("Readme URL")
-        .interact_text()
-        .unwrap();
-
-    let blueprint_url = Input::<String>::new()
-        .with_prompt("Blueprint URL (plutus.json)")
-        .interact_text()
-        .unwrap();
-
-    term.clear_screen().unwrap();
-
-    let confirm = Confirm::new()
-        .with_prompt(format!(
-            "DApp details\n\nName: {}\nScope: {}\nRepository URL: {}\nReadme URL: {}\nBlueprint URL: {}\n\nAre the details correct?",
-            name, scope, repository_url, readme_url, blueprint_url
-        ))
-        .interact()
-        .unwrap();
-
-    term.clear_screen().unwrap();
+    clearscreen::clear().unwrap();
 
     if !confirm {
         println!("Publishing cancelled.");
@@ -202,34 +278,18 @@ pub async fn run() {
         name,
         scope,
         repository_url,
-        blueprint_url,
+        blueprint_url: None,
         published_date: std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .unwrap()
             .as_secs() as i64,
     };
 
-    println!("Reading blueprint and readme...");
-    let blueprint = get_raw(&metadata.blueprint_url).await;
-    let readme = get_raw(&readme_url).await;
-
-
-    println!("Reading information from blueprint...");
-    let blueprint_json: serde_json::Value =
-        serde_json::from_str(&blueprint).expect("Failed to parse blueprint JSON");
-
-    let version = match blueprint_json.get("preamble") {
-        Some(preamble) => preamble["version"].as_str().unwrap_or("0.0.0"),
-        None => "0.0.0",
-    };
-
-    let description = match blueprint_json.get("preamble") {
-        Some(preamble) => preamble["description"].as_str().unwrap_or(""),
-        None => "",
-    };
+    let version = blueprint.preamble.version.as_str();
+    let description = blueprint.preamble.description.unwrap_or_default();
 
     println!("Publishing DApp...");
-    let result = push(&metadata, &readme, &blueprint, version, description).await;
+    let result = push(&metadata, readme, &blueprint_json, version, description.as_str()).await;
 
     if let Err(err) = result {
         eprintln!("Error during push: {}", err);
