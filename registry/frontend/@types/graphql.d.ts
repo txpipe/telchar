@@ -38,6 +38,10 @@ interface DappBlueprint {
   version: Scalars['String']['output'];
 }
 
+interface DappBlueprintCodegenArgs {
+  template: Scalars['String']['input'];
+}
+
 interface DappConnection {
   /** A list of edges. */
   edges: Array<DappEdge>;

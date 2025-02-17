@@ -20,7 +20,7 @@ type DappBlueprint {
 	plutusVersion: String!
 	validators: [DappValidator!]!
 	schemas: [DappSchema!]!
-	codegen: String!
+	codegen(template: String!): String!
 }
 
 type DappConnection {
