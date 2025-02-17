@@ -28,7 +28,7 @@ export function Home() {
           Need help? Join the support <a href="#" className="underline underline-offset-3">Discord</a> or <a href="#" className="underline underline-offset-3">Read the docs</a>.
         </p>
       </div>
-      <img src="/images/logo.svg" className="aspect-[324/383] hidden sm:block sm:w-[180px] md:w-[240px] lg:w-[270px] xl:w-[324px] absolute left-5 -bottom-14 pointer-events-none" />
+      <img src="/images/logo.svg" className="aspect-[324/383] hidden lg:block lg:w-[270px] xl:w-[324px] absolute left-5 -bottom-14 pointer-events-none" />
     </main>
   );
 }
