@@ -1,4 +1,6 @@
-use async_graphql::{ComplexObject, SimpleObject, ID};
+use std::fmt;
+
+use async_graphql::{ComplexObject, Enum, SimpleObject, ID};
 use telchar_codegen::{get_blueprint_from_path, get_validators_from_blueprint, get_schemas_from_blueprint, get_template_from_blueprint};
 use telchar_codegen::blueprint::Blueprint;
 use telchar_codegen::template::Template;
@@ -60,6 +62,16 @@ pub struct DAppSchema {
     schema: String,
 }
 
+/// One of the films in the Star Wars Trilogy
+#[derive(Enum, Copy, Clone, Eq, PartialEq)]
+pub enum DAppSort {
+    AlphabeticAsc,
+    AlphabeticDsc,
+    UpdateTime,
+    Relevance,
+    Downloads,
+}
+
 #[ComplexObject]
 impl DApp {
     async fn blueprint(&self) -> DAppBlueprint {
@@ -112,5 +124,17 @@ impl DAppBlueprint {
     async fn codegen(&self, template: String) -> String {
         let template = Template::from_str(template.as_str()).unwrap();
         get_template_from_blueprint(self.blueprint.clone(), template)
+    }
+}
+
+impl fmt::Display for DAppSort {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            DAppSort::AlphabeticAsc => write!(f, "ALPHABETIC_ASC"),
+            DAppSort::AlphabeticDsc => write!(f, "ALPHABETIC_DSC"),
+            DAppSort::Relevance => write!(f, "RELEVANCE"),
+            DAppSort::UpdateTime => write!(f, "UPDATE_TIME"),
+            DAppSort::Downloads => write!(f, "DOWNLOADS"),
+        }
     }
 }

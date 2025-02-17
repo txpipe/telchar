@@ -38,6 +38,10 @@ interface DappBlueprint {
   version: Scalars['String']['output'];
 }
 
+interface DappBlueprintCodegenArgs {
+  template: Scalars['String']['input'];
+}
+
 interface DappConnection {
   /** A list of edges. */
   edges: Array<DappEdge>;
@@ -65,6 +69,14 @@ interface DappSchema {
   name: Scalars['String']['output'];
   schema: Scalars['String']['output'];
 }
+
+/** One of the films in the Star Wars Trilogy */
+type DappSort =
+  | 'ALPHABETIC_ASC'
+  | 'ALPHABETIC_DSC'
+  | 'DOWNLOADS'
+  | 'RELEVANCE'
+  | 'UPDATE_TIME';
 
 interface DappValidator {
   datum: Maybe<DappReference>;
@@ -104,4 +116,5 @@ interface QueryDappsArgs {
   offset: InputMaybe<Scalars['Int']['input']>;
   pageSize: InputMaybe<Scalars['Int']['input']>;
   search: InputMaybe<Scalars['String']['input']>;
+  sortBy: InputMaybe<DappSort>;
 }

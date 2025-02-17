@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 
 // Components
 import { DocumentIcon } from '~/components/icons/document';
@@ -7,8 +7,10 @@ import { InfoIcon } from '~/components/icons/info';
 import { TabName } from '~/components/TabName';
 import { SearchBar } from '~/components/SearchBar';
 import { ToTopButton } from '~/components/ToTopButton';
+import { Header } from '~/components/Header';
 
 // Local components
+import { ArrowLeftIcon } from '~/components/icons/arrow-left';
 import { TabReadme } from './tab/readme';
 import { TabBlueprint } from './tab/blueprint';
 // import { TabDeployment } from './tab/deployment';
@@ -33,51 +35,60 @@ export function DAppDetails({ dapp, readme }: { dapp: Dapp; readme: string | nul
   const activeTab: Tab = getValidTab(searchParams.get('activeTab')?.toLowerCase());
 
   return (
-    <main className="mt-14">
-      <SearchBar className="max-w-[677px]" showViewAll />
-      <h1 className="text-3xl font-semibold mt-20">{dapp.name}</h1>
-      <div className="mt-2 text-xl">
-        <h2 className="inline text-primary-400">@{dapp.scope}</h2>
-        <span className="text-white/60"> • v{dapp.blueprint.version}</span>
-      </div>
-      <p className="text-white/60 mt-6">{dapp.blueprint.description}</p>
-
-      <div className="flex mt-14 border-b-[#3E3E3E] border-b gap-6">
-        <TabName
-          icon={<InfoIcon width="14" height="14" gradient={activeTab === 'readme' ? 'secondary' : undefined} />}
-          name="Readme"
-          active={activeTab === 'readme'}
-          onClick={() => setSearchParams({ activeTab: 'readme' })}
-        />
-        <TabName
-          icon={<DocumentIcon width="14" height="14" gradient={activeTab === 'blueprint' ? 'secondary' : undefined} />}
-          name="Blueprint"
-          active={activeTab === 'blueprint'}
-          onClick={() => setSearchParams({ activeTab: 'blueprint' })}
-        />
-        {/* <TabName
-          icon={<DeploymentIcon width="14" height="14" gradient={activeTab === 'deployment' ? 'secondary' : undefined} />}
-          name="Deployment"
-          active={activeTab === 'deployment'}
-          onClick={() => setSearchParams({ activeTab: 'deployment' })}
-        /> */}
-      </div>
-
-      <div className="flex gap-14 mt-8 items-start">
-        <div className="w-full">
-          {activeTab === 'readme' && <TabReadme readme={readme} />}
-          {activeTab === 'blueprint' && (
-            <TabBlueprint
-              validators={dapp.blueprint.validators}
-              schemas={dapp.blueprint.schemas}
-              repo={dapp.id}
-            />
-          )}
-          {/* {activeTab === 'deployment' && <TabDeployment />} */}
+    <>
+      <Header
+        appName="Registry"
+        centerNode={<SearchBar className="md:max-w-[500px]" dark />}
+      />
+      <main className="mt-20">
+        <h1 className="text-3xl font-semibold mt-20">{dapp.name}</h1>
+        <div className="mt-2 text-xl">
+          <h2 className="inline text-primary-400">@{dapp.scope}</h2>
+          <span className="text-white/60"> • v{dapp.blueprint.version}</span>
         </div>
-        <Info dapp={dapp} className="max-w-[460px] sticky top-8" />
-      </div>
-      <ToTopButton />
-    </main>
+        <p className="text-white/30 mt-6">{dapp.blueprint.description}</p>
+
+        <div className="flex mt-14 border-b-[#3E3E3E] border-b gap-8">
+          <TabName
+            icon={<InfoIcon width="18" height="18" gradient={activeTab === 'readme' ? 'secondary' : undefined} />}
+            name="Readme"
+            active={activeTab === 'readme'}
+            onClick={() => setSearchParams({ activeTab: 'readme' })}
+          />
+          <TabName
+            icon={<DocumentIcon width="18" height="18" gradient={activeTab === 'blueprint' ? 'secondary' : undefined} />}
+            name="Blueprint"
+            active={activeTab === 'blueprint'}
+            onClick={() => setSearchParams({ activeTab: 'blueprint' })}
+          />
+          {/* <TabName
+            icon={<DeploymentIcon width="18" height="18" gradient={activeTab === 'deployment' ? 'secondary' : undefined} />}
+            name="Deployment"
+            active={activeTab === 'deployment'}
+            onClick={() => setSearchParams({ activeTab: 'deployment' })}
+          /> */}
+        </div>
+
+        <div className="flex gap-14 mt-8 items-start">
+          <div className="w-full">
+            {activeTab === 'readme' && <TabReadme readme={readme} />}
+            {activeTab === 'blueprint' && (
+              <TabBlueprint
+                validators={dapp.blueprint.validators}
+                schemas={dapp.blueprint.schemas}
+                repo={dapp.id}
+              />
+            )}
+            {/* {activeTab === 'deployment' && <TabDeployment />} */}
+          </div>
+          <Info dapp={dapp} className="max-w-[460px] sticky top-8" />
+        </div>
+        <ToTopButton />
+
+        <Link to="/" className="flex items-center gap-3 w-fit text-white/80 hover:underline hover:underline-offset-[3px] hover:text-primary-400 mt-14">
+          <ArrowLeftIcon width="18" height="18" /> Back to all dApps
+        </Link>
+      </main>
+    </>
   );
 }

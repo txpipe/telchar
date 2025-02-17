@@ -17,8 +17,7 @@ export function Hero({ className, onSearch }: Props) {
 
       <SearchBar className="mt-14 mx-auto  max-w-[836px]" onSearch={onSearch} />
 
-      {/* <div className="relative flex flex-col items-center mt-20 p-8 before:bg-gradient-to-b before:from-[#434343]/[0.86] before:to-transparent before:rounded-t-xl before:absolute before:top-0 before:bottom-0 before:left-0 before:right-0 before:-z-10 z-0 before:pointer-events-none before:opacity-[0.41]"> */}
-      <div className="flex flex-col items-center mt-20 p-8 bg-gradient-to-b from-[#434343]/[0.35] to-transparent rounded-t-xl backdrop-blur-[14.605px]">
+      <div className="flex flex-col items-center mt-20 p-8 bg-[linear-gradient(136.71deg,var(--tw-gradient-stops))] from-[#434343]/[0.35] to-transparent rounded-t-xl backdrop-blur-[7.30274px]">
         <h2 className="text-2xl font-semibold text-primary-400">Getting started</h2>
         <p className="mt-6 max-w-[800px] text-center">
           Download and run Telchar effortlessly with our standalone binaries or installers for various systems and

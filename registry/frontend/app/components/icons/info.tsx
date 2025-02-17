@@ -32,11 +32,11 @@ export function InfoIcon(
           <stop stopColor="#3BE0FE" />
           <stop offset="1" stopColor="#0094AE" />
         </linearGradient>
-        <linearGradient id="secondary02" x1="nan" x2="nan" y1="nan" y2="nan" gradientUnits="userSpaceOnUse">
+        <linearGradient id="secondary02" gradientUnits="userSpaceOnUse">
           <stop stopColor="#3BE0FE" />
           <stop offset="1" stopColor="#0094AE" />
         </linearGradient>
-        <linearGradient id="secondary03" x1="nan" x2="nan" y1="nan" y2="nan" gradientUnits="userSpaceOnUse">
+        <linearGradient id="secondary03" gradientUnits="userSpaceOnUse">
           <stop stopColor="#3BE0FE" />
           <stop offset="1" stopColor="#0094AE" />
         </linearGradient>
