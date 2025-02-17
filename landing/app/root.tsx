@@ -30,14 +30,14 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode; }) {
   return (
-    <html lang="en" className="dark h-full">
+    <html lang="en" className="dark">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
-      <body className="pt-14 pb-6 px-14 min-h-dvh h-full overflow-y-auto">
+      <body>
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -48,11 +48,17 @@ export function Layout({ children }: { children: React.ReactNode; }) {
 
 export default function App() {
   return (
-    <div className="flex flex-col gap-14 h-full">
-      <Header />
-      <Outlet />
-      <Footer />
-    </div>
+    <>
+      <div className="relative pt-14 pb-6 px-14 flex flex-col gap-14 min-h-dvh z-10">
+        <Header />
+        <Outlet />
+        <Footer />
+      </div>
+      <div className="fixed top-0 left-0 bottom-0 right-0 z-0">
+        <div className="main-radial-gradient bottom-0 right-0 translate-[45%]" />
+        <div className="main-radial-gradient left-0 top-1/2 -translate-x-[35%] -translate-y-1/2" />
+      </div>
+    </>
   );
 }
 

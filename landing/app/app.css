@@ -17,3 +17,9 @@ body {
   @apply bg-white dark:bg-gray-950;
   @apply text-gray-900 dark:text-white;
 }
+
+
+.main-radial-gradient {
+  @apply absolute pointer-events-none aspect-[686/560] w-[719px] opacity-20;
+  @apply bg-radial-[50%_50%_at_50%_50%] from-[#5A5BED] from-0% to-transparent to-100%;
+}
