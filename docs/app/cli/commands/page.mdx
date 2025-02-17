@@ -99,12 +99,16 @@ It will take the `plutus.json` file and `README.md` file and prepare an OCI imag
 telchar publish
 ```
 
-The CLI will ask you for the following information:
-- **Name**: The name of the DApp.
-- **Scope**: The scope of the DApp.
-- **Repository URL**: The URL of the repository.
-- **Readme URL**: The URL of the README file.
-- **Blueprint URL (plutus.json)**: The URL of the `plutus.json` file.
+The CLI will try to find the `plutus.json` file in the current directory.
+If the file is not found, the CLI will ask you for the path to the file.
 
-Once this data is confirmed, the CLI will pull the information from the URLs and create the OCI image.<br/>
+Then CLI will try to find the `README.md` file in the current directory.
+If the file is not found, the CLI will ask you for the path to the file (optional - this step could be skipped).
+
+After the CLI finds the `plutus.json` and `README.md` files, it will ask you to confirm the following data:
+- **Scope**: The scope of the DApp (default to what is in plutus.json).
+- **Name**: The name of the DApp (default to what is in plutus.json).
+- **Repository URL**: The URL of the repository. (optional)
+
+Once this data is confirmed, the CLI will prepare the information and create the OCI image.<br/>
 The image will be pushed to the registry and will be available throw [Telchar Registry](https://registry.telchar.sh).
