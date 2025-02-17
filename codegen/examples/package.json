@@ -1,0 +1,8 @@
+{
+    "name": "telchar-codegen-examples",
+    "private": true,
+    "type": "module",
+    "dependencies": {
+        "@blaze-cardano/sdk": "^0.2.22"
+    }
+}

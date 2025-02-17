@@ -1,6 +1,8 @@
 
 pub fn get_template() -> String {
     r#"
+import { Data } from "@blaze-cardano/sdk";
+
 {{#each this}}
 
   {{~ #if (is_integer type_name) ~}}
