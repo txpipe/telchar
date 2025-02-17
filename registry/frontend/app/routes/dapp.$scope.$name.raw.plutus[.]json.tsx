@@ -24,8 +24,16 @@ export async function loader({ context, params }: Route.LoaderArgs) {
   let output = '{}';
 
   if (result.dapp.blueprintUrl) {
+    let _finalUrl = result.dapp.blueprintUrl;
+
+    if (_finalUrl.includes('github.com')) {
+      _finalUrl = _finalUrl
+        .replace('github.com', 'raw.githubusercontent.com')
+        .replace('/blob', '');
+    }
+
     // Improve it by storing on cache
-    const blueprintResult = await fetch(result.dapp.blueprintUrl);
+    const blueprintResult = await fetch(_finalUrl);
 
     if (blueprintResult.ok) {
       output = await blueprintResult.text();
