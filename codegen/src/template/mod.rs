@@ -28,7 +28,6 @@ impl fmt::Display for Template {
     }
 }
 
-
 fn get_template_name(template: Template) -> String {
     match template {
         Template::Blaze => "blaze".to_string(),

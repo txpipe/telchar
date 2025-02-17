@@ -144,17 +144,17 @@ pub fn get_schemas_from_blueprint(blueprint: blueprint::Blueprint) -> Vec<schema
                     && !internal_schemas.iter().all(|s| s.type_name.eq(&TypeName::Literal))
                     {
                         let reference = internal_schemas.iter().find(|s| s.type_name.ne(&TypeName::Literal));
+                        schemas.push(reference.unwrap().clone());
                         schemas.push(schema::Schema::new_nullable(
                             definition_name.clone(),
                             reference.unwrap().name.clone(),
                             definition_json.clone()
                         ));
-                        schemas.push(reference.unwrap().clone());
                     } else {
-                        schemas.push(schema::Schema::new_enum(definition_name.clone(), &internal_schemas, definition_json.clone()));
                         for schema in &internal_schemas {
                             schemas.push(schema.clone());
                         }
+                        schemas.push(schema::Schema::new_enum(definition_name.clone(), &internal_schemas, definition_json.clone()));
                     }
                 }
             }
