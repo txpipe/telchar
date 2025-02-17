@@ -1,0 +1,76 @@
+---
+title: API
+---
+
+# API
+
+## `get_blueprint_from_path`
+
+Reads a JSON file from a specified path and parses it into a `Blueprint`
+
+```rust
+pub fn get_blueprint_from_path(path: String) -> blueprint::Blueprint
+```
+
+Arguments
+- `path`: the `plutusjson` file path in the filesystem
+
+Returns
+- A `Blueprint` instance
+
+## `get_blueprint_from_json`
+
+Parses the JSON data into a `Blueprint`
+
+```rust
+pub fn get_blueprint_from_json(json: String) -> blueprint::Blueprint
+```
+
+Arguments
+- `json`: the JSON data from a `plutusjson` file
+
+Returns
+- A `Blueprint` instance
+
+## `get_schemas_from_blueprint`
+
+Obtains the list of schemas from a given `Blueprint`
+
+```rust
+pub fn get_schemas_from_blueprint(blueprint: blueprint::Blueprint) -> Vec<schema::Schema>
+```
+
+Arguments
+- `blueprint`: a `Blueprint` from which to obtain the schemas
+
+Returns
+- A vector of `Schema` from the blueprint
+
+## `get_validators_from_blueprint`
+
+Obtains the list of validators from a given `Blueprint`
+
+```rust
+pub fn get_validators_from_blueprint(blueprint: blueprint::Blueprint) -> Vec<schema::Validator>
+```
+
+Arguments
+- `blueprint`: a `Blueprint` from which to obtain the validators
+
+Returns
+- A vector of `Validator` from the blueprint
+
+## `get_template_from_blueprint`
+
+Generates the boilerplate code for a given `Blueprint` for the given `Template`
+
+```rust
+pub fn get_template_from_blueprint(blueprint: blueprint::Blueprint, template: template::Template) -> String
+```
+
+Arguments
+- `blueprint`: a `Blueprint` from which to create the boilerplate code
+- `template`: a `Template` from which to create the boilerplate code
+
+Returns
+- A string containing the boilerplate code
