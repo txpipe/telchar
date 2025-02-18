@@ -1,6 +1,3 @@
-
-pub fn get_template() -> String {
-    r#"
 import { Data } from "@blaze-cardano/sdk";
 
 {{#each this}}
@@ -50,5 +47,3 @@ const {{name}} = Data.Array({{properties.[0].schema_name}});
   {{/if}}
 
 {{/each}}
-    "#.to_string()
-}

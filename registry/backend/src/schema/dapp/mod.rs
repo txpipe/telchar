@@ -1,7 +1,7 @@
 use std::fmt;
 
 use async_graphql::{ComplexObject, Enum, SimpleObject, ID};
-use telchar_codegen::{get_blueprint_from_path, get_validators_from_blueprint, get_schemas_from_blueprint, get_template_from_blueprint};
+use telchar_codegen::Codegen;
 use telchar_codegen::blueprint::Blueprint;
 use telchar_codegen::template::Template;
 use serde::{Deserialize, Serialize};
@@ -77,7 +77,8 @@ impl DApp {
     async fn blueprint(&self) -> DAppBlueprint {
         let blueprint = if self.blueprint.is_none() {
             // This should be removed in future. I keep it as fallback
-            get_blueprint_from_path(format!("../data/{}_{}.json", self.scope, self.name))
+            let codegen = Codegen::new();
+            codegen.get_blueprint_from_path(format!("../data/{}_{}.json", self.scope, self.name))
         } else {
             self.blueprint.clone().unwrap()
         };
@@ -104,13 +105,15 @@ impl DApp {
 impl DAppBlueprint {
     // Improve this
     async fn validators(&self) -> Vec<DAppValidator> {
-        let validators = get_validators_from_blueprint(self.blueprint.clone());
+        let codegen = Codegen::new();
+        let validators = codegen.get_validators_from_blueprint(self.blueprint.clone());
         serde_json::from_str(&serde_json::to_string_pretty(&validators).unwrap()).expect("Unable to parse")
     }
 
     async fn schemas(&self) -> Vec<DAppSchema> {
+        let codegen = Codegen::new();
         let mut schemas: Vec<DAppSchema> = vec![];
-        for schema in get_schemas_from_blueprint(self.blueprint.clone()) {
+        for schema in codegen.get_schemas_from_blueprint(self.blueprint.clone()) {
             schemas.push(
                 DAppSchema {
                     name: schema.name.clone(),
@@ -122,8 +125,9 @@ impl DAppBlueprint {
     }
 
     async fn codegen(&self, template: String) -> String {
+        let codegen = Codegen::new();
         let template = Template::from_str(template.as_str()).unwrap();
-        get_template_from_blueprint(self.blueprint.clone(), template)
+        codegen.get_template_from_blueprint(self.blueprint.clone(), template)
     }
 }
 

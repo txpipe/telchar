@@ -1,6 +1,7 @@
 use oci_client::{client::ImageData, secrets::RegistryAuth, Client, Reference};
 use serde::{Deserialize, Serialize};
 use serde_json::{Number, Value};
+use telchar_codegen::Codegen;
 use telchar_codegen::blueprint;
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -161,8 +162,9 @@ pub fn get_blueprint(image: &ImageData) -> Option<blueprint::Blueprint> {
     let blueprint = image.layers.iter().find(|l| l.media_type == "application/vnd.telchar.blueprint.v1+json");
 
     if let Some(blueprint) = blueprint {
+        let codegen = Codegen::new();
         let data = String::from_utf8_lossy(&blueprint.data).to_string();
-        return Some(telchar_codegen::get_blueprint_from_json(data));
+        return Some(codegen.get_blueprint_from_json(data));
     }
 
     return None;
