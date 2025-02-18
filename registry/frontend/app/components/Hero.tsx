@@ -32,12 +32,12 @@ export function Hero({ className, onSearch }: Props) {
           </p>
           <span className="text-white/50">or</span>
           <a
-            href={`${import.meta.env.VITE_DOCS_URL}/cli/installation`}
+            href={`${import.meta.env.VITE_DOCS_URL}/cli`}
             className="flex items-center gap-3"
             target="_blank"
             rel="noreferrer"
           >
-            View instalation instructions
+            View installation instructions
             <ArrowRightIcon className="inline-block" />
           </a>
         </div>
