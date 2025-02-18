@@ -7,7 +7,7 @@ use oci_client::{
     Client, Reference,
 };
 
-use telchar_codegen::get_blueprint_from_json;
+use telchar_codegen::Codegen;
 use telchar_codegen::blueprint::Blueprint;
 
 use serde::{Deserialize, Serialize};
@@ -154,10 +154,11 @@ fn get_blueprint_file(path: String) -> (Blueprint, String) {
     let plutus_exists = fs::exists(&path_buf).unwrap_or(false);
 
     if plutus_exists {
+        let codegen = Codegen::new();
         println!("Found blueprint file at: {:?}", path_buf.display());
         println!("Processing...");
         let output_string = fs::read_to_string(path_buf).expect("Unable to read file");
-        let output = get_blueprint_from_json(output_string.clone());
+        let output = codegen.get_blueprint_from_json(output_string.clone());
         println!("Blueprint processed successfully!");
         return (output, output_string);
     }

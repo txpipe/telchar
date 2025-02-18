@@ -4,10 +4,14 @@ use std::str::FromStr;
 use handlebars::{handlebars_helper, Handlebars};
 use super::schema;
 
-mod blaze;
+static TEMPLATE_BLAZE: &'static str = include_str!(".././templates/blaze.hbs");
+static TEMPLATE_LUCID_EVOLUTION: &'static str = include_str!(".././templates/lucid-evolution.hbs");
+static TEMPLATE_MESH: &'static str = include_str!(".././templates/mesh.hbs");
 
 pub enum Template {
     Blaze,
+    LucidEvolution,
+    Mesh,
 }
 
 impl str::FromStr for Template {
@@ -15,6 +19,8 @@ impl str::FromStr for Template {
     fn from_str(input: &str) -> Result<Template, Self::Err> {
         match input {
             "blaze" => Ok(Template::Blaze),
+            "lucid-evolution" => Ok(Template::LucidEvolution),
+            "mesh" => Ok(Template::Mesh),
             _ => Err(()),
         }
     }
@@ -24,13 +30,17 @@ impl fmt::Display for Template {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
             Template::Blaze => write!(f, "blaze"),
+            Template::LucidEvolution => write!(f, "lucid-evolution"),
+            Template::Mesh => write!(f, "mesh"),
         }
     }
 }
 
-fn get_template_name(template: Template) -> String {
+pub fn get_template_name(template: Template) -> String {
     match template {
         Template::Blaze => "blaze".to_string(),
+        Template::LucidEvolution => "lucid-evolution".to_string(),
+        Template::Mesh => "mesh".to_string(),
     }
 }
 
@@ -38,12 +48,12 @@ fn helper_is_type(type_name_str: String, type_name: schema::TypeName) -> bool {
     schema::TypeName::from_str(&type_name_str).unwrap().eq(&type_name)
 }
 
-pub fn get_template_from_schemas(schemas: Vec<schema::Schema>, template: Template) -> String {
-    let template_name = get_template_name(template);
-
+pub fn init_handlebars() -> Handlebars<'static> {
     let mut handlebars = Handlebars::new();
 
-    handlebars.register_template_string("blaze", blaze::get_template()).unwrap();
+    handlebars.register_template_string("blaze", TEMPLATE_BLAZE).unwrap();
+    handlebars.register_template_string("lucid-evolution", TEMPLATE_LUCID_EVOLUTION).unwrap();
+    handlebars.register_template_string("mesh", TEMPLATE_MESH).unwrap();
 
     handlebars_helper!(is_integer: |type_name: str| helper_is_type(type_name.into(), schema::TypeName::Integer));
     handlebars.register_helper("is_integer", Box::new(is_integer));
@@ -69,5 +79,5 @@ pub fn get_template_from_schemas(schemas: Vec<schema::Schema>, template: Templat
     handlebars_helper!(is_list: |type_name: str| helper_is_type(type_name.into(), schema::TypeName::List));
     handlebars.register_helper("is_list", Box::new(is_list));
 
-    handlebars.render(&template_name, &schemas).unwrap()
+    handlebars
 }
