@@ -116,6 +116,11 @@ impl Codegen<'_> {
                         _ => {}
                     }
                 }
+                if definition.1.title.is_some() {
+                    if definition.1.title.as_ref().unwrap() == "Data" && definition_name == "Data" {
+                        schemas.push(schema::Schema::new_anydata(definition_json.clone()));
+                    }
+                }
                 if definition.1.any_of.is_some() {
                     let mut internal_schemas: Vec<schema::Schema> = vec![];
                     for (index, parameter) in definition.1.any_of.as_ref().unwrap().iter().enumerate() {
@@ -124,9 +129,13 @@ impl Codegen<'_> {
                                 let schema_name = format!("{}{}", definition_name, parameter.title.clone().unwrap_or((index+1).to_string()));
                                 let mut properties: Vec<schema::Reference> = vec![];
                                 for property in &parameter.fields {
+                                    let mut schema_name = self.get_schema_name(property.reference.clone());
+                                    if schema_name == "Data" {
+                                        schema_name = "AnyData".to_string();
+                                    }
                                     properties.push(schema::Reference{
                                         name: property.title.clone(),
-                                        schema_name: self.get_schema_name(property.reference.clone()),
+                                        schema_name,
                                     });
                                 }
                                 let schema: schema::Schema;
@@ -238,7 +247,6 @@ impl Codegen<'_> {
     /// A string containing the boilerplate code.
     pub fn get_template_from_blueprint(&self, blueprint: blueprint::Blueprint, template: template::Template) -> String {
         let schemas = self.get_schemas_from_blueprint(blueprint);
-        let template_name = template::get_template_name(template);
-        self.handlebars.render(&template_name, &schemas).unwrap()
+        self.handlebars.render(&template.to_string(), &schemas).unwrap()
     }
 }

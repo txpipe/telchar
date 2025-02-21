@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 /// Represents the different types a schema can have.
 #[derive(Debug, Deserialize, Serialize, Clone, Copy, PartialEq)]
 pub enum TypeName {
+    AnyData,
     Integer,
     Bytes,
     Literal,
@@ -42,6 +43,19 @@ pub struct Validator {
 }
 
 impl Schema {
+    /// Creates a new any data schema.
+    ///
+    /// # Arguments
+    ///
+    /// * `json` - The JSON representation of the schema.
+    ///
+    /// # Returns
+    ///
+    /// A new `Schema` instance with type `AnyData`.
+    pub fn new_anydata(json: String) -> Self {
+        Self { name: "AnyData".to_string(), type_name: TypeName::AnyData, properties: None, json }
+    }
+
     /// Creates a new integer schema.
     ///
     /// # Arguments
@@ -181,6 +195,7 @@ impl str::FromStr for TypeName {
     /// A `Result` containing the `TypeName` or an error.
     fn from_str(input: &str) -> Result<TypeName, Self::Err> {
         match input {
+            "AnyData" => Ok(TypeName::AnyData),
             "Integer" => Ok(TypeName::Integer),
             "Bytes" => Ok(TypeName::Bytes),
             "Literal" => Ok(TypeName::Literal),

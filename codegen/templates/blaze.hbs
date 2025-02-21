@@ -2,6 +2,10 @@ import { Data } from "@blaze-cardano/sdk";
 
 {{#each this}}
 
+  {{~ #if (is_anydata type_name) ~}}
+const AnyData = Data.Any();
+  {{/if}}
+
   {{~ #if (is_integer type_name) ~}}
 const {{name}} = Data.Integer();
   {{/if}}

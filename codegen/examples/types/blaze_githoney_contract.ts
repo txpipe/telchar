@@ -11,6 +11,8 @@ const Bool = Data.Enum([
 
 const ByteArray = Data.Bytes();
 
+const AnyData = Data.Any();
+
 const Int = Data.Integer();
 
 const TypesGithoneyContractRedeemersAddRewards = Data.Literal("AddRewards");
@@ -84,7 +86,7 @@ const AikenTransactionDatumDatumHash = Data.Tuple([
 ]);
 
 const AikenTransactionDatumInlineDatum = Data.Tuple([
-  Data,
+  AnyData,
 ]);
 
 const AikenTransactionDatum = Data.Enum([
