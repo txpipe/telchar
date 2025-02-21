@@ -1,3 +1,5 @@
+//! This module provides functionality for initializing Handlebars templates and defining template types.
+
 use std::fmt;
 use std::str;
 use std::str::FromStr;
@@ -8,6 +10,7 @@ static TEMPLATE_BLAZE: &'static str = include_str!(".././templates/blaze.hbs");
 static TEMPLATE_LUCID_EVOLUTION: &'static str = include_str!(".././templates/lucid-evolution.hbs");
 static TEMPLATE_MESH: &'static str = include_str!(".././templates/mesh.hbs");
 
+/// Enum representing the different templates available.
 pub enum Template {
     Blaze,
     LucidEvolution,
@@ -27,7 +30,7 @@ impl str::FromStr for Template {
 }
 
 impl fmt::Display for Template {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
             Template::Blaze => write!(f, "blaze"),
             Template::LucidEvolution => write!(f, "lucid-evolution"),
@@ -36,24 +39,34 @@ impl fmt::Display for Template {
     }
 }
 
-pub fn get_template_name(template: Template) -> String {
-    match template {
-        Template::Blaze => "blaze".to_string(),
-        Template::LucidEvolution => "lucid-evolution".to_string(),
-        Template::Mesh => "mesh".to_string(),
-    }
-}
-
+/// Helper function to check if a type name matches a specified `TypeName`.
+///
+/// # Arguments
+///
+/// * `type_name_str` - The string representation of the type name.
+/// * `type_name` - The `TypeName` to compare against.
+///
+/// # Returns
+///
+/// A boolean indicating whether the type names match.
 fn helper_is_type(type_name_str: String, type_name: schema::TypeName) -> bool {
     schema::TypeName::from_str(&type_name_str).unwrap().eq(&type_name)
 }
 
+/// Initializes Handlebars with registered templates and helpers.
+///
+/// # Returns
+///
+/// A `Handlebars` instance with registered templates and helpers.
 pub fn init_handlebars() -> Handlebars<'static> {
     let mut handlebars = Handlebars::new();
 
     handlebars.register_template_string("blaze", TEMPLATE_BLAZE).unwrap();
     handlebars.register_template_string("lucid-evolution", TEMPLATE_LUCID_EVOLUTION).unwrap();
     handlebars.register_template_string("mesh", TEMPLATE_MESH).unwrap();
+
+    handlebars_helper!(is_anydata: |type_name: str| helper_is_type(type_name.into(), schema::TypeName::AnyData));
+    handlebars.register_helper("is_anydata", Box::new(is_anydata));
 
     handlebars_helper!(is_integer: |type_name: str| helper_is_type(type_name.into(), schema::TypeName::Integer));
     handlebars.register_helper("is_integer", Box::new(is_integer));
