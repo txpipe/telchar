@@ -29,7 +29,7 @@ The toolchain will include 3 different deliverables (components):
 ## Telchar CLI
 
 - publish command: a CLI command to upload blueprint files from the local development environment onto the registry.
-- codegen: a CLI command to automatically generate code for type declarations from blueprint files to be used in libraries such as lucid, meshsdk, pycardano, plu-ts, pallas and potentially other tx builders in the ecosystem.
+- codegen: a CLI command to automatically generate code for type declarations from blueprint files to be used in libraries such as blaze, lucid-evolution and potentially other tx builders in the ecosystem.
 - plutus data builder: an interactive CLI command for devs to build Plutus data payloads that match the blueprint specification. This can be used for testing or tx building.
 - deploy reference script: a CLI command to deploy fully-defined scripts as on-chain utxos, making them available to be used as reference scripts by other transactions (Plutus v2).
 - github actions: the CLI will be available as a Github action, allowing devs to use the tools as part of their continuous integration pipelines.
