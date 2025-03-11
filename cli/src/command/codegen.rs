@@ -1,16 +1,19 @@
-use crate::run_codegen_query;
+use std::str::FromStr;
+use dirs::home_dir;
+
+use telchar_codegen::Codegen;
+use telchar_codegen::template::Template;
 
 pub async fn run(sub_matches: &clap::ArgMatches) {
-    let graphql_url = dotenv!("GRAPHQL_URL");
+    let codegen = Codegen::new();
 
     let blueprint_reference = sub_matches.get_one::<String>("blueprint").expect("required");
     let template_reference = sub_matches.get_one::<String>("template").expect("required");
     if let Some((scope, name)) = blueprint_reference.split_once('/') {
-        let codegen = run_codegen_query(graphql_url.to_string(), scope.to_string(), name.to_string(), template_reference.to_string()).await;
-        match codegen {
-            Some(codegen) => println!("{}", codegen),
-            None => println!("Blueprint not found")
-        }
+        let blueprint_path = home_dir().unwrap().join(".telchar").join("protocol").join(format!("{}_{}.json", scope, name));
+        let blueprint = codegen.get_blueprint_from_path(blueprint_path.to_str().unwrap().to_string());
+        let template = Template::from_str(&template_reference).unwrap();
+        println!("{}", codegen.get_template_from_blueprint(blueprint, template));
     } else {
         println!("Invalid blueprint reference provided");
     }
