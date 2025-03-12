@@ -4,6 +4,7 @@
     "type": "module",
     "dependencies": {
         "@blaze-cardano/sdk": "^0.2.22",
-        "@lucid-evolution/lucid": "^0.4.23"
+        "@lucid-evolution/lucid": "^0.4.23",
+        "@meshsdk/core": "^1.9.0-beta.4"
     }
 }
