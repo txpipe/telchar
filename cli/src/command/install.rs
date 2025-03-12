@@ -14,7 +14,10 @@ pub async fn run(sub_matches: &clap::ArgMatches) {
 
             let blueprint_path = telchar_path.join(format!("{}_{}.json", scope, name));
 
-            let url = blueprint_url.replace("github.com", "raw.githubusercontent.com").replace("/blob", "");
+            let mut url = blueprint_url;
+            if url.contains("github.com") {
+                url = url.replace("github.com", "raw.githubusercontent.com").replace("/blob", "");
+            }
             let response = surf::get(url).await.unwrap().body_string().await.unwrap();
 
             fs::write(blueprint_path, response).unwrap();
