@@ -5,6 +5,22 @@ asIndexPage: true
 
 # Commands
 
+## Install
+
+This command allows you to install the blueprint from a published DApp
+
+### Usage
+
+```sh
+telchar install <scope>/<name>
+```
+
+### Example
+
+```sh
+telchar install txpipe/asteria
+```
+
 ## Codegen
 
 This command allows you to obtain the boilerplate code to comunicate with a published DApp
@@ -71,22 +87,6 @@ const AsteriaTypesPelletDatum = Data.Object({
 });
 
 ...
-```
-
-## Codegen Local
-
-This command allows you to obtain the boilerplate code to comunicate with a DApp from a local blueprint file
-
-### Usage
-
-```sh
-telchar codegen-local <blueprint_path> <template>
-```
-
-#### Example
-
-```sh
-telchar codegen-local ./plutus.json blaze
 ```
 
 ## Publish
