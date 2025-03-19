@@ -2,7 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.0] - 2025-02-11
+## [0.1.2] - 2025-03-19
+
+### 🚀 Features
+
+- *(frontend)* Change codegen to install on dapp details (#40)
+
+### 🐛 Bug Fixes
+
+- *(hero)* Update installation link and correct typo in text
+
+### 📚 Documentation
+
+- *(README)* Update codegen libraries
+
+## [0.1.1] - 2025-02-18
+
+### 🐛 Bug Fixes
+
+- Update installer script names in CLI installation documentation (#28)
+
+## [0.1.0] - 2025-02-12
 
 ### 🚀 Features
 
