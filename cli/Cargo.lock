@@ -2989,7 +2989,7 @@ dependencies = [
 
 [[package]]
 name = "telchar"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "chrono",
  "clap",
@@ -3009,7 +3009,7 @@ dependencies = [
 
 [[package]]
 name = "telchar-codegen"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "handlebars",
  "heck 0.5.0",
